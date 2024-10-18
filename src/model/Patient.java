@@ -1,8 +1,7 @@
-package sc2002project;
+package model;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-// hello
 
 public class Patient extends User {
 	
