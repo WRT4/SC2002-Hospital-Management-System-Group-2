@@ -1,4 +1,4 @@
-package hms;
+package model;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -31,7 +31,7 @@ public class Pharmacist extends User{
 				
 			}
 			
-			appointment.setPrescriptionSatus(status); // in appointment class
+			appointment.setPrescriptionStatus(status); // in appointment class
 			System.out.println("Prescripttion status updated to: "+ status);
 			
 		}catch (NullPointerException e) {
