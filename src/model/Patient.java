@@ -144,11 +144,10 @@ public class Patient extends User {
 			doctor.viewSchedule();
 		}
 		// reschedule and free slot
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter new date: ");
-		String date = sc.next();
+		String date = Appointment.inputDate();
 		System.out.println("Enter new time: ");
-		String time = sc.next();
+		String time = Appointment.inputTime();
 		temp.setDate(date);
 		temp.setTime(time);
 		temp.getDoctor().getSchedule().setAvailability(date, time);
@@ -162,7 +161,7 @@ public class Patient extends User {
 			}
 		}
 		if (i == appointments.size()) {
-			throw new RuntimeException();
+			throw new RuntimeException("Error! Appointment does not exist!");
 		}
 		appointments.remove(i); 
 	}
@@ -178,9 +177,10 @@ public class Patient extends User {
 	public void viewAppointmentOutcomes() {
 		int j = 0;
 		for (int i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getStatus() == "Confirmed") {
+			if (appointments.get(i).getStatus() == "CONFIRMED") {
 				j++;
-				appointments.get(i).printAppointmentOutcome(j);
+				System.out.print(j+".");
+				appointments.get(i).printAppointmentOutcome();
 			}
 		}
 	}
