@@ -124,7 +124,7 @@ public class Patient extends User {
 		appointments.add(temp);
 	}
 	
-	public void rescheduleAppointments() {
+	public void rescheduleAppointments(ArrayList<Doctor> doctors) {
 		// move to app class?
 		int j = 0;
 		for (int i = 0; i < appointments.size(); i++) {
@@ -139,7 +139,19 @@ public class Patient extends User {
 		System.out.println("Changing appointment " + choice + " ...");
 		Appointment temp = appointments.get(choice-1);
 		// display available timeslots
+		for (Doctor doctor : doctors) {
+			System.out.println("Schedule for Doctor " + doctor.getName());
+			doctor.viewSchedule();
+		}
 		// reschedule and free slot
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter new date: ");
+		String date = sc.next();
+		System.out.println("Enter new time: ");
+		String time = sc.next();
+		temp.setDate(date);
+		temp.setTime(time);
+		temp.getDoctor().getSchedule().setAvailability(date, time);
 	}
 	
 	public void cancelAppoinment (String date, String time) throws RuntimeException {
