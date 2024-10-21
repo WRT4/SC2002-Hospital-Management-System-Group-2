@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Schedule {
-    private int doctorId;
+    private String doctorId;
     private List<Appointment> appointments;
 
-    public Schedule(int doctorId) {
+    public Schedule(String doctorId) {
         this.doctorId = doctorId;
         this.appointments = new ArrayList<>();
     }
@@ -17,8 +17,8 @@ public class Schedule {
         System.out.println("Appointment added: " + appointment);
     }
 
-    public void removeAppointment(int appointmentId) {
-        appointments.removeIf(appt -> appt.getId() == appointmentId);
+    public void removeAppointment(String appointmentId) {
+        appointments.removeIf(appt -> appt.getAppointmentID() == appointmentId);
         System.out.println("Appointment " + appointmentId + " removed");
     }
 
@@ -30,7 +30,7 @@ public class Schedule {
     }
 
     public void setAvailability(String date, String time) {
-        Appointment availability = new Appointment(-1, date, time, -1); // -1 indicates availability slot
+        Appointment availability = new Appointment(null, null, date, time); // -1 indicates availability slot
         appointments.add(availability);
         System.out.println("Availability set for " + date + " at " + time);
     }
@@ -42,5 +42,5 @@ public class Schedule {
         doctorSchedule.viewSchedule();
         doctorSchedule.removeAppointment(1);
         doctorSchedule.viewSchedule();
-    }
-}*/
+    }*/
+}
