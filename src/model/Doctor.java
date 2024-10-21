@@ -36,7 +36,7 @@ public class Doctor extends User {
 
     public void updateMedicalRecord(Patient patient, String diagnosis, String prescription) {
         MedicalRecord record = patient.getMedicalRecord();
-        record.addDiagnosis(diagnosis);
+        record.addDiagnosis(diagnosis, this);
         record.addPrescription(prescription);
         System.out.println("Medical record updated for patient: " + patient.getName());
     }
@@ -101,7 +101,7 @@ public class Doctor extends User {
     // Placeholder methods for getting patient, diagnosis, and prescription
     private Patient getPatient() {
         // Implement method to get a patient object
-        return new Patient("P001", "John Doe");
+        return new Patient("P001", "John Doe",null);
     }
 
     private String getDiagnosis() {
@@ -113,4 +113,13 @@ public class Doctor extends User {
         System.out.println("Enter prescription:");
         return scanner.nextLine();
     }
+
+	public String getId() {
+		return this.id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
 }
