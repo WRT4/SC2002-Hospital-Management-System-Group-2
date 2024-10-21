@@ -8,12 +8,12 @@ public class Patient extends User {
 	private MedicalRecord record;
 	private ArrayList<Appointment> appointments;
 	
-	public Patient(String id, String name, String role, MedicalRecord record) {
-		super(id,name,role);
+	public Patient(String id, String name, MedicalRecord record) {
+		super(id,name,"Patient");
 		this.record = record;
 	}
 	
-	public static void menu() {
+	public void showMenu() {
 		System.out.println("1. View medical record");
 		System.out.println("2. Update personal information");
 		System.out.println("3. View available appointment slots");
@@ -120,7 +120,7 @@ public class Patient extends User {
 	}
 	
 	public void scheduleAppointment(Doctor doctor, String date, String time) {
-		Appointment temp = new Appointment(this.id, doctor.getId(), date, time);
+		Appointment temp = new Appointment(this, doctor, date, time);
 		appointments.add(temp);
 	}
 	
@@ -159,7 +159,7 @@ public class Patient extends User {
 		// view status
 		int i = 0;
 		for (i = 0; i < appointments.size(); i++) {
-			appointments.get(i).printScheduledAppointment(i);
+			appointments.get(i).printScheduledAppointment();
 		}
 	}
 	
@@ -172,5 +172,6 @@ public class Patient extends User {
 			}
 		}
 	}
+
 }
 
