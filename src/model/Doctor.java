@@ -122,4 +122,8 @@ public class Doctor extends User {
 		return this.name;
 	}
 
+	public Schedule getSchedule() {
+		return schedule;
+	}
+
 }
