@@ -77,4 +77,11 @@ public class Appointment {
 	public void setPrescription(String prescription) {
 		this.prescription = prescription;
 	}
+
+	public Doctor getDoctor() {
+		return doctor;	
+	}
+
+
+
 }
