@@ -75,9 +75,9 @@ public class Doctor extends User {
                     break;
                 case 4:
                     System.out.println("Enter date (YYYY-MM-DD):");
-                    String date = scanner.nextLine();
+                    String date = Appointment.inputDate();
                     System.out.println("Enter time (HH:MM):");
-                    String time = scanner.nextLine();
+                    String time = Appointment.inputTime();
                     setAvailability(date, time);
                     break;
                 case 5:
