@@ -26,9 +26,9 @@ public class MedicalRecord {
     }
 
     public void addDiagnosis(String diagnosis, Doctor doctor) {
-        if (doctor ! = null){
+        if (doctor != null){
             diagnoses.add(diagnosis);
-            System.out.println("Diagnoses added by Dr. " doctor.getName());
+            System.out.println("Diagnosis added by Dr. " + doctor.getName());
         }
         else{
             System.out.println("Only a doctor can add a diagnosis.");
@@ -36,9 +36,9 @@ public class MedicalRecord {
     }
 
     public void addPrescription(String prescription, Doctor doctor) {
-        if (doctor ! = null){
+        if (doctor != null){
             diagnoses.add(prescription);
-            System.out.println("Prescription added by Dr. " doctor.getName());
+            System.out.println("Prescription added by Dr. " + doctor.getName());
         }
         else{
             System.out.println("Only a doctor can add a prescription.");
@@ -49,7 +49,7 @@ public class MedicalRecord {
         prescriptions.add(prescription);
     }
 
-    public String getPhonenumber (String phoneNumber){
+    public String getPhonenumber (){
         return phoneNumber;
     }
 
@@ -57,8 +57,8 @@ public class MedicalRecord {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getEmail (String email){
-        return email;
+    public String getEmail (){
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -72,4 +72,16 @@ public class MedicalRecord {
         "\nDiagnoses: " + diagnoses +
         "\nPrescriptions: " + prescriptions);
     }
+
+	public void setDateOfBirth(String dob) {
+		this.dateOfBirth = dob;
+	}
+
+	public String getDateOfBirth() {
+		return this.dateOfBirth;
+	}
+
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
 }
