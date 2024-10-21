@@ -1,3 +1,5 @@
+package model;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,4 +110,8 @@ public abstract class User {
         logActivity("Account unlocked by Administrator.");
         resetFailedAttempts();
     }
+
+	public String getName() {
+		return this.name;
+	}
 }
