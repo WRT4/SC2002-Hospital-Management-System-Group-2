@@ -1,20 +1,22 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Appointment {
     private Patient patient;
     private Doctor doctor;
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private String status;
     private String prescriptionStatus;
     private String AppointmentID;
     private static int count;
     private String prescription;
     
-    public Appointment(Patient patient, Doctor doctor, String date, String time) {
+    public Appointment(Patient patient, Doctor doctor, LocalDate date, LocalTime time) {
         this.patient = patient;
         this.doctor = doctor;
         this.date = date;
@@ -24,19 +26,19 @@ public class Appointment {
         this.AppointmentID = "" + count;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getTime(){
+    public LocalTime getTime(){
         return this.time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
@@ -85,9 +87,9 @@ public class Appointment {
 		return doctor;	
 	}
 
-	public static String inputDate() {
+	public static LocalDate inputDate() {
 		Scanner sc = new Scanner(System.in);
-		int day=0, month=0;
+		int day=0, month=0, year = 0;
 		while (true) {
 			try {
 				System.out.println("Enter Day: ");
@@ -99,6 +101,11 @@ public class Appointment {
 				month = sc.nextInt();
 				if (month > 12 || month < 1) {
 					throw new RuntimeException("Invalid input for Month!");
+				}
+				System.out.println("Enter Year: ");
+				year = sc.nextInt();
+				if (year < LocalDate.now().getYear() || year > LocalDate.now().getYear()+1) {
+					throw new RuntimeException("Invalid input for Year!");
 				}
 				break;
 			}
@@ -119,10 +126,10 @@ public class Appointment {
 			}
 		}
 		sc.close();
-		return "2024-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+		return LocalDate.of(year, month, day);
 	}
 	
-	public static String inputTime() {
+	public static LocalTime inputTime() {
 		Scanner sc = new Scanner(System.in);
 		int hour=0, min=0;
 		while (true) {
@@ -156,7 +163,7 @@ public class Appointment {
 			}
 		}
 		sc.close();
-		return String.format("%02d", hour) + ":" + String.format("%02d", min);
+		return LocalTime.of(hour, min);
 	}
 	
 
