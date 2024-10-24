@@ -15,6 +15,7 @@ public class Appointment {
     private String AppointmentID;
     private static int count;
     private String prescription;
+    private AppointmentRequest request;
     
     public Appointment(Patient patient, Doctor doctor, LocalDate date, LocalTime time) {
         this.patient = patient;
@@ -24,8 +25,13 @@ public class Appointment {
         this.status = "PENDING";
         count++;
         this.AppointmentID = "" + count;
+        this.request = new AppointmentRequest(date, time, doctor, patient);
     }
-
+    
+    public AppointmentRequest getRequest() {
+    	return request;
+    }
+    
     public LocalDate getDate() {
         return this.date;
     }
