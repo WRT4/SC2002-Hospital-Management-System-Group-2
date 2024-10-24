@@ -84,4 +84,8 @@ public class MedicalRecord {
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
+
+	public String getName() {
+		return name;
+	}
 }

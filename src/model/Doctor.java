@@ -3,11 +3,11 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Doctor extends User {
     private Schedule schedule;
-    private ArrayList<Appointment> appointments;
     private ArrayList<AppointmentRequest> requests;
  
     Scanner scanner = new Scanner(System.in);
@@ -15,7 +15,7 @@ public class Doctor extends User {
     public Doctor(String id, String name) {
         super(id, name, "Doctor");
         this.schedule = new Schedule(id);
-        this.appointments = new ArrayList<>();
+        this.requests = new ArrayList<AppointmentRequest>();
     }
 
     public void setAvailability(LocalDate date, LocalTime time) {
@@ -23,7 +23,7 @@ public class Doctor extends User {
     }
 
     public void viewAppointments() {
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : schedule.getAppointments()) {
             System.out.println(appointment);
         }
     }
@@ -33,7 +33,7 @@ public class Doctor extends User {
     }
 
     public void viewMedicalRecords(Patient patient) {
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : schedule.getAppointments()) {
             System.out.println(appointment);
         }
     }
@@ -79,19 +79,21 @@ public class Doctor extends User {
                     break;
                 case 4:
                     System.out.println("Enter date (YYYY-MM-DD):");
-                    LocalDate date = Appointment.inputDate();
+                    LocalDate date = Schedule.inputDate();
                     System.out.println("Enter time (HH:MM):");
-                    LocalTime time = Appointment.inputTime();
+                    LocalTime time = Schedule.inputTime();
                     setAvailability(date, time);
                     break;
                 case 5:
                     // Implement accept or decline appointment requests
+                	viewRequests();
                     break;
                 case 6:
                     viewAppointments();
                     break;
                 case 7:
                     // Implement record appointment outcome
+                	viewAppointmentOutcomes();
                     break;
                 case 8:
                     System.out.println("Logging out...");
@@ -130,8 +132,103 @@ public class Doctor extends User {
 		return schedule;
 	}
 
-	public void getRequest(AppointmentRequest request) {
+	public void addRequest(AppointmentRequest request) {
 		requests.add(request);
+	}
+	
+	public void viewRequests() {
+		for (AppointmentRequest request: requests) {
+			if (request.getStatus() == Status.PENDING)
+				System.out.println(request);
+		}
+		System.out.println("Which requestID would you like to accept/reject?");
+		Scanner sc = new Scanner(System.in);
+		int requestID;
+		AppointmentRequest request = null;
+		while (true) {
+			try {
+				System.out.println("Enter requestID or -1 to exit: ");
+				requestID = sc.nextInt();
+				if (requestID == -1) return;
+				int i = 0;
+				for (i = 0; i < requests.size(); i++) {
+		            if (requests.get(i).getRequestID() == requestID) {
+		                request = requests.get(i);
+		                break;
+		            }
+		        }
+				if (i == requests.size()) throw new RuntimeException("ID does not exist! ");
+				break;
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Wrong input type! Try Again!");
+				sc.nextLine();
+				continue;
+			}
+			catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
+				continue;
+			}
+			catch (Exception e) {
+				System.out.println("Error! Try Again!");
+				sc.nextLine();
+				continue;
+			}
+		}
+		System.out.println("Please input 1 for Accept or 2 for Reject");
+		int choice;
+		while (true) {
+			try {
+				choice = sc.nextInt();
+				if (choice != 1 || choice != 2) throw new RuntimeException("Choice does not exist! ");
+				break;
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Wrong input type! Try Again!");
+				sc.nextLine();
+				continue;
+			}
+			catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
+				continue;
+			}
+			catch (Exception e) {
+				System.out.println("Error! Try Again!");
+				sc.nextLine();
+				continue;
+			}
+		}
+		if (choice == 1) {
+			request.acceptRequest();
+		}
+		else {
+			request.declineRequest();
+		}
+		
+	}
+	
+	public void viewAppointmentOutcomes() {
+		ArrayList<Appointment> appointments = schedule.getAppointments();
+		for (Appointment appointment : appointments) {
+			if (appointment.getStatus() == Status.COMPLETED) {
+				appointment.printAppointmentOutcome();
+			}
+		}
+	}
+
+	public int findAppointment(int id) {
+		for (int i = 0; i < requests.size(); i++) {
+			if (schedule.getAppointments().get(i).getAppointmentID() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public void removeAppointment(Appointment appointment) {
+		schedule.getAppointments().remove(appointment);
 	}
 
 }

@@ -4,15 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.temporal.ChronoUnit;
 
 public class Patient extends User {
 	
 	private MedicalRecord record;
 	private ArrayList<Appointment> appointments;
+	private ArrayList<AppointmentRequest> requests;
 	
 	public Patient(String id, String name, MedicalRecord record) {
 		super(id,name,"Patient");
 		this.record = record;
+		this.appointments = new ArrayList<Appointment>();
+		this.requests = new ArrayList<AppointmentRequest>();
 	}
 	
 	public void showMenu() {
@@ -22,9 +26,10 @@ public class Patient extends User {
 		System.out.println("4. Schedule an appointment");
 		System.out.println("5. Reschedule an appointment");
 		System.out.println("6. Cancel an appointment");
-		System.out.println("7. View scheduled appointments");
-		System.out.println("8. View past appointment outcome recrods");
-		System.out.println("9. Logout");
+		System.out.println("7. View appointment requests");
+		System.out.println("8. View scheduled appointments");
+		System.out.println("9. View past appointment outcome recrods");
+		System.out.println("10. Logout");
 	}
 	
 	public String getPatientId() {
@@ -47,7 +52,7 @@ public class Patient extends User {
 	        record.setPhoneNumber(phoneNumber);
 	}
 	
-	public int getChoice() {
+	private int getChoice() {
 		int choice = -1;
 		System.out.println("Enter choice: ");
 		Scanner sc = new Scanner(System.in);
@@ -121,17 +126,30 @@ public class Patient extends User {
 		record.setPhoneNumber(number);
 	}
 	
-	public void scheduleAppointment(Doctor doctor, LocalDate date, LocalTime time) {
-		Appointment temp = new Appointment(this, doctor, date, time);
-		appointments.add(temp);
-		doctor.getRequest(temp.getRequest());
+	public void scheduleAppointment(Doctor doctor, LocalDate date, TimeSlot time) {
+		//notify you can only book 2 weeks in advance 
+		
+		//check if the timeslot clashes with doctor's schedule
+		LocalDate today = LocalDate.now(); 
+		int index = ChronoUnit.DAYS.between(today, appDate);
+
+		// if (doctor.getSchedule().getWorkDays().get(index).getWorkingSlot().get(i).getOccupied()
+	
+		
+		//1. check if date is out of range 
+		//2. check if date clashes - timeslot overlaps with timeslot 
+		// how to call doctor's available timeslot -- doctor.getSchedule().getWorkDays()
+
+		AppointmentRequest temp = new AppointmentRequest(date, time, doctor, this);
+		requests.add(temp);
+		doctor.addRequest(temp);
 	}
 	
 	public void rescheduleAppointments(ArrayList<Doctor> doctors) {
 		// move to app class?
 		int j = 0;
 		for (int i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getStatus() == "Confirmed") {
+			if (appointments.get(i).getStatus() == Status.CONFIRMED) {
 				j++;
 				System.out.println(j + ". " + appointments.get(i).toString());
 			}
@@ -148,44 +166,63 @@ public class Patient extends User {
 		}
 		// reschedule and free slot
 		System.out.println("Enter new date: ");
-		LocalDate date = Appointment.inputDate();
+		LocalDate date = Schedule.inputDate();
 		System.out.println("Enter new time: ");
-		LocalTime time = Appointment.inputTime();
+		LocalTime time = Schedule.inputTime();
 		temp.setDate(date);
-		temp.setTime(time);
+		temp.setTimeSlot(time);
+		temp.getDoctor().addRequest(new AppointmentRequest(date, temp.getTimeSlot(),temp.getDoctor(), temp.getPatient()));
+		int id = temp.getDoctor().findAppointment(temp.getAppointmentID());
+		temp.getDoctor().getSchedule().getAppointments().get(id).setStatus(Status.CANCELLED);
+		temp.getPatient().getAppointments().get(id).setStatus(Status.CANCELLED);
 		temp.getDoctor().getSchedule().setAvailability(date, time);
 	}
 	
 	public void cancelAppoinment (LocalDate date, LocalTime time) throws RuntimeException {
 		int i = 0;
 		for (i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getDate() == date && appointments.get(i).getTime() == time ) {
+			if (appointments.get(i).getDate() == date && appointments.get(i).getTimeSlot().getStartTime() == time ) {
 				break;
 			}
 		}
 		if (i == appointments.size()) {
 			throw new RuntimeException("Error! Appointment does not exist!");
 		}
-		appointments.remove(i); 
+		appointments.get(i).getDoctor().getSchedule().setAvailability(date, time);
+		appointments.get(i).setStatus(Status.CANCELLED);
 	}
 	
 	public void viewScheduledAppointents() {
 		// view status
 		int i = 0;
 		for (i = 0; i < appointments.size(); i++) {
-			appointments.get(i).printScheduledAppointment();
+			if (appointments.get(i).getStatus() == Status.CONFIRMED)
+				appointments.get(i).printScheduledAppointment();
+		}
+	}
+	
+	public void viewRequests() {
+		// view status
+		int i = 0;
+		for (i = 0; i < requests.size(); i++) {
+			System.out.println(requests.get(i));
 		}
 	}
 	
 	public void viewAppointmentOutcomes() {
-		int j = 0;
 		for (int i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getStatus() == "CONFIRMED") {
-				j++;
-				System.out.print(j+".");
+			if (appointments.get(i).getStatus() == Status.CONFIRMED) {
 				appointments.get(i).printAppointmentOutcome();
 			}
 		}
+	}
+	
+	public MedicalRecord getRecord() {
+		return record;
+	}
+
+	public ArrayList<Appointment> getAppointments() {
+		return appointments;
 	}
 
 }
