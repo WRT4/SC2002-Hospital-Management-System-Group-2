@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -119,9 +121,10 @@ public class Patient extends User {
 		record.setPhoneNumber(number);
 	}
 	
-	public void scheduleAppointment(Doctor doctor, String date, String time) {
+	public void scheduleAppointment(Doctor doctor, LocalDate date, LocalTime time) {
 		Appointment temp = new Appointment(this, doctor, date, time);
 		appointments.add(temp);
+		doctor.getRequest(temp.getRequest());
 	}
 	
 	public void rescheduleAppointments(ArrayList<Doctor> doctors) {
@@ -145,15 +148,15 @@ public class Patient extends User {
 		}
 		// reschedule and free slot
 		System.out.println("Enter new date: ");
-		String date = Appointment.inputDate();
+		LocalDate date = Appointment.inputDate();
 		System.out.println("Enter new time: ");
-		String time = Appointment.inputTime();
+		LocalTime time = Appointment.inputTime();
 		temp.setDate(date);
 		temp.setTime(time);
 		temp.getDoctor().getSchedule().setAvailability(date, time);
 	}
 	
-	public void cancelAppoinment (String date, String time) throws RuntimeException {
+	public void cancelAppoinment (LocalDate date, LocalTime time) throws RuntimeException {
 		int i = 0;
 		for (i = 0; i < appointments.size(); i++) {
 			if (appointments.get(i).getDate() == date && appointments.get(i).getTime() == time ) {
