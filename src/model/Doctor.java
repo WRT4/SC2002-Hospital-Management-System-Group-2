@@ -1,11 +1,15 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Doctor extends User {
     private Schedule schedule;
     private ArrayList<Appointment> appointments;
+    private ArrayList<AppointmentRequest> requests;
+ 
     Scanner scanner = new Scanner(System.in);
 
     public Doctor(String id, String name) {
@@ -14,7 +18,7 @@ public class Doctor extends User {
         this.appointments = new ArrayList<>();
     }
 
-    public void setAvailability(String date, String time) {
+    public void setAvailability(LocalDate date, LocalTime time) {
         schedule.setAvailability(date, time);
     }
 
@@ -75,9 +79,9 @@ public class Doctor extends User {
                     break;
                 case 4:
                     System.out.println("Enter date (YYYY-MM-DD):");
-                    String date = Appointment.inputDate();
+                    LocalDate date = Appointment.inputDate();
                     System.out.println("Enter time (HH:MM):");
-                    String time = Appointment.inputTime();
+                    LocalTime time = Appointment.inputTime();
                     setAvailability(date, time);
                     break;
                 case 5:
@@ -124,6 +128,10 @@ public class Doctor extends User {
 
 	public Schedule getSchedule() {
 		return schedule;
+	}
+
+	public void getRequest(AppointmentRequest request) {
+		requests.add(request);
 	}
 
 }
