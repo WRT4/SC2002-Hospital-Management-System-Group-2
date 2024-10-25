@@ -61,6 +61,7 @@ public class Schedule {
 		for (TimeSlot timeSlot: workingSlots){
 			if (!timeSlot.getOccupied() && timeSlot.getDate().equals(date))
 				System.out.println(timeSlot);
+				System.out.println();
 		}
 	}
 
@@ -71,18 +72,16 @@ public class Schedule {
 		}
 	}
     
-    public int findTimeSlot(LocalDate date, LocalTime time) {
-    	int i = 0;
+    public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
     	for (TimeSlot timeslot : workingSlots) {
-    		if (time.equals(timeslot.getStartTime()) && date.equals(timeslot.getDate())) return i;
-    		i++;
+    		if (time.equals(timeslot.getStartTime()) && date.equals(timeslot.getDate())) return timeslot;
     	}
-    	return -1;
+    	return null;
     }
 	//free up time slots
     public void setAvailability(LocalDate date, LocalTime time) {
-		int i = findTimeSlot(date, time);
-		workingSlots.get(i).free();
+		TimeSlot temp = findTimeSlot(date, time);
+		temp.free();
     }
     
     public void setAvailability(LocalDate date, TimeSlot timeslot) {
@@ -185,6 +184,35 @@ public class Schedule {
 	    }
 	    
 	    return LocalTime.of(hour, min);
+	}
+
+	public void viewAllSlots(LocalDate date) {
+		String occupied = "";
+		for (TimeSlot timeSlot: workingSlots){
+			if (timeSlot.getDate().equals(date)) {
+				if (timeSlot.getOccupied() == false) {
+					occupied = "FREE";
+				}
+				else if (timeSlot.getOccupied() == true) {
+					Appointment temp = findAppointment(timeSlot);
+					if (temp != null) occupied = temp.toString();
+					else occupied = "BUSY";
+				}
+				System.out.println(timeSlot + ": " + occupied);
+				System.out.println();
+			}
+		}
+	}
+	
+	public Appointment findAppointment(TimeSlot timeslot) {
+		Appointment apt = null;
+		for (Appointment appointment : appointments) {
+			if (appointment.getTimeSlot().equals(timeslot)) {
+				apt = appointment;
+				break;
+			}
+		}
+		return apt;
 	}
 
 }

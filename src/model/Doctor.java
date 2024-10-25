@@ -17,10 +17,90 @@ public class Doctor extends User {
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
     }
-
-    public void setAvailability(LocalDate date, LocalTime time) {
-        schedule.setAvailability(date, time);
+    
+    private int getChoice() {
+		int choice = -1;
+		Scanner sc = new Scanner(System.in);
+		while (true) {
+			System.out.println("Enter choice: ");
+			try {
+				choice = sc.nextInt();
+				break;
+			}
+			catch (Exception e) {
+				System.out.println("Error input! Try again!");
+				sc.nextLine();
+			}
+		}
+		return choice;
+	}
+    
+    public void setAvailability() {
+    	Scanner sc = new Scanner(System.in);
+    	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n3. Go back");
+    	int choice = getChoice();
+    	while (choice != 1 && choice != 2 && choice != 3) {
+    		System.out.println("No such option! Try again!");
+    		choice = getChoice();
+    	}
+    	if (choice == 1) {
+    		System.out.println("Enter date (YYYY-MM-DD):");
+            LocalDate date = Schedule.inputDate();
+            System.out.println("Enter time (HH:MM):");
+            LocalTime time = Schedule.inputTime();
+            TimeSlot timeslot = schedule.findTimeSlot(date, time);
+            if (timeslot == null) {
+            	System.out.println("No such timeslot!");
+            	return;
+            }
+            if (timeslot.getOccupied() == true) {
+            	System.out.println("Timeslot already busy! ");
+            	return;
+            }
+            timeslot.setOccupied();
+            System.out.println("Date: " + date + " Time: " + time + " successfully set as unavailable!");
+            return;
+    	}
+    	else if (choice == 2) {
+    		System.out.println("Enter date (YYYY-MM-DD):");
+            LocalDate date = Schedule.inputDate();
+            System.out.println("Enter time (HH:MM):");
+            LocalTime time = Schedule.inputTime();
+            Appointment temp = schedule.findAppointment(schedule.findTimeSlot(date, time));
+            TimeSlot timeslot = schedule.findTimeSlot(date, time);
+            if (timeslot == null) {
+            	System.out.println("No such timeslot!");
+            	return;
+            }
+            if (temp == null) {
+            	timeslot.free();
+            	System.out.println("Date: " + date + " Time: " + time + " successfully freed");
+            	return;
+            }
+            else {
+            	System.out.println("Cancel " + temp + "?" + "\n1. Yes \n2. No");
+            	int choice2 = getChoice();
+            	while (choice2 != 1 && choice2 != 2 ) {
+            		System.out.println("No such option! Try again!");
+            		choice2 = getChoice();
+            	}
+            	if (choice2 == 1) {
+            		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
+            		temp.setStatus(Status.CANCELLED);
+            		System.out.println("Successfully cancelled!");
+            		return;
+            	}
+            	else
+            		return;
+            }
+            // ask for confirmation to cancel appointment
+    	}
+    	else if (choice == 3) {
+    		return;
+    	}
     }
+    
+
 
     public void viewAppointments() {
         for (Appointment appointment : schedule.getAppointments()) {
@@ -35,13 +115,14 @@ public class Doctor extends User {
     }
 
     public void viewSchedule() {
-        schedule.viewSchedule();
+    	System.out.println("Viewing Personal Schedule: ");
+		System.out.println("Enter date: ");
+		LocalDate date = Schedule.inputDate();
+		schedule.viewAllSlots(date);
     }
 
     public void viewMedicalRecords(Patient patient) {
-        for (Appointment appointment : schedule.getAppointments()) {
-            System.out.println(appointment);
-        }
+        patient.getRecord().printMedicalRecord();
     }
 
     public void updateMedicalRecord(Patient patient, String diagnosis, String prescription) {
@@ -85,11 +166,7 @@ public class Doctor extends User {
                     viewSchedule();
                     break;
                 case 4:
-                    System.out.println("Enter date (YYYY-MM-DD):");
-                    LocalDate date = Schedule.inputDate();
-                    System.out.println("Enter time (HH:MM):");
-                    LocalTime time = Schedule.inputTime();
-                    setAvailability(date, time);
+                    setAvailability();
                     break;
                 case 5:
                     // Implement accept or decline appointment requests
@@ -241,13 +318,13 @@ public class Doctor extends User {
 		}
 	}
 
-	public int findAppointment(int id) {
-		for (int i = 0; i < requests.size(); i++) {
-			if (schedule.getAppointments().get(i).getAppointmentID() == id) {
-				return i;
+	public Appointment findAppointment(int id) {
+		for (Appointment apt : schedule.getAppointments()) {
+			if (apt.getAppointmentID() == id) {
+				return apt;
 			}
 		}
-		return -1;
+		return null;
 	}
 
 	public void removeAppointment(Appointment appointment) {
@@ -255,12 +332,12 @@ public class Doctor extends User {
 	}
 	
 	public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
-		int i = this.schedule.findTimeSlot(date, time);
-		if (i == -1) {
+		TimeSlot timeslot = this.schedule.findTimeSlot(date, time);
+		if (timeslot == null) {
 			System.out.println("TimeSlot not found!");
 			return null;
 		}
-		return this.schedule.getWorkingSlots().get(i);
+		return timeslot;
 	}
 
 }
