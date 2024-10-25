@@ -11,11 +11,11 @@ public class AppointmentRequest implements Request {
 	private Status status;
 	private static int count = 0;
 	private int requestID;
-	public AppointmentRequest(LocalDate date, TimeSlot time, Doctor doctor, Patient patient) {
+	public AppointmentRequest(LocalDate date, TimeSlot timeslot, Doctor doctor, Patient patient) {
 		this.doctor = doctor;
 		this.patient = patient;
 		this.date = date;
-		this.timeslot = time;
+		this.timeslot = timeslot;
 		status = Status.PENDING;
 		requestID = ++count;
 	}
@@ -26,10 +26,12 @@ public class AppointmentRequest implements Request {
 		patient.getAppointments().add(temp);
 		doctor.getSchedule().getAppointments().add(temp);
 		temp.setStatus(Status.CONFIRMED);
+		System.out.println("Appointment Accepted!");
 	}
 	
 	public void declineRequest() {
 		this.status = Status.DECLINED;
+		System.out.println("Appointment Declined!");
 	}
 	
 	public void cancelRequest() {
@@ -37,7 +39,7 @@ public class AppointmentRequest implements Request {
 	}
 
 	public String toString() {
-		return "Request ID: " + requestID + " Name: " + patient.getName() + " Time: " + timeslot.printTimeSlot() + " Status: " + status;
+		return "Request ID: " + requestID + " Name: " + patient.getName() + " Time: " + timeslot.toString() + " Status: " + status;
 	}
 
 	public Status getStatus() {

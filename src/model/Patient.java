@@ -20,16 +20,67 @@ public class Patient extends User {
 	}
 	
 	public void showMenu() {
-		System.out.println("1. View medical record");
-		System.out.println("2. Update personal information");
-		System.out.println("3. View available appointment slots");
-		System.out.println("4. Schedule an appointment");
-		System.out.println("5. Reschedule an appointment");
-		System.out.println("6. Cancel an appointment");
-		System.out.println("7. View appointment requests");
-		System.out.println("8. View scheduled appointments");
-		System.out.println("9. View past appointment outcome recrods");
-		System.out.println("10. Logout");
+		int choice = -1;
+		do {
+			System.out.println("Patient Menu: ");
+			System.out.println("1. View medical record");
+			System.out.println("2. Update personal information");
+			System.out.println("3. View available appointment slots");
+			System.out.println("4. Schedule an appointment");
+			System.out.println("5. Reschedule an appointment");
+			System.out.println("6. Cancel an appointment");
+			System.out.println("7. View appointment requests");
+			System.out.println("8. View scheduled appointments");
+			System.out.println("9. View past appointment outcome recrods");
+			System.out.println("10. Logout");
+			choice = getChoice();
+			while (choice < 1 || choice > 10) {
+				System.out.println("No such option! ");
+				choice = getChoice();
+			}
+			switch (choice) {
+				case 1:
+					viewRecord();
+					break;
+				case 2:
+					updateContactInfo();
+					break;
+				case 3:
+					viewAvailableSlots();
+					break;
+				case 4:
+					scheduleAppointment();
+					break;
+				case 5:
+					rescheduleAppointments();
+					break;
+				case 6:
+					cancelAppointment();
+					break;
+				case 7:
+					viewRequests();
+					break;
+				case 8:
+					viewScheduledAppointments();
+					break;
+				case 9:
+					viewAppointmentOutcomes();
+					break;
+				case 10:
+					System.out.println("Logging out...");
+			}
+		}
+		while (choice != 10);
+	}
+	
+	public void viewAvailableSlots() {
+		System.out.println("Viewing available slots: ");
+		System.out.println("Enter date: ");
+		LocalDate date = Schedule.inputDate();
+		for (Doctor doctor : Database.doctors) {
+			System.out.println("Schedule for Doctor " + doctor.getName() + ":");
+			doctor.getSchedule().viewAvailableSlots(date);
+		}
 	}
 	
 	public String getPatientId() {
@@ -54,21 +105,23 @@ public class Patient extends User {
 	
 	private int getChoice() {
 		int choice = -1;
-		System.out.println("Enter choice: ");
 		Scanner sc = new Scanner(System.in);
-		try {
-			choice = sc.nextInt();
+		while (true) {
+			System.out.println("Enter choice: ");
+			try {
+				choice = sc.nextInt();
+				break;
+			}
+			catch (Exception e) {
+				System.out.println("Error input! Try again!");
+				sc.nextLine();
+			}
 		}
-		catch (Exception e) {
-			System.out.println("Error input! Try again!");
-			getChoice();
-		}
-		sc.close();
 		return choice;
 	}
 	
 	public void viewRecord() {
-		record.toString();
+		record.printMedicalRecord();
 	}
 	
 	public void updateContactInfo() {
@@ -82,10 +135,11 @@ public class Patient extends User {
 		System.out.println("2. Exit");
 		int choice = -1, choice2 = -1;
 		Scanner sc = new Scanner(System.in);
-		do {
+		choice = getChoice();
+		while(choice != 1 && choice != 2) {
+			System.out.println("Option doesn't exist! ");
 			choice = getChoice();
 		}
-		while(choice != 1 || choice != 2);
 		if (choice == 1) {
 			System.out.println("What would you like to change?");
 			System.out.println("1. Email");
@@ -102,7 +156,6 @@ public class Patient extends User {
 				updatePhoneNumber(phoneNumber);
 			}
 		}
-		sc.close();
 	}
 	
 	public void updateContactInfo(String email, String phoneNumber) {
@@ -126,12 +179,29 @@ public class Patient extends User {
 		record.setPhoneNumber(number);
 	}
 	
-	public void scheduleAppointment(Doctor doctor, LocalDate date, TimeSlot requestTime) {
-
+	public void scheduleAppointment() {
+		Scanner sc = new Scanner(System.in);
+		for (Doctor doctor : Database.doctors) {
+			System.out.println(doctor.toString());
+		}
+		System.out.println("Enter Doctor id: ");
+		String id = sc.next();
+		Doctor doctor = null;
+		for (Doctor doctor1 : Database.doctors) {
+			if (doctor1.getId().equals(id)) doctor = doctor1;
+		}
+		if (doctor == null) {
+			System.out.println("Doctor not found!");
+			return;
+		}
+		LocalDate date = Schedule.inputDate();
+		LocalTime time = Schedule.inputTime();
+		TimeSlot requestTime = doctor.findTimeSlot(date, time);
+		if (requestTime == null) return;
 		//2. ask for duration -- 30 minutes is default ---------------- later
 
 		if (doctor.getSchedule().checkOverlapping(requestTime)){
-			System.out.println("Doctor" + doctor.getName() + "is not available at" + requestTime.printTimeSlot());
+			System.out.println("Doctor " + doctor.getName() + " is not available at " + requestTime.toString());
 			System.out.println("Please try again.");
 		}
 		else{
@@ -139,59 +209,96 @@ public class Patient extends User {
 			requests.add(temp);
 			doctor.addRequest(temp);
 		}
-
+		System.out.println("Appointment Request Sent!");
 	}
 	
-	public void rescheduleAppointments(ArrayList<Doctor> doctors) {
+	public void rescheduleAppointments() {
 		// move to app class?
-		int j = 0;
-		for (int i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getStatus() == Status.CONFIRMED) {
-				j++;
-				System.out.println(j + ". " + appointments.get(i).toString());
+		for (Appointment appointment : appointments) {
+			if (appointment.getStatus() == Status.CONFIRMED) {
+				System.out.println(appointment);
 			}
 		}
-		System.out.println("Which appointment would you like to reschedule? ");
+		System.out.println("Which appointment ID would you like to reschedule? ");
 		int choice = getChoice();
-		while (choice > appointments.size() || choice < 1) choice = getChoice();
+		while (choice > appointments.size() || choice < 1) {
+			System.out.println("Error input! Try again! ");
+			choice = getChoice();
+		}
 		System.out.println("Changing appointment " + choice + " ...");
-		Appointment temp = appointments.get(choice-1);
+		Appointment temp = null;
+		for (Appointment appointment : appointments) {
+			if (appointment.getAppointmentID() == choice) {
+				temp = appointment;
+				break;
+			}
+		}
 		// display available timeslots
-		for (Doctor doctor : doctors) {
-			System.out.println("Schedule for Doctor " + doctor.getName());
-			doctor.viewSchedule();
+//		for (Doctor doctor : Database.doctors) {
+//			System.out.println("Schedule for Doctor " + doctor.getName());
+//			doctor.viewSchedule();
+//		}
+		if (temp == null) {
+			System.out.println("Error! AppointmentID does not exist!");
+			return;
 		}
 		// reschedule and free slot
 		System.out.println("Enter new date: ");
 		LocalDate date = Schedule.inputDate();
 		System.out.println("Enter new time: ");
 		LocalTime time = Schedule.inputTime();
-		temp.setDate(date);
-		temp.setTimeSlot(time);
-		temp.getDoctor().addRequest(new AppointmentRequest(date, temp.getTimeSlot(),temp.getDoctor(), temp.getPatient()));
-		int id = temp.getDoctor().findAppointment(temp.getAppointmentID());
-		temp.getDoctor().getSchedule().getAppointments().get(id).setStatus(Status.CANCELLED);
-//		temp.getPatient().getAppointments().get(id).setStatus(Status.CANCELLED);
-		temp.getDoctor().getSchedule().setAvailability(date, time);
+		TimeSlot requestTime = temp.getDoctor().findTimeSlot(date, time);
+		if (requestTime == null) return;
+		//2. ask for duration -- 30 minutes is default ---------------- later
+
+		if (temp.getDoctor().getSchedule().checkOverlapping(requestTime)){
+			System.out.println("Doctor " + temp.getDoctor().getName() + " is not available at " + requestTime.toString());
+			System.out.println("Please try again.");
+			return;
+		}
+		temp.setStatus(Status.CANCELLED);
+		AppointmentRequest request = new AppointmentRequest(date, requestTime ,temp.getDoctor(), temp.getPatient());
+		temp.getDoctor().addRequest(request);
+		requests.add(request);
+		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
+		System.out.println("Successfully Rescheduled! New request sent!");
 	}
 	
-	public void cancelAppoinment (LocalDate date, LocalTime time) throws RuntimeException {
-		int i = 0;
-		for (i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getDate() == date && appointments.get(i).getTimeSlot().getStartTime() == time ) {
-				break;
+	public void cancelAppointment () {
+		Scanner sc = new Scanner(System.in);
+		for (Appointment apt : appointments) {
+			if (apt.getStatus() == Status.CONFIRMED) {
+				System.out.println(apt);
 			}
 		}
-		if (i == appointments.size()) {
-			throw new RuntimeException("Error! Appointment does not exist!");
+		System.out.println("Which appointment would you like to cancel? Enter Appointment ID");
+		int apptID = sc.nextInt();
+		Appointment temp = null;
+		for (Appointment appointment : appointments) {
+			if (appointment.getAppointmentID() == apptID) {
+				temp = appointment;
+			}
+				
 		}
-		appointments.get(i).getDoctor().getSchedule().setAvailability(date, time);
-		appointments.get(i).setStatus(Status.CANCELLED);
+		if (temp == null) {
+			System.out.println("Error! Appointment does not exist!");
+			return;
+		}
+		if (temp.getStatus() != Status.CONFIRMED) {
+			System.out.println("Error! Appointment is COMPLETED or CANCELLED!");
+			return;
+		}
+		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
+		temp.setStatus(Status.CANCELLED);
+		System.out.println("Successfully cancelled!");
 	}
 	
-	public void viewScheduledAppointents() {
+	public void viewScheduledAppointments() {
 		// view status
 		int i = 0;
+		if (appointments.size() == 0) {
+			System.out.println("No scheduled appointments");
+		}
 		for (i = 0; i < appointments.size(); i++) {
 			if (appointments.get(i).getStatus() == Status.CONFIRMED)
 				appointments.get(i).printScheduledAppointment();
@@ -211,6 +318,9 @@ public class Patient extends User {
 			if (appointments.get(i).getStatus() == Status.CONFIRMED) {
 				appointments.get(i).printAppointmentOutcome();
 			}
+			else if (appointments.get(i).getStatus() == Status.CANCELLED) {
+				appointments.get(i).printCancelledAppointments();;
+			}
 		}
 	}
 	
@@ -220,6 +330,10 @@ public class Patient extends User {
 
 	public ArrayList<Appointment> getAppointments() {
 		return appointments;
+	}
+	
+	public String toString() {
+		return "Patient ID: " + id + " Patient Name: " + name; 
 	}
 
 }

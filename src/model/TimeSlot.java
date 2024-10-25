@@ -13,7 +13,8 @@ public class TimeSlot {
     public TimeSlot(LocalDate date, LocalTime startTime, LocalTime endTime){
         this.date = date;
         this.startTime = startTime;
-        this.endTime = startTime.plusMinutes(15);
+        this.endTime = startTime.plusMinutes(30);
+        this.isOccupied = false;
     }
     public LocalDate getDate(){
         return date;
@@ -33,11 +34,11 @@ public class TimeSlot {
 
     public void freeSlot(){
         isOccupied = false;
-        System.out.println("Time Slot <<" + printTimeSlot() + " >> is emptied.");
+        System.out.println("Time Slot <<" + toString() + " >> is emptied.");
     }
     
-    public String printTimeSlot(){
-        return "Date: " + date + ", " + startTime + "-" + endTime;
+    public String toString(){
+        return "Date: " + date + ", " + startTime + "-" + endTime + "\n";
     }
 
 	public void setStartTime(LocalTime time) {
@@ -48,9 +49,17 @@ public class TimeSlot {
     //check if this timeslot overlaps with another timeslot (other)
     public boolean isOverlap (TimeSlot other){
         //if not on the same day, not overlapping
-        if (!date.equals(other.date))
-            return false;
         if (startTime.isBefore(other.endTime) && other.startTime.isBefore(endTime))
             return true;
+        return false;
+    }
+    
+    public void setOccupied() {
+    	this.isOccupied = true;
+    }
+    
+    public void free() {
+    	this.isOccupied = false;
     }
 }
+

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.time.temporal.ChronoUnit;
 
 public class Appointment {
     private Patient patient;
@@ -21,6 +22,7 @@ public class Appointment {
         this.doctor = doctor;
         this.date = date;
         this.timeslot = time;
+        this.timeslot.setOccupied();
         this.status = Status.PENDING;
         count++;
         this.AppointmentID = count;
@@ -67,7 +69,11 @@ public class Appointment {
 
     //print Appointment Outcome Record (for COMPLETED appointments)
     public void printAppointmentOutcome(){
-        System.out.println("Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName()); //getDoctorName
+        System.out.println("Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName()); //add outcomes
+    }
+    
+    public void printCancelledAppointments() {
+    	System.out.println("Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName() + " CANCELLED.");
     }
 
 	public int getAppointmentID() {
@@ -90,6 +96,10 @@ public class Appointment {
 
 	public Patient getPatient() {
 		return patient;
+	}
+	
+	public String toString() {
+		return "Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " Patient: " + patient.getName() + " with Doctor: " + doctor.getName();
 	}
 
 }

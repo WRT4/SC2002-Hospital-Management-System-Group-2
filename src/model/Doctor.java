@@ -24,8 +24,14 @@ public class Doctor extends User {
 
     public void viewAppointments() {
         for (Appointment appointment : schedule.getAppointments()) {
-            System.out.println(appointment);
+            if (appointment.getStatus() == Status.CONFIRMED) {
+            	System.out.println(appointment);
+            }
         }
+    }
+    
+    public String toString() {
+    	return "Doctor ID: " + getId() + " Name: " + getName();
     }
 
     public void viewSchedule() {
@@ -47,16 +53,17 @@ public class Doctor extends User {
 
     @Override
     public void showMenu() {
-        System.out.println("1. View Patient Medical Records");
-        System.out.println("2. Update Patient Medical Records");
-        System.out.println("3. View Personal Schedule");
-        System.out.println("4. Set Availability for Appointments");
-        System.out.println("5. Accept or Decline Appointment Requests");
-        System.out.println("6. View Upcoming Appointments");
-        System.out.println("7. Record Appointment Outcome");
-        System.out.println("8. Logout");
         int choice;
         do {
+        	System.out.println("Doctor Menu: ");
+            System.out.println("1. View Patient Medical Records");
+            System.out.println("2. Update Patient Medical Records");
+            System.out.println("3. View Personal Schedule");
+            System.out.println("4. Set Availability for Appointments");
+            System.out.println("5. Accept or Decline Appointment Requests");
+            System.out.println("6. View Upcoming Appointments");
+            System.out.println("7. Record Appointment Outcome");
+            System.out.println("8. Logout");
             System.out.println("Choose an action:");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -106,8 +113,20 @@ public class Doctor extends User {
 
     // Placeholder methods for getting patient, diagnosis, and prescription
     private Patient getPatient() {
+    	Scanner sc = new Scanner(System.in);
         // Implement method to get a patient object
-        return new Patient("P001", "John Doe",null);
+    	for (Patient patient : Database.patients) {
+    		System.out.println(patient);
+    	}
+        System.out.println("Enter Patient ID: ");
+        String choice = sc.next();
+        for (Patient patient : Database.patients) {
+        	if (choice.equals(patient.getPatientId())) {
+        		return patient;
+        	}
+        }
+        return null;
+        
     }
 
     private String getDiagnosis() {
@@ -157,7 +176,8 @@ public class Doctor extends User {
 		                break;
 		            }
 		        }
-				if (i == requests.size()) throw new RuntimeException("ID does not exist! ");
+				if (request == null) throw new RuntimeException("ID does not exist! ");
+				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepeted or declined! ");
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -181,7 +201,7 @@ public class Doctor extends User {
 		while (true) {
 			try {
 				choice = sc.nextInt();
-				if (choice != 1 || choice != 2) throw new RuntimeException("Choice does not exist! ");
+				if (choice != 1 && choice != 2) throw new RuntimeException("Choice does not exist! ");
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -211,6 +231,9 @@ public class Doctor extends User {
 	
 	public void viewAppointmentOutcomes() {
 		ArrayList<Appointment> appointments = schedule.getAppointments();
+		if (appointments.size() == 0) {
+			System.out.println("No past appointments");
+		}
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.COMPLETED) {
 				appointment.printAppointmentOutcome();
@@ -229,6 +252,15 @@ public class Doctor extends User {
 
 	public void removeAppointment(Appointment appointment) {
 		schedule.getAppointments().remove(appointment);
+	}
+	
+	public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
+		int i = this.schedule.findTimeSlot(date, time);
+		if (i == -1) {
+			System.out.println("TimeSlot not found!");
+			return null;
+		}
+		return this.schedule.getWorkingSlots().get(i);
 	}
 
 }

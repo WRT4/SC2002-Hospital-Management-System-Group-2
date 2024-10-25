@@ -12,7 +12,8 @@ public class MedicalRecord {
     private ArrayList<String> prescriptions;
     private String phoneNumber;
     private String email;
-
+    
+    
     public MedicalRecord(String patientID, String name, String dateOfBirth, String gender, String phoneNumber, String email, String bloodType) {
         this.patientID = patientID;
         this.name = name;
@@ -23,6 +24,10 @@ public class MedicalRecord {
         this.bloodType = bloodType;
         this.diagnoses = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
+    }
+    
+    public MedicalRecord() {
+    	this("","","","","","","");
     }
 
     public void addDiagnosis(String diagnosis, Doctor doctor) {

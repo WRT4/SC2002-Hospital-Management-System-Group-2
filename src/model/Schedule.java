@@ -18,9 +18,9 @@ public class Schedule {
     public Schedule(String doctorID){
 		this.doctorID = doctorID;
         //create working slots for 2 weeks timeframe
-		workingSlots = new ArrayList<>();
+		workingSlots = new ArrayList<TimeSlot>();
         createWorkingSlots();
-        appointments = new ArrayList<>();
+        appointments = new ArrayList<Appointment>();
     }
     
     public void createWorkingSlots(){
@@ -30,7 +30,11 @@ public class Schedule {
 		LocalDate day;
 		for (int i=0; i <14; i++){
 			day = today.plusDays(i);
-			workingSlots.add(new TimeSlot(day, LocalTime.of(8,0), LocalTime.of(17,0)));
+			LocalTime temp = LocalTime.of(8,0);
+			while (temp.isBefore(LocalTime.of(17,0))){
+				workingSlots.add(new TimeSlot(day, temp, temp.plusMinutes(30)));
+				temp = temp.plusMinutes(30);
+			}
 		}
     }
 
@@ -48,23 +52,41 @@ public class Schedule {
         System.out.println("Appointment added: " + appointment);
     }
 
-    public void removeAppointment(String appointmentId) {
+    public void removeAppointment(int appointmentId) {
         appointments.removeIf(appt -> appt.getAppointmentID() == appointmentId);
         System.out.println("Appointment " + appointmentId + " removed");
     }
 
-    public void viewSchedule() {
-        System.out.println("Schedule for Doctor ID: " + doctorID);
-        for (Appointment appt : appointments) {
-            System.out.println(appt);
-        }
+	public void viewAvailableSlots(LocalDate date){
+		for (TimeSlot timeSlot: workingSlots){
+			if (!timeSlot.getOccupied() && timeSlot.getDate().equals(date))
+				System.out.println(timeSlot);
+		}
+	}
+
+	public void viewSchedule() {
+		System.out.println("Schedule for Doctor ID: " + doctorID);
+		for (Appointment appt : appointments) {
+			System.out.println(appt);
+		}
+	}
+    
+    public int findTimeSlot(LocalDate date, LocalTime time) {
+    	int i = 0;
+    	for (TimeSlot timeslot : workingSlots) {
+    		if (time.equals(timeslot.getStartTime()) && date.equals(timeslot.getDate())) return i;
+    		i++;
+    	}
+    	return -1;
     }
 	//free up time slots
-    public void setAvailability(LocalDate date, LocalTime timeslot) {
-		timeslot.
-        Appointment availability = new Appointment(null, null, date, time); // -1 indicates availability slot
-        appointments.add(availability);
-        System.out.println("Availability set for " + date + " at " + time);
+    public void setAvailability(LocalDate date, LocalTime time) {
+		int i = findTimeSlot(date, time);
+		workingSlots.get(i).free();
+    }
+    
+    public void setAvailability(LocalDate date, TimeSlot timeslot) {
+		timeslot.free();
     }
 
 	public boolean checkOverlapping (TimeSlot requestSlot){
@@ -85,84 +107,86 @@ public class Schedule {
         doctorSchedule.viewSchedule();
     }*/
     
-    public static LocalDate inputDate() {
-		Scanner sc = new Scanner(System.in);
-		int day=0, month=0, year = 0;
-		while (true) {
-			try {
-				System.out.println("Enter Day: ");
-				day = sc.nextInt();
-				if (day > 31 || day < 1) {
-					throw new RuntimeException("Invalid input for Day!");
-				}
-				System.out.println("Enter Month: ");
-				month = sc.nextInt();
-				if (month > 12 || month < 1) {
-					throw new RuntimeException("Invalid input for Month!");
-				}
-				System.out.println("Enter Year: ");
-				year = sc.nextInt();
-				if (year < LocalDate.now().getYear() || year > LocalDate.now().getYear()+1) {
-					throw new RuntimeException("Invalid input for Year!");
-				}
-				break;
-			}
-			catch (InputMismatchException e) {
-				System.out.println("Wrong input type! Try Again!");
-				sc.nextLine();
-				continue;
-			}
-			catch (RuntimeException e) {
-				System.out.println(e.getMessage());
-				sc.nextLine();
-				continue;
-			}
-			catch (Exception e) {
-				System.out.println("Error! Try Again!");
-				sc.nextLine();
-				continue;
-			}
-		}
-		sc.close();
-		return LocalDate.of(year, month, day);
+	public static LocalDate inputDate() {
+	    Scanner sc = new Scanner(System.in);
+	    String dayStr, monthStr, yearStr;
+	    int day = 0, month = 0, year = 0;
+	    
+	    while (true) {
+	        try {
+	            System.out.println("Enter Day (01-31): ");
+	            dayStr = sc.next();
+	            day = Integer.parseInt(dayStr);
+	            if (day < 1 || day > 31) {
+	                throw new RuntimeException("Invalid input for Day! Please enter a valid day between 01 and 31.");
+	            }
+	            
+	            System.out.println("Enter Month (01-12): ");
+	            monthStr = sc.next();
+	            month = Integer.parseInt(monthStr);
+	            if (month < 1 || month > 12) {
+	                throw new RuntimeException("Invalid input for Month! Please enter a valid month between 01 and 12.");
+	            }
+	            
+	            System.out.println("Enter Year (Current year - Current year + 1): ");
+	            yearStr = sc.next();
+	            year = Integer.parseInt(yearStr);
+	            if (year < LocalDate.now().getYear() || year > LocalDate.now().getYear() + 1) {
+	                throw new RuntimeException("Invalid input for Year! Please enter a valid year.");
+	            }
+	            break; // Exit the loop if all inputs are valid
+	        } catch (InputMismatchException e) {
+	            System.out.println("Wrong input type! Please enter a valid number.");
+	            sc.nextLine(); // Clear the invalid input
+	        } catch (RuntimeException e) {
+	            System.out.println(e.getMessage());
+	            sc.nextLine(); // Clear the input
+	        } catch (Exception e) {
+	            System.out.println("Error! Try Again!");
+	            sc.nextLine(); // Clear the input
+	        }
+	    }
+	    
+	    return LocalDate.of(year, month, day);
 	}
+
 	
 	public static LocalTime inputTime() {
-		Scanner sc = new Scanner(System.in);
-		int hour=0, min=0;
-		while (true) {
-			try {
-				System.out.println("Enter Hour (24 hour format): ");
-				hour = sc.nextInt();
-				if (hour > 23 || hour < 0) {
-					throw new RuntimeException("Invalid input for Hour!");
-				}
-				System.out.println("Enter Minute: ");
-				min = sc.nextInt();
-				if (min > 59 || min < 0) {
-					throw new RuntimeException("Invalid input for Minute!");
-				}
-				break;
-			}
-			catch (InputMismatchException e) {
-				System.out.println("Wrong input type! Try Again!");
-				sc.nextLine();
-				continue;
-			}
-			catch (RuntimeException e) {
-				System.out.println(e.getMessage());
-				sc.nextLine();
-				continue;
-			}
-			catch (Exception e) {
-				System.out.println("Error! Try Again!");
-				sc.nextLine();
-				continue;
-			}
-		}
-		sc.close();
-		return LocalTime.of(hour, min);
+	    Scanner sc = new Scanner(System.in);
+	    String hourStr, minStr;
+	    int hour = 0, min = 0;
+
+	    while (true) {
+	        try {
+	            System.out.println("Enter Hour (00-23): ");
+	            hourStr = sc.next();
+	            hour = Integer.parseInt(hourStr);
+	            if (hour < 0 || hour > 23) {
+	                throw new RuntimeException("Invalid input for Hour! Please enter a valid hour between 00 and 23.");
+	            }
+	            
+	            System.out.println("Enter Minute (00-59): ");
+	            minStr = sc.next();
+	            min = Integer.parseInt(minStr);
+	            if (min < 0 || min > 59) {
+	                throw new RuntimeException("Invalid input for Minute! Please enter a valid minute between 00 and 59.");
+	            }
+	            break; // Exit the loop if all inputs are valid
+	        } catch (InputMismatchException e) {
+	            System.out.println("Wrong input type! Please enter a valid number.");
+	            sc.nextLine(); // Clear the invalid input
+	        } catch (RuntimeException e) {
+	            System.out.println(e.getMessage());
+	            sc.nextLine(); // Clear the input
+	        } catch (Exception e) {
+	            System.out.println("Error! Try Again!");
+	            sc.nextLine(); // Clear the input
+	        }
+	    }
+	    
+	    return LocalTime.of(hour, min);
 	}
+
 }
 
 
