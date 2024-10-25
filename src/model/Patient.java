@@ -132,7 +132,7 @@ public class Patient extends User {
 		//check if the timeslot clashes with doctor's schedule
 		LocalDate today = LocalDate.now(); 
 		int index = ChronoUnit.DAYS.between(today, appDate);
-
+		if (doctor.getSchedule().getWorkDays().get(index).getWorkingSlot().get
 		// if (doctor.getSchedule().getWorkDays().get(index).getWorkingSlot().get(i).getOccupied()
 	
 		
