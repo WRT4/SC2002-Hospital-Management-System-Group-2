@@ -37,7 +37,7 @@ public class AppointmentRequest implements Request {
 	}
 
 	public String toString() {
-		return "Request ID: " + requestID + " Name: " + patient.getName() + " Time: " + timeslot.getTimeSlot() + " Status: " + status;
+		return "Request ID: " + requestID + " Name: " + patient.getName() + " Time: " + timeslot.printTimeSlot() + " Status: " + status;
 	}
 
 	public Status getStatus() {

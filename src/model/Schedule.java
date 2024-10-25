@@ -1,6 +1,5 @@
 package model;
 
-import java.java.time.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,35 +10,36 @@ import java.util.InputMismatchException;
 
 //schedule has appointments and workDays()
 public class Schedule {
-    // private String doctorId;
+	private String doctorID;
     private ArrayList<Appointment> appointments;
-    private ArrayList<WorkingDay> workDays;
+    private ArrayList<TimeSlot> workingSlots;
 
-    //a schedule just instantiated should have available timeslots for 2 weeks timeframe 
-    public Schedule(){
-        //call WorkingDay constructor
-        workDays = new ArrayList<>();
-        createWorkingDays();
+
+    public Schedule(String doctorID){
+		this.doctorID = doctorID;
+        //create working slots for 2 weeks timeframe
+		workingSlots = new ArrayList<>();
+        createWorkingSlots();
         appointments = new ArrayList<>();
     }
     
-    public void createWorkingDays(){
-		LocalDate today = LocalDate.now(); 
+    public void createWorkingSlots(){
+		LocalDate today = LocalDate.now();
+		LocalDate lastDay = today.plusDays(14);
+		System.out.println("Creating Working Schedule from" + today.toString() + " to " + lastDay.toString());
+		LocalDate day;
 		for (int i=0; i <14; i++){
-			LocalDate day = today.plusDays(i); 
-			dayOfWeek = day.getDayOfWeek();
-			if (dayOfWeek.getValue()<6){
-				workDays.add(WorkingDay(dayofWeek.toString(), LocalTime.of(8,0), LocalTime.of(17,0)));
-			}
+			day = today.plusDays(i);
+			workingSlots.add(new TimeSlot(day, LocalTime.of(8,0), LocalTime.of(17,0)));
 		}
     }
 
-    public ArrayList<Appointment> getAppointments(){
+	public ArrayList<TimeSlot> getWorkingSlots() {
+		return workingSlots;
+	}
+
+	public ArrayList<Appointment> getAppointments(){
     	return appointments;
-    }
-    
-    public ArrayList<WorkingDay> getWorkDays(){
-    	return workDays;
     }
 
     public void addAppointment(Appointment appointment) {
@@ -54,17 +54,27 @@ public class Schedule {
     }
 
     public void viewSchedule() {
-        System.out.println("Schedule for Doctor ID: " + doctorId);
+        System.out.println("Schedule for Doctor ID: " + doctorID);
         for (Appointment appt : appointments) {
             System.out.println(appt);
         }
     }
-
-    public void setAvailability(LocalDate date, LocalTime time) {
+	//free up time slots
+    public void setAvailability(LocalDate date, LocalTime timeslot) {
+		timeslot.
         Appointment availability = new Appointment(null, null, date, time); // -1 indicates availability slot
         appointments.add(availability);
         System.out.println("Availability set for " + date + " at " + time);
     }
+
+	public boolean checkOverlapping (TimeSlot requestSlot){
+		for (TimeSlot slot: workingSlots){
+			if(slot.getOccupied()){
+				return requestSlot.isOverlap(slot);
+			}
+		}
+		return false;
+	}
 
    /* public static void main(String[] args) {
         Schedule doctorSchedule = new Schedule(1);
@@ -154,10 +164,5 @@ public class Schedule {
 		return LocalTime.of(hour, min);
 	}
 }
-
-/* time 1: time 1 start, time1 end 
-time 2: time 2 start, time2 end - go through: 
-overlapping: 
-time1start < time2end && time1end > time2start */
 
 

@@ -126,23 +126,20 @@ public class Patient extends User {
 		record.setPhoneNumber(number);
 	}
 	
-	public void scheduleAppointment(Doctor doctor, LocalDate date, TimeSlot time) {
-		//notify you can only book 2 weeks in advance 
-		
-		//check if the timeslot clashes with doctor's schedule
-		LocalDate today = LocalDate.now(); 
-		int index = ChronoUnit.DAYS.between(today, appDate);
-		if (doctor.getSchedule().getWorkDays().get(index).getWorkingSlot().get
-		// if (doctor.getSchedule().getWorkDays().get(index).getWorkingSlot().get(i).getOccupied()
-	
-		
-		//1. check if date is out of range 
-		//2. check if date clashes - timeslot overlaps with timeslot 
-		// how to call doctor's available timeslot -- doctor.getSchedule().getWorkDays()
+	public void scheduleAppointment(Doctor doctor, LocalDate date, TimeSlot requestTime) {
 
-		AppointmentRequest temp = new AppointmentRequest(date, time, doctor, this);
-		requests.add(temp);
-		doctor.addRequest(temp);
+		//2. ask for duration -- 30 minutes is default ---------------- later
+
+		if (doctor.getSchedule().checkOverlapping(requestTime)){
+			System.out.println("Doctor" + doctor.getName() + "is not available at" + requestTime.printTimeSlot());
+			System.out.println("Please try again.");
+		}
+		else{
+			AppointmentRequest temp = new AppointmentRequest(date, requestTime, doctor, this);
+			requests.add(temp);
+			doctor.addRequest(temp);
+		}
+
 	}
 	
 	public void rescheduleAppointments(ArrayList<Doctor> doctors) {
@@ -174,7 +171,7 @@ public class Patient extends User {
 		temp.getDoctor().addRequest(new AppointmentRequest(date, temp.getTimeSlot(),temp.getDoctor(), temp.getPatient()));
 		int id = temp.getDoctor().findAppointment(temp.getAppointmentID());
 		temp.getDoctor().getSchedule().getAppointments().get(id).setStatus(Status.CANCELLED);
-		temp.getPatient().getAppointments().get(id).setStatus(Status.CANCELLED);
+//		temp.getPatient().getAppointments().get(id).setStatus(Status.CANCELLED);
 		temp.getDoctor().getSchedule().setAvailability(date, time);
 	}
 	
