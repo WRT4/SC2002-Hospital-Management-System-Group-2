@@ -1,106 +1,72 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 
-public class Pharmacist extends User{
-	private ArrayList<String> medicationInventory;
-	private ArrayList<Integer> stockLevels;
-	private static final int LOW_STOCK_THRESHOLD = 5;
-	
-	public Pharmacist(String id, String name) {
-		super(id,name, "Pharmacist");
-		this.medicationInventory = new ArrayList<>();
-		this.stockLevels = new ArrayList<>();
-		
-	}
-	
-	public void updatePrescriptionStatus(Appointment appointment, String status) {
-		try {
-			if(appointment == null) {
-				throw new NullPointerException ("Appointment cannot be null.");
-				
-			}
-			if (status == null || status.isEmpty()) {
-				throw new IllegalArgumentException("Prescription status cannot be null or empty.");
-			}
-			
-			// Assuming valid statuses are "pending" or "dispensed"
-			if (!status.equalsIgnoreCase("pending") && !status.equalsIgnoreCase("dispensed")) {
-				throw new IllegalArgumentException("Invalid prescription status:"+ status);
-				
-			}
-			
-			appointment.setPrescriptionStatus(status); // in appointment class
-			System.out.println("Prescripttion status updated to: "+ status);
-			
-		}catch (NullPointerException e) {
-			System.out.println("Error:"+ e.getMessage());
-		
-		}catch(IllegalArgumentException e) {
-			System.out.println("Error: " + e.getMessage());
-			
-		}catch(Exception e) {
-			System.out.println("An unexpected error occured while updating the prescription status.");
-		}
-	}
-	
-	
-	public void viewInventory() {
-		try {
-			if(medicationInventory ==null|| medicationInventory.isEmpty()) {
-				throw new Exception("Medication inventory is empty.");
-			}
-			System.out.println("Current Medication Inventory:");
-			for(int i = 0; i< medicationInventory.size(); i++) {
-				System.out.println(medicationInventory.get(i)+ "- Stock:"+ stockLevels.get(i));
-				if(stockLevels.get(i)<= LOW_STOCK_THRESHOLD);{
-					System.out.println("!!Low Stock warning for:"+ medicationInventory.get(i));
-				}
-			}
-		}catch (Exception e) {
-			System.out.println("Error:"+ e.getMessage());
-		}
-	}
-	
-	
-	public void addMedicationToInventory (String medication, int stock) {
-		try {
-			if(medication == null || medication.isEmpty()) {
-				throw new IllegalArgumentException("Medication name cannot be null or empty.");
-				
-			}
-			if(stock <=0) {
-				throw new IllegalArgumentException("Stock level must be greater than zero.");
-			}
-			
-			medicationInventory.add(medication); 
-			stockLevels.add(stock);
-			System.out.println(medication +"added to the inventory with stock: "+ stock);
-		
-		}catch(IllegalArgumentException e) {
-			System.out.println("Error:" +e.getMessage());
-			
-		}
-	}
-	
-	public void submitreplenishmentRequest(String medication) {
-		int index= medicationInventory.indexOf(medication);
-		if (index == -1) {
-            System.out.println("Medication not found in inventory.");
+public class Pharmacist extends User {
+    private MedicationBank medicationBank;
+
+    public Pharmacist(String id, String name, MedicationBank medicationBank) {
+        super(id, name, "Pharmacist");
+        this.medicationBank = medicationBank;
+    }
+
+    // Add a medication to the inventory
+    public void addMedicationToInventory(Medication medication) {
+        if (medication == null || medication.getName().isEmpty()) {
+            System.out.println("Error: Medication name cannot be null or empty.");
             return;
         }
-		if (stockLevels.get(index) <= LOW_STOCK_THRESHOLD) {
-            System.out.println("Replenishment request submitted for " + medication + " (current stock: " + stockLevels.get(index) + ")");
-            administrator.receiveReplenishmentRequest(medication); // Here we can notify the administrator via some notification mechanism
+        medicationBank.addMedication(medication);
+    }
+
+    // Submit a replenishment request if stock is low
+    public void submitReplenishmentRequest(String medicationName, int requestedAmount, Administrator administrator) {
+        if (!medicationBank.inventory.containsKey(medicationName)) {
+            System.out.println("Error: Medication not found in inventory.");
+            return;
         }
-		else {
-            System.out.println("Stock is sufficient for " + medication);
+
+        Medication medication = medicationBank.inventory.get(medicationName);
+        if (medication.isStockLow()) {
+            System.out.println("Replenishment request submitted for " + medicationName + " (current stock: " + medication.getStockLevel() + ")");
+            administrator.receiveReplenishmentRequest(medicationName, requestedAmount);
+        } else {
+            System.out.println("Stock is sufficient for " + medicationName);
         }
-		
-	}
-	
-	public void viewAppointmentOutcomeRecords(ArrayList<Appointment> appointments) {
+    }
+
+    // View the medication inventory
+    public void viewInventory() {
+        medicationBank.viewInventory();
+    }
+
+    // Update prescription status for a given appointment
+    public void updatePrescriptionStatus(Appointment appointment, String status) {
+        try {
+            if (appointment == null) {
+                throw new NullPointerException("Appointment cannot be null.");
+            }
+            if (status == null || status.isEmpty()) {
+                throw new IllegalArgumentException("Prescription status cannot be null or empty.");
+            }
+
+            // Assuming valid statuses are "pending" or "dispensed"
+            if (!status.equalsIgnoreCase("pending") && !status.equalsIgnoreCase("dispensed")) {
+                throw new IllegalArgumentException("Invalid prescription status: " + status);
+            }
+
+            appointment.setPrescriptionStatus(status); // In Appointment class
+            System.out.println("Prescription status updated to: " + status);
+
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred while updating the prescription status.");
+        }
+    }
+
+    // View appointment outcome records
+    public void viewAppointmentOutcomeRecords(ArrayList<Appointment> appointments) {
         if (appointments == null || appointments.isEmpty()) {
             System.out.println("No appointment records available.");
             return;
@@ -112,8 +78,9 @@ public class Pharmacist extends User{
                                ", Status: " + appointment.getPrescriptionStatus());
         }
     }
-	
-	public void showMenu() {
+
+    // Display menu options
+    public void showMenu() {
         System.out.println("1. View Appointment Outcome Records");
         System.out.println("2. Update Prescription Status");
         System.out.println("3. View Medication Inventory");
@@ -122,4 +89,5 @@ public class Pharmacist extends User{
         System.out.println("6. Logout");
     }
 }
+
 
