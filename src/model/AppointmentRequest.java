@@ -50,4 +50,8 @@ public class AppointmentRequest implements Request {
 		return requestID;
 	}
 
+	public void setStaus(Status status) {
+		this.status = status;
+	}
+
 }

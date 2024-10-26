@@ -39,7 +39,11 @@ public class MedicalRecord {
             System.out.println("Only a doctor can add a diagnosis.");
         }
     }
-
+    
+    public void addDiagnosis(String diagnosis) {
+    	diagnoses.add(diagnosis);
+    }
+    
     public void addPrescription(String prescription, Doctor doctor) {
         if (doctor != null){
             diagnoses.add(prescription);

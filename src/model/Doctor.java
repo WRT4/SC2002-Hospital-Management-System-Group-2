@@ -37,17 +37,19 @@ public class Doctor extends User {
     
     public void setAvailability() {
     	Scanner sc = new Scanner(System.in);
-    	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n3. Go back");
+    	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n-1. Go back");
     	int choice = getChoice();
-    	while (choice != 1 && choice != 2 && choice != 3) {
+    	while (choice != 1 && choice != 2 && choice != -1) {
     		System.out.println("No such option! Try again!");
     		choice = getChoice();
     	}
     	if (choice == 1) {
     		System.out.println("Enter date (YYYY-MM-DD):");
             LocalDate date = Schedule.inputDate();
+            if (date == null) return;
             System.out.println("Enter time (HH:MM):");
             LocalTime time = Schedule.inputTime();
+            if (time == null) return;
             TimeSlot timeslot = schedule.findTimeSlot(date, time);
             if (timeslot == null) {
             	System.out.println("No such timeslot!");
@@ -64,8 +66,10 @@ public class Doctor extends User {
     	else if (choice == 2) {
     		System.out.println("Enter date (YYYY-MM-DD):");
             LocalDate date = Schedule.inputDate();
+            if (date == null) return;
             System.out.println("Enter time (HH:MM):");
             LocalTime time = Schedule.inputTime();
+            if (time == null) return;
             Appointment temp = schedule.findAppointment(schedule.findTimeSlot(date, time));
             TimeSlot timeslot = schedule.findTimeSlot(date, time);
             if (timeslot == null) {
@@ -95,7 +99,7 @@ public class Doctor extends User {
             }
             // ask for confirmation to cancel appointment
     	}
-    	else if (choice == 3) {
+    	else if (choice == -1) {
     		return;
     	}
     }
@@ -103,11 +107,16 @@ public class Doctor extends User {
 
 
     public void viewAppointments() {
+    	int num = 0;
         for (Appointment appointment : schedule.getAppointments()) {
             if (appointment.getStatus() == Status.CONFIRMED) {
             	System.out.println(appointment);
+            	num++;
             }
         }
+        if (num == 0) {
+			System.out.println("No scheduled appointments! ");
+		}
     }
     
     public String toString() {
@@ -118,6 +127,7 @@ public class Doctor extends User {
     	System.out.println("Viewing Personal Schedule: ");
 		System.out.println("Enter date: ");
 		LocalDate date = Schedule.inputDate();
+		if (date == null) return;
 		schedule.viewAllSlots(date);
     }
 
@@ -158,8 +168,11 @@ public class Doctor extends User {
                 case 2:
                     // Assuming you have methods to get diagnosis and prescription
                     patient = getPatient();
+                    System.out.println("Enter -1 to go back.");
                     String diagnosis = getDiagnosis();
+                    if (diagnosis.equals("-1")) return;
                     String prescription = getPrescription();
+                    if (prescription.equals("-1")) return;
                     updateMedicalRecord(patient, diagnosis, prescription);
                     break;
                 case 3:
@@ -195,8 +208,9 @@ public class Doctor extends User {
     	for (Patient patient : Database.patients) {
     		System.out.println(patient);
     	}
-        System.out.println("Enter Patient ID: ");
+        System.out.println("Enter Patient ID or -1 to go back: ");
         String choice = sc.next();
+        if (choice.equals("-1")) return null;
         for (Patient patient : Database.patients) {
         	if (choice.equals(patient.getPatientId())) {
         		return patient;
@@ -254,7 +268,7 @@ public class Doctor extends User {
 		            }
 		        }
 				if (request == null) throw new RuntimeException("ID does not exist! ");
-				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepeted or declined! ");
+				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepeted, declined or cancelled! ");
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -307,14 +321,76 @@ public class Doctor extends User {
 	}
 	
 	public void viewAppointmentOutcomes() {
+		Scanner sc = new Scanner(System.in);
 		ArrayList<Appointment> appointments = schedule.getAppointments();
 		if (appointments.size() == 0) {
 			System.out.println("No past appointments");
+			return;
 		}
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.COMPLETED) {
 				appointment.printAppointmentOutcome();
 			}
+			if (appointment.getStatus() == Status.CONFIRMED) {
+				System.out.println(appointment);
+			}
+		}
+		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to go back: ");
+		int id = getChoice();
+		if (id == -1) return;
+		Appointment apt = null;
+		for (Appointment appointment : appointments) {
+			if (appointment.getAppointmentID() == id) {
+				apt = appointment;
+				break;
+			}
+		}
+		if (apt == null) {
+			System.out.println("Appointment does not exist! ");
+			return;
+		}
+		if (apt.getStatus() == Status.CANCELLED) {
+			System.out.println("Appointment had been cancelled! ");
+			return;
+		}
+		if (apt.getStatus() == Status.CONFIRMED) {
+			if (apt.getTimeSlot().getEndTime().isBefore(LocalTime.now())) {
+				apt.setStatus(Status.COMPLETED);
+			}
+		}
+		if (apt.getStatus() == Status.COMPLETED) {
+			System.out.println("What would you like to Record? \n1. Service Type \n2. Prescription \n3. Consultation notes \n-1. Go back");
+			int choice = getChoice();
+			while (choice != 1 && choice != 2 && choice != -1 && choice != 3) {
+				System.out.println("Error! No such option!");
+				choice = getChoice();
+			}
+			if (choice == -1) return;
+			else if (choice == 1) {
+				System.out.println("Setting Service Type...");
+				System.out.println("Enter Service Type: ");
+				String ser = sc.next();
+				apt.setServiceType(ser);
+				System.out.println("Service Type added!");
+			}
+			else if (choice == 2) {
+				System.out.println("Setting prescription...");
+				System.out.println("Enter prescription: ");
+				String pres = sc.next();
+				apt.setPrescription(pres);
+				apt.getPatient().getRecord().addPrescription(pres);
+				apt.setPrescriptionStatus(Status.PENDING);
+				// send prescription request
+				System.out.println("Prescription added!");
+			}
+			else if (choice == 3) {
+				System.out.println("Setting Consultation notes...");
+				System.out.println("Enter Consultation notes: ");
+				String note = sc.nextLine();
+				apt.setNotes(note);
+				System.out.println("Consultation notes added!");
+			}
+			
 		}
 	}
 

@@ -12,10 +12,21 @@ public class Appointment {
     private LocalDate date;
     private TimeSlot timeslot;
     private Status status;
-    private String prescriptionStatus;
-    private int AppointmentID;
+    private Status prescriptionStatus;
+    private int appointmentID;
     private static int count;
     private String prescription;
+    private String diagnosis;
+    private String serviceType;
+    private String note;
+    
+    public void setServiceType (String s) {
+    	this.serviceType = s;
+    }
+    
+    public String getServiceType() {
+    	return this.serviceType;
+    }
     
     public Appointment(LocalDate date, TimeSlot time, Doctor doctor, Patient patient) {
         this.patient = patient;
@@ -25,7 +36,7 @@ public class Appointment {
         this.timeslot.setOccupied();
         this.status = Status.PENDING;
         count++;
-        this.AppointmentID = count;
+        this.appointmentID = count;
     }
     
     public LocalDate getDate() {
@@ -52,33 +63,37 @@ public class Appointment {
         this.status = status;
     }
 
-    public String getPrescriptionStatus(){
+    public Status getPrescriptionStatus(){
         return this.prescriptionStatus;
     }
 
-    public void setPrescriptionStatus(String prescriptionStatus) {
+    public void setPrescriptionStatus(Status prescriptionStatus) {
         this.prescriptionStatus = prescriptionStatus;
     }
 
     //to confirm with "Schedule" entity
     public void printScheduledAppointment(){
-        System.out.println("Appointment: " + date + " at " + timeslot.getStartTime() + "\n with Doctor: " + doctor.getName() );//getName for doctor
+    	System.out.println("Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName());//getName for doctor
         System.out.println("Status: " + status);
         System.out.println();
     }
 
     //print Appointment Outcome Record (for COMPLETED appointments)
     public void printAppointmentOutcome(){
-        System.out.println("Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName()); //add outcomes
+        System.out.println("Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName());//add outcomes
+        System.out.println("Service Type: " + serviceType);
+        System.out.println("Prescription: " + prescription + " Status :" + prescriptionStatus);
+        System.out.println("Consultation notes: " + note);
+        System.out.println();
     }
     
     public void printCancelledAppointments() {
-    	System.out.println("Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName() + " CANCELLED.");
+    	System.out.println("Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName() + " CANCELLED.");
     }
 
 	public int getAppointmentID() {
 		// TODO Auto-generated method stub
-		return this.AppointmentID;
+		return this.appointmentID;
 	}
 
 	public String getPrescription() {
@@ -99,7 +114,23 @@ public class Appointment {
 	}
 	
 	public String toString() {
-		return "Appointment " + AppointmentID + ": " + date + " at " + timeslot.getStartTime() + " Patient: " + patient.getName() + " with Doctor: " + doctor.getName();
+		return "Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " Patient: " + patient.getName() + " with Doctor: " + doctor.getName();
+	}
+	
+	public void setDiagnosis(String d) {
+		diagnosis = d;
+	}
+	
+	public String getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setNotes(String note) {
+		this.note = note;
+	}
+	
+	public String getNotes() {
+		return note;
 	}
 
 }

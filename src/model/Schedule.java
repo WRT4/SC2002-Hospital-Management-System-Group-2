@@ -60,8 +60,7 @@ public class Schedule {
 	public void viewAvailableSlots(LocalDate date){
 		for (TimeSlot timeSlot: workingSlots){
 			if (!timeSlot.getOccupied() && timeSlot.getDate().equals(date))
-				System.out.println(timeSlot);
-				System.out.println();
+				System.out.println(timeSlot + "\n");
 		}
 	}
 
@@ -113,23 +112,26 @@ public class Schedule {
 	    
 	    while (true) {
 	        try {
-	            System.out.println("Enter Day (01-31): ");
+	            System.out.println("Enter Day (01-31) or -1 to exit: ");
 	            dayStr = sc.next();
 	            day = Integer.parseInt(dayStr);
+	            if (day == -1) return null;
 	            if (day < 1 || day > 31) {
 	                throw new RuntimeException("Invalid input for Day! Please enter a valid day between 01 and 31.");
 	            }
 	            
-	            System.out.println("Enter Month (01-12): ");
+	            System.out.println("Enter Month (01-12) or -1 to exit: ");
 	            monthStr = sc.next();
 	            month = Integer.parseInt(monthStr);
+	            if (month == -1) return null;
 	            if (month < 1 || month > 12) {
 	                throw new RuntimeException("Invalid input for Month! Please enter a valid month between 01 and 12.");
 	            }
 	            
-	            System.out.println("Enter Year (Current year - Current year + 1): ");
+	            System.out.println("Enter Year (Current year - Current year + 1) or -1 to exit: ");
 	            yearStr = sc.next();
 	            year = Integer.parseInt(yearStr);
+	            if (year == -1) return null;
 	            if (year < LocalDate.now().getYear() || year > LocalDate.now().getYear() + 1) {
 	                throw new RuntimeException("Invalid input for Year! Please enter a valid year.");
 	            }
@@ -157,16 +159,18 @@ public class Schedule {
 
 	    while (true) {
 	        try {
-	            System.out.println("Enter Hour (00-23): ");
+	            System.out.println("Enter Hour (00-23) or -1 to exit: ");
 	            hourStr = sc.next();
 	            hour = Integer.parseInt(hourStr);
+	            if (hour == -1) return null;
 	            if (hour < 0 || hour > 23) {
 	                throw new RuntimeException("Invalid input for Hour! Please enter a valid hour between 00 and 23.");
 	            }
 	            
-	            System.out.println("Enter Minute (00-59): ");
+	            System.out.println("Enter Minute (00-59) or -1 to exit: ");
 	            minStr = sc.next();
 	            min = Integer.parseInt(minStr);
+	            if (min == -1) return null;
 	            if (min < 0 || min > 59) {
 	                throw new RuntimeException("Invalid input for Minute! Please enter a valid minute between 00 and 59.");
 	            }
@@ -195,7 +199,7 @@ public class Schedule {
 				}
 				else if (timeSlot.getOccupied() == true) {
 					Appointment temp = findAppointment(timeSlot);
-					if (temp != null) occupied = temp.toString();
+					if (temp != null && temp.getStatus() != Status.CANCELLED) occupied = temp.toString();
 					else occupied = "BUSY";
 				}
 				System.out.println(timeSlot + ": " + occupied);
