@@ -37,7 +37,7 @@ public class Doctor extends User {
     
     public void setAvailability() {
     	Scanner sc = new Scanner(System.in);
-    	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n-1. Go back");
+    	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n-1. Exit");
     	int choice = getChoice();
     	while (choice != 1 && choice != 2 && choice != -1) {
     		System.out.println("No such option! Try again!");
@@ -168,7 +168,7 @@ public class Doctor extends User {
                 case 2:
                     // Assuming you have methods to get diagnosis and prescription
                     patient = getPatient();
-                    System.out.println("Enter -1 to go back.");
+                    System.out.println("Enter -1 to exit.");
                     String diagnosis = getDiagnosis();
                     if (diagnosis.equals("-1")) return;
                     String prescription = getPrescription();
@@ -190,7 +190,7 @@ public class Doctor extends User {
                     break;
                 case 7:
                     // Implement record appointment outcome
-                	viewAppointmentOutcomes();
+                	recordAppointmentOutcomes();
                     break;
                 case 8:
                     System.out.println("Logging out...");
@@ -208,7 +208,7 @@ public class Doctor extends User {
     	for (Patient patient : Database.patients) {
     		System.out.println(patient);
     	}
-        System.out.println("Enter Patient ID or -1 to go back: ");
+        System.out.println("Enter Patient ID or -1 to exit: ");
         String choice = sc.next();
         if (choice.equals("-1")) return null;
         for (Patient patient : Database.patients) {
@@ -287,12 +287,12 @@ public class Doctor extends User {
 				continue;
 			}
 		}
-		System.out.println("Please input 1 for Accept or 2 for Reject");
+		System.out.println("Please input 1 for Accept or 2 for Reject. Enter -1 to exit.");
 		int choice;
 		while (true) {
 			try {
 				choice = sc.nextInt();
-				if (choice != 1 && choice != 2) throw new RuntimeException("Choice does not exist! ");
+				if (choice != 1 && choice != 2 && choice != -1) throw new RuntimeException("Choice does not exist! ");
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -314,28 +314,45 @@ public class Doctor extends User {
 		if (choice == 1) {
 			request.acceptRequest();
 		}
-		else {
+		else if (choice == 2) {
 			request.declineRequest();
 		}
+		else 
+			return;
 		
 	}
 	
-	public void viewAppointmentOutcomes() {
+	public void recordAppointmentOutcomes() {
+		int num1 = 0,num2 = 0;
 		Scanner sc = new Scanner(System.in);
 		ArrayList<Appointment> appointments = schedule.getAppointments();
 		if (appointments.size() == 0) {
-			System.out.println("No past appointments");
+			System.out.println("No scheduled appointments!");
 			return;
 		}
+		System.out.println("Unompleted appointments: ");
+		for (Appointment appointment : appointments) {
+			if (appointment.getStatus() == Status.CONFIRMED) {
+				System.out.println(appointment);
+				num1++;
+			}
+		}
+		if (num1 == 0) {
+			System.out.println("No Uncompleted appointments!");
+		}
+		System.out.println();
+		System.out.println("Completed appointments: ");
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.COMPLETED) {
 				appointment.printAppointmentOutcome();
-			}
-			if (appointment.getStatus() == Status.CONFIRMED) {
-				System.out.println(appointment);
+				num2++;
 			}
 		}
-		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to go back: ");
+		if (num2 == 0) {
+			System.out.println("No completed appointments!");
+		}
+		System.out.println();
+		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to exit: ");
 		int id = getChoice();
 		if (id == -1) return;
 		Appointment apt = null;
@@ -354,15 +371,40 @@ public class Doctor extends User {
 			return;
 		}
 		if (apt.getStatus() == Status.CONFIRMED) {
-			if (apt.getTimeSlot().getEndTime().isBefore(LocalTime.now())) {
-				apt.setStatus(Status.COMPLETED);
+			if (apt.getTimeSlot().getDate().isBefore(LocalDate.now().plusDays(1))) {
+				if (apt.getTimeSlot().getDate().isBefore(LocalDate.now())){
+					apt.setStatus(Status.COMPLETED);
+				}
+				else if (apt.getTimeSlot().getEndTime().isBefore(LocalTime.now())) {
+					apt.setStatus(Status.COMPLETED);
+				}
+				else if (apt.getTimeSlot().getStartTime().isBefore(LocalTime.now())){
+					System.out.println("Would you like to set appointment " + apt.getAppointmentID() + " to completed? Enter 1 for yes or -1 to exit.");
+					int choice2 = getChoice();
+					while (choice2 != 1 && choice2 != -1) {
+						System.out.println("Invalid option! Try again!");
+						choice2 = getChoice();
+					}
+					if (choice2 == -1) return;
+					else if (choice2 == 1) {
+						apt.setStatus(Status.COMPLETED);
+					}
+				}
+				else {
+					System.out.println("Appointment has not started!");
+					return;
+				}
+			}
+			else {
+				System.out.println("Appointment has not started!");
+				return;
 			}
 		}
 		if (apt.getStatus() == Status.COMPLETED) {
-			System.out.println("What would you like to Record? \n1. Service Type \n2. Prescription \n3. Consultation notes \n-1. Go back");
+			System.out.println("What would you like to Record? \n1. Service Type \n2. Prescription \n3. Consultation notes \n-1. Exit");
 			int choice = getChoice();
 			while (choice != 1 && choice != 2 && choice != -1 && choice != 3) {
-				System.out.println("Error! No such option!");
+				System.out.println("Invalid option! Try again!");
 				choice = getChoice();
 			}
 			if (choice == -1) return;
