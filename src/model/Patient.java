@@ -29,7 +29,7 @@ public class Patient extends User {
 			System.out.println("4. Schedule an appointment");
 			System.out.println("5. Reschedule an appointment");
 			System.out.println("6. Cancel an appointment");
-			System.out.println("7. View appointment requests");
+			System.out.println("7. View/cancel appointment requests");
 			System.out.println("8. View scheduled appointments");
 			System.out.println("9. View past appointment outcome recrods");
 			System.out.println("10. Logout");
@@ -205,6 +205,18 @@ public class Patient extends User {
 		if (date == null) return;
 		LocalTime time = Schedule.inputTime();
 		if (time == null) return;
+		while (time.isBefore(LocalTime.of(8,0))) {
+			System.out.println("First appointment slot is at 8am! Unable to schedule!");
+			time = Schedule.inputTime();
+			if (time == null) return;
+		}
+		if (date.equals(LocalDate.now())) {
+			while (time.isBefore(LocalTime.now())) {
+				System.out.println("Time has lapsed! Unable to schedule!");
+				time = Schedule.inputTime();
+				if (time == null) return;
+			}
+		}
 		TimeSlot requestTime = doctor.findTimeSlot(date, time);
 		if (requestTime == null) return;
 		//2. ask for duration -- 30 minutes is default ---------------- later
@@ -223,12 +235,18 @@ public class Patient extends User {
 	
 	public void rescheduleAppointments() {
 		// move to app class?
+		int num = 0;
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.CONFIRMED) {
 				System.out.println(appointment);
+				num++;
 			}
 		}
-		System.out.println("Which appointment ID would you like to reschedule? Enter -1 to go back ");
+		if (num == 0) {
+			System.out.println("No scheduled appointments!");
+			return;
+		}
+		System.out.println("Which appointment ID would you like to reschedule? Enter Appointment ID or -1 to exit. ");
 		int choice = getChoice();
 		while (choice > appointments.size() || (choice < 1 && choice != -1)) {
 			System.out.println("Error input! Try again! ");
@@ -259,6 +277,18 @@ public class Patient extends User {
 		System.out.println("Enter new time: ");
 		LocalTime time = Schedule.inputTime();
 		if (time == null) return;
+		while (time.isBefore(LocalTime.of(8,0))) {
+			System.out.println("First appointment slot is at 8am! Unable to schedule!");
+			time = Schedule.inputTime();
+			if (time == null) return;
+		}
+		if (date.equals(LocalDate.now())) {
+			while (time.isBefore(LocalTime.now())) {
+				System.out.println("Time has lapsed! Unable to schedule!");
+				time = Schedule.inputTime();
+				if (time == null) return;
+			}
+		}
 		TimeSlot requestTime = temp.getDoctor().findTimeSlot(date, time);
 		if (requestTime == null) return;
 		//2. ask for duration -- 30 minutes is default ---------------- later
@@ -283,8 +313,9 @@ public class Patient extends User {
 				System.out.println(apt);
 			}
 		}
-		System.out.println("Which appointment would you like to cancel? Enter Appointment ID");
-		int apptID = sc.nextInt();
+		System.out.println("Which appointment would you like to cancel? Enter Appointment ID or -1 to exit.");
+		int apptID = getChoice();
+		if (apptID == -1) return;
 		Appointment temp = null;
 		for (Appointment appointment : appointments) {
 			if (appointment.getAppointmentID() == apptID) {
@@ -309,7 +340,8 @@ public class Patient extends User {
 		// view status
 		int i = 0;
 		if (appointments.size() == 0) {
-			System.out.println("No scheduled appointments");
+			System.out.println("No scheduled appointments!");
+			return;
 		}
 		int num = 0;
 		for (i = 0; i < appointments.size(); i++) {
@@ -320,6 +352,7 @@ public class Patient extends User {
 		}
 		if (num == 0) {
 			System.out.println("No scheduled appointments! ");
+			return;
 		}
 	}
 	
@@ -340,7 +373,7 @@ public class Patient extends User {
 		}
 		if (choice == -1) return;
 		if (choice == 1) {
-			System.out.println("Which requestID would would like to cancel? Enter ID or -1 to go back ");
+			System.out.println("Which requestID would would like to cancel? Enter ID or -1 to exit.");
 			int id = getChoice();
 			if (id == -1) return;
 			AppointmentRequest req = null;
