@@ -26,7 +26,7 @@ public class Schedule {
     public void createWorkingSlots(){
 		LocalDate today = LocalDate.now();
 		LocalDate lastDay = today.plusDays(14);
-		System.out.println("Creating Working Schedule from" + today.toString() + " to " + lastDay.toString());
+		System.out.println("Creating Working Schedule from " + today.toString() + " to " + lastDay.toString());
 		LocalDate day;
 		for (int i=0; i <14; i++){
 			day = today.plusDays(i);
