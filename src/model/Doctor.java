@@ -128,6 +128,11 @@ public class Doctor extends User {
 		System.out.println("Enter date: ");
 		LocalDate date = Schedule.inputDate();
 		if (date == null) return;
+		while (date.isBefore(schedule.getWorkingSlots().getFirst().getDate())) {
+			System.out.println("No record found! ");
+			date = Schedule.inputDate();
+			if (date == null) return;
+		}
 		schedule.viewAllSlots(date);
     }
 
