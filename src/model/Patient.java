@@ -31,7 +31,7 @@ public class Patient extends User {
 			System.out.println("6. Cancel an appointment");
 			System.out.println("7. View/cancel appointment requests");
 			System.out.println("8. View scheduled appointments");
-			System.out.println("9. View past appointment outcome recrods");
+			System.out.println("9. View past appointment outcome records");
 			System.out.println("10. Logout");
 			choice = getChoice();
 			while (choice < 1 || choice > 10) {
@@ -203,6 +203,13 @@ public class Patient extends User {
 		}
 		LocalDate date = Schedule.inputDate();
 		if (date == null) return;
+		else if (date.isBefore(LocalDate.now())) {
+			while (date.isBefore(LocalDate.now())) {
+				System.out.println("Date has lapsed! Unable to schedule!");
+				date = Schedule.inputDate();
+				if (date == null) return;
+			}
+		}
 		LocalTime time = Schedule.inputTime();
 		if (time == null) return;
 		while (time.isBefore(LocalTime.of(8,0))) {
@@ -274,6 +281,13 @@ public class Patient extends User {
 		System.out.println("Enter new date: ");
 		LocalDate date = Schedule.inputDate();
 		if (date == null) return;
+		else if (date.isBefore(LocalDate.now())) {
+			while (date.isBefore(LocalDate.now())) {
+				System.out.println("Date has lapsed! Unable to schedule!");
+				date = Schedule.inputDate();
+				if (date == null) return;
+			}
+		}
 		System.out.println("Enter new time: ");
 		LocalTime time = Schedule.inputTime();
 		if (time == null) return;
@@ -408,13 +422,19 @@ public class Patient extends User {
 	}
 	
 	public void viewAppointmentOutcomes() {
+		int num = 0;
 		for (int i = 0; i < appointments.size(); i++) {
-			if (appointments.get(i).getStatus() == Status.CONFIRMED) {
+			if (appointments.get(i).getStatus() == Status.COMPLETED) {
 				appointments.get(i).printAppointmentOutcome();
+				num++;
 			}
 			else if (appointments.get(i).getStatus() == Status.CANCELLED) {
-				appointments.get(i).printCancelledAppointments();;
+				appointments.get(i).printCancelledAppointments();
+				num++;
 			}
+		}
+		if (num == 0) {
+			System.out.println("No completed or cancelled appointments!");
 		}
 	}
 	
