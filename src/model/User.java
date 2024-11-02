@@ -15,6 +15,7 @@ public abstract class User {
     private static final int MAX_LOGIN_ATTEMPTS = 3;
     private static final int PASSWORD_EXPIRY_DAYS = 90;
     private List<String> activityLog;
+    private List<Request> userRequests; // Track requests submitted by the user
 
     public User(String id, String name, String role) {
         this.id = id;
@@ -25,6 +26,7 @@ public abstract class User {
         this.isLocked = false;
         this.passwordLastChanged = LocalDate.now(); // Password set to current date
         this.activityLog = new ArrayList<>();
+        this.userRequests = new ArrayList<>();
     }
 
     // Login method with max attempts feature
@@ -54,6 +56,22 @@ public abstract class User {
         }
     }
 
+    // Method to create a password reset request
+    public void requestPasswordReset(Administrator admin) {
+        PasswordResetRequest resetRequest = new PasswordResetRequest(this);
+        userRequests.add(resetRequest);
+        admin.receiveRequest(resetRequest);
+        System.out.println("Password reset request sent to administrator.");
+    }
+
+    // Method to create an unlock account request
+    public void requestAccountUnlock(Administrator admin) {
+        UnlockAccountRequest unlockRequest = new UnlockAccountRequest(this);
+        userRequests.add(unlockRequest);
+        admin.receiveRequest(unlockRequest);
+        System.out.println("Account unlock request sent to administrator.");
+    }
+
     // Change password method with expiry reset
     public void changePassword(String newPassword) {
         this.password = newPassword;
@@ -68,10 +86,17 @@ public abstract class User {
     }
 
     // Lock account after max failed attempts
-    private void lockAccount() {
+    public void lockAccount() {
         isLocked = true;
         logActivity("Account locked due to multiple failed login attempts.");
         System.out.println("Account locked. Please contact the administrator.");
+    }
+
+    // Unlock account
+    public void unlockAccount() {
+        isLocked = false;
+        resetFailedAttempts();
+        logActivity("Account unlocked.");
     }
 
     // Reset failed login attempts
@@ -99,19 +124,8 @@ public abstract class User {
         logActivity("User logged out.");
         System.out.println("User logged out.");
     }
-    
-    public void lockAccount() {
-        this.isLocked = true;
-        logActivity("Account locked by Administrator.");
-    }
 
-    public void unlockAccount() {
-        this.isLocked = false;
-        logActivity("Account unlocked by Administrator.");
-        resetFailedAttempts();
+    public String getName() {
+        return this.name;
     }
-
-	public String getName() {
-		return this.name;
-	}
 }
