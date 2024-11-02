@@ -6,11 +6,13 @@ import java.util.List;
 public class Administrator extends User {
     private List<User> staff; // List to manage staff members
     private List<RefillRequest> refillRequests; // List to store refill requests for review
+    private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
 
     public Administrator(String id, String name) {
         super(id, name, "Administrator");
         this.staff = new ArrayList<>();
         this.refillRequests = new ArrayList<>();
+        this.userRequests = new ArrayList<>();
     }
 
     // Manage staff members (add/remove) with duplication check
@@ -37,6 +39,12 @@ public class Administrator extends User {
         System.out.println("Refill request received for medication: " + request.getMedication());
     }
 
+    // Receive general user requests (password reset, account unlock)
+    public void receiveUserRequest(Request request) {
+        userRequests.add(request);
+        System.out.println("User request received: " + request);
+    }
+
     // Approve a specific refill request
     public void approveRefillRequest(int requestIndex) {
         if (requestIndex >= 0 && requestIndex < refillRequests.size()) {
@@ -61,6 +69,30 @@ public class Administrator extends User {
         }
     }
 
+    // Approve a general user request
+    public void approveUserRequest(int requestIndex) {
+        if (requestIndex >= 0 && requestIndex < userRequests.size()) {
+            Request request = userRequests.get(requestIndex);
+            request.acceptRequest();
+            userRequests.remove(requestIndex); // Remove from list after approval
+            System.out.println("User request approved.");
+        } else {
+            System.out.println("Invalid request index.");
+        }
+    }
+
+    // Decline a general user request
+    public void declineUserRequest(int requestIndex) {
+        if (requestIndex >= 0 && requestIndex < userRequests.size()) {
+            Request request = userRequests.get(requestIndex);
+            request.declineRequest();
+            userRequests.remove(requestIndex); // Remove from list after decline
+            System.out.println("User request declined.");
+        } else {
+            System.out.println("Invalid request index.");
+        }
+    }
+
     // Display all pending refill requests
     public void viewPendingRefillRequests() {
         if (refillRequests.isEmpty()) {
@@ -69,6 +101,18 @@ public class Administrator extends User {
             System.out.println("Pending Refill Requests:");
             for (int i = 0; i < refillRequests.size(); i++) {
                 System.out.println((i + 1) + ". " + refillRequests.get(i));
+            }
+        }
+    }
+
+    // Display all pending user requests
+    public void viewPendingUserRequests() {
+        if (userRequests.isEmpty()) {
+            System.out.println("No pending user requests.");
+        } else {
+            System.out.println("Pending User Requests:");
+            for (int i = 0; i < userRequests.size(); i++) {
+                System.out.println((i + 1) + ". " + userRequests.get(i));
             }
         }
     }
@@ -107,6 +151,10 @@ public class Administrator extends User {
         System.out.println("5. View Pending Refill Requests");
         System.out.println("6. Approve Refill Request");
         System.out.println("7. Decline Refill Request");
-        System.out.println("8. Logout");
+        System.out.println("8. View Pending User Requests");
+        System.out.println("9. Approve User Request");
+        System.out.println("10. Decline User Request");
+        System.out.println("11. Logout");
     }
 }
+
