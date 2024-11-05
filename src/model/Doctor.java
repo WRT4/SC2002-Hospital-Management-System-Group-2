@@ -1,10 +1,11 @@
 package model;
 
-import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Doctor extends User {
+
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
 
@@ -26,18 +27,12 @@ public class Doctor extends User {
         requests.add(request);
     }
 
-    public ArrayList<Appointment> viewAppointments() {
-        ArrayList<Appointment> confirmedAppointments = new ArrayList<>();
-        for (Appointment appointment : schedule.getAppointments()) {
-            if (appointment.getStatus() == Status.CONFIRMED) {
-                confirmedAppointments.add(appointment);
-            }
-        }
-        return confirmedAppointments;
+    public void removeAppointment(Appointment appointment) {
+        schedule.getAppointments().remove(appointment);
     }
 
-    public String toString() {
-        return "Doctor ID: " + getId() + " Name: " + getName();
+    public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
+        return this.schedule.findTimeSlot(date, time);
     }
 
     public Appointment findAppointment(int id) {
@@ -49,11 +44,9 @@ public class Doctor extends User {
         return null;
     }
 
-    public void removeAppointment(Appointment appointment) {
-        schedule.getAppointments().remove(appointment);
-    }
-
-    public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
-        return schedule.findTimeSlot(date, time);
+    @Override
+    public String toString() {
+        return "Doctor ID: " + getId() + " Name: " + getName();
     }
 }
+
