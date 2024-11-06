@@ -38,7 +38,11 @@ public class TimeSlot {
     }
     
     public String toString(){
-        return "Date: " + date + ", " + startTime + "-" + endTime;
+        return "Date: " + date + ",Time: " + startTime + "-" + endTime;
+    }
+
+    public void printTime(){
+        System.out.println(startTime + "-" + endTime);
     }
 
 	public void setStartTime(LocalTime time) {

@@ -32,6 +32,10 @@ public class AppointmentRequest implements Request {
 	public void declineRequest() {
 		this.status = Status.DECLINED;
 		System.out.println("Appointment Declined!");
+		String messageToPatient;
+		messageToPatient = "Message at " + LocalDate.now() + ": Appointment Request rejected by " + doctor.getName() + "\n" +
+				"Appointment Details - " + timeslot.toString();
+		patient.getMessage().add(0,messageToPatient);
 	}
 	
 	public void cancelRequest() {
@@ -39,7 +43,7 @@ public class AppointmentRequest implements Request {
 	}
 
 	public String toString() {
-		return "Request ID: " + requestID + " Name: " + patient.getName() + " Time: " + timeslot.toString() + " Status: " + status;
+		return "Request ID: " + requestID + " Patient Name: " + patient.getName() + ", Doctor Name: " + doctor.getName() + " "+ timeslot.toString() + " Status: " + status;
 	}
 
 	public Status getStatus() {
@@ -50,8 +54,16 @@ public class AppointmentRequest implements Request {
 		return requestID;
 	}
 
-	public void setStaus(Status status) {
+	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Patient getPatient(){
+		return this.patient;
+	}
+
+	public LocalDate getDate(){
+		return this.date;
 	}
 
 }

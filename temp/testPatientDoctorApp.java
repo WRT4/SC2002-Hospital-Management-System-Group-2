@@ -10,7 +10,9 @@ public class testPatientDoctorApp {
     public static void main(String[] args) {
         // Initialize database with sample data
         Database.doctors.add(new Doctor("1", "Wen Rong"));
+        Database.doctors.add(new Doctor("2", "Kai Wen"));
         Database.patients.add(new Patient("1", "Jing Huan", new MedicalRecord()));
+        Database.patients.add(new Patient("2", "Shane", new MedicalRecord()));
 
         Scanner sc = new Scanner(System.in);
 
@@ -23,16 +25,34 @@ public class testPatientDoctorApp {
                 // Handle user choices
                 switch (choice) {
                     case 1:
-                        Database.doctors.getFirst().showMenu();
+                        for (Doctor doctor: Database.doctors){
+                            System.out.println(doctor);
+                        }
+                        int doctorChoice = 0;
+                        System.out.println("Choose Doctor ID");
+                        doctorChoice = sc.nextInt();
+                        if (doctorChoice !=1 && doctorChoice !=2 ){
+                            System.out.println("Invalid Input of doctor");
+                        }
+                        Database.doctors.get(doctorChoice-1).showMenu();
                         break;
                     case 2:
-                        Database.patients.getFirst().showMenu();
+                        for (Patient patient: Database.patients){
+                            System.out.println(patient);
+                        }
+                        int patientChoice = 0;
+                        System.out.println("Choose Patient ID");
+                        patientChoice = sc.nextInt();
+                        if (patientChoice !=1 && patientChoice !=2 ){
+                            System.out.println("Invalid Input of patient");
+                        }
+                        Database.patients.get(patientChoice-1).showMenu();
                         break;
-                    //case 3:
-                        //System.out.println("Exiting the application.");
+                    case 3:
+                        System.out.println("Exiting the application.");
                         
-                        //sc.close(); // Close the scanner before exiting
-                        //return; // Exit the main method
+                        sc.close(); // Close the scanner before exiting
+                        return; // Exit the main method
                     default:
                         System.out.println("Invalid choice. Please enter 1, 2, or 3.");
                         break;

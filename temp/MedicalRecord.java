@@ -74,10 +74,9 @@ public class MedicalRecord {
         this.email = email;
     }
 
-
     public void printMedicalRecord() {
         System.out.println("Patient: " + name + " | Phone number: " + phoneNumber + " | Email Address: " + email +
-        "\nGender: " + gender + " | Blood Type: " + bloodType +
+        "\nDate Of Birth: " + dateOfBirth + " | Gender: " + gender + " | Blood Type: " + bloodType +
         "\nDiagnoses: " + diagnoses +
         "\nPrescriptions: " + prescriptions);
     }
@@ -97,4 +96,17 @@ public class MedicalRecord {
 	public String getName() {
 		return name;
 	}
+
+    public void setGender(String gender){
+        this.gender = gender;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
+    }
 }
+

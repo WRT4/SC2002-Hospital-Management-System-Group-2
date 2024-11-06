@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -9,13 +10,17 @@ import java.util.Scanner;
 public class Doctor extends User {
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
- 
+	private ArrayList<Patient> patientsUnderCare;
+	private ArrayList<String> messages;
+
     Scanner scanner = new Scanner(System.in);
 
     public Doctor(String id, String name) {
         super(id, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
+		this.patientsUnderCare = new ArrayList<Patient>();
+		this.messages = new ArrayList<String>();
     }
     
     private int getChoice() {
@@ -45,7 +50,7 @@ public class Doctor extends User {
     	}
     	if (choice == 1) {
     		System.out.println("Enter date (YYYY-MM-DD):");
-            LocalDate date = Schedule.inputDate();
+            LocalDate date = Schedule.inputDate(false);
             if (date == null) return;
             System.out.println("Enter time (HH:MM):");
             LocalTime time = Schedule.inputTime();
@@ -65,7 +70,7 @@ public class Doctor extends User {
     	}
     	else if (choice == 2) {
     		System.out.println("Enter date (YYYY-MM-DD):");
-            LocalDate date = Schedule.inputDate();
+            LocalDate date = Schedule.inputDate(false);
             if (date == null) return;
             System.out.println("Enter time (HH:MM):");
             LocalTime time = Schedule.inputTime();
@@ -91,6 +96,10 @@ public class Doctor extends User {
             	if (choice2 == 1) {
             		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
             		temp.setStatus(Status.CANCELLED);
+					String messageToPatient;
+					messageToPatient = "Message at " + LocalDate.now() + ": Appointment cancelled by " + getName() + "\n" +
+							"Appointment Details - " + timeslot.toString();
+					temp.getPatient().getMessage().add(0,messageToPatient);
             		System.out.println("Successfully cancelled!");
             		return;
             	}
@@ -103,8 +112,6 @@ public class Doctor extends User {
     		return;
     	}
     }
-    
-
 
     public void viewAppointments() {
     	int num = 0;
@@ -126,11 +133,11 @@ public class Doctor extends User {
     public void viewSchedule() {
     	System.out.println("Viewing Personal Schedule: ");
 		System.out.println("Enter date: ");
-		LocalDate date = Schedule.inputDate();
+		LocalDate date = Schedule.inputDate(false);
 		if (date == null) return;
-		while (date.isBefore(schedule.getWorkingSlots().getFirst().getDate())) {
+		while (date.isBefore(schedule.getWorkingSlots().get(0).getDate())) {
 			System.out.println("No record found! ");
-			date = Schedule.inputDate();
+			date = Schedule.inputDate(false);
 			if (date == null) return;
 		}
 		schedule.viewAllSlots(date);
@@ -149,13 +156,24 @@ public class Doctor extends User {
 
     @Override
     public void showMenu() {
-        int choice;
+		remindPendingRequests();
+		System.out.println("Message Box: ");
+		int counter = 0;
+		for (String message: messages){
+			System.out.println((counter+1) + " - " + message);
+			System.out.println();
+			counter++;
+		}
+		if (counter ==0)
+			System.out.println("No messages yet!");
+
+		int choice;
         do {
         	System.out.println("Doctor Menu: ");
             System.out.println("1. View Patient Medical Records");
             System.out.println("2. Update Patient Medical Records");
             System.out.println("3. View Personal Schedule");
-            System.out.println("4. Set Availability for Appointments");
+            System.out.println("4. Set Availability for Appointments / Update Personal Schedule");
             System.out.println("5. Accept or Decline Appointment Requests");
             System.out.println("6. View Upcoming Appointments");
             System.out.println("7. Record Appointment Outcome");
@@ -168,11 +186,16 @@ public class Doctor extends User {
                 case 1:
                     // Assuming you have a method to get a patient object
                     Patient patient = getPatient();
-                    viewMedicalRecords(patient);
+					if (patient != null){
+						viewMedicalRecords(patient);
+					}
                     break;
                 case 2:
                     // Assuming you have methods to get diagnosis and prescription
                     patient = getPatient();
+					if (patient==null){
+						break;
+					}
                     System.out.println("Enter -1 to exit.");
                     String diagnosis = getDiagnosis();
                     if (diagnosis.equals("-1")) return;
@@ -208,21 +231,25 @@ public class Doctor extends User {
 
     // Placeholder methods for getting patient, diagnosis, and prescription
     private Patient getPatient() {
+		if (patientsUnderCare==null || patientsUnderCare.size()==0){
+			System.out.println("No patients under care.");
+			return null;
+		}
     	Scanner sc = new Scanner(System.in);
         // Implement method to get a patient object
-    	for (Patient patient : Database.patients) {
+    	for (Patient patient : patientsUnderCare) {
     		System.out.println(patient);
     	}
         System.out.println("Enter Patient ID or -1 to exit: ");
         String choice = sc.next();
         if (choice.equals("-1")) return null;
-        for (Patient patient : Database.patients) {
+        for (Patient patient : patientsUnderCare) {
         	if (choice.equals(patient.getPatientId())) {
         		return patient;
         	}
         }
+		System.out.println("Patient not found. ");
         return null;
-        
     }
 
     private String getDiagnosis() {
@@ -247,14 +274,25 @@ public class Doctor extends User {
 		return schedule;
 	}
 
+	public ArrayList<String> getMessage(){
+		return messages;
+	}
+
 	public void addRequest(AppointmentRequest request) {
 		requests.add(request);
 	}
 	
 	public void viewRequests() {
+		int num = 0;
 		for (AppointmentRequest request: requests) {
-			if (request.getStatus() == Status.PENDING)
+			if (request.getStatus() == Status.PENDING){
 				System.out.println(request);
+				num++;
+			}
+		}
+		if (num == 0) {
+			System.out.println("No appointment requests yet!");
+			return;
 		}
 		System.out.println("Which requestID would you like to accept/reject?");
 		Scanner sc = new Scanner(System.in);
@@ -273,7 +311,7 @@ public class Doctor extends User {
 		            }
 		        }
 				if (request == null) throw new RuntimeException("ID does not exist! ");
-				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepeted, declined or cancelled! ");
+				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepted, declined or cancelled! ");
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -318,6 +356,7 @@ public class Doctor extends User {
 		}
 		if (choice == 1) {
 			request.acceptRequest();
+			patientsUnderCare.add(request.getPatient());
 		}
 		else if (choice == 2) {
 			request.declineRequest();
@@ -335,7 +374,7 @@ public class Doctor extends User {
 			System.out.println("No scheduled appointments!");
 			return;
 		}
-		System.out.println("Unompleted appointments: ");
+		System.out.println("Uncompleted appointments: ");
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.CONFIRMED) {
 				System.out.println(appointment);
@@ -463,4 +502,12 @@ public class Doctor extends User {
 		return timeslot;
 	}
 
+	public void remindPendingRequests(){
+		for (AppointmentRequest request: requests){
+			if (request.getStatus()==Status.PENDING && ChronoUnit.DAYS.between(LocalDate.now(), request.getDate()) < 3){
+				String pendingRequest = "Please be reminded that you have a pending appointment request: \n" + request.toString();
+				messages.add(0, pendingRequest);
+			}
+		}
+	}
 }
