@@ -294,6 +294,7 @@ public class DoctorController {
 			Appointment apt = findAppointment(doctor.getSchedule().getAppointments(), true);
 			if (apt == null) return;
 			apt.setStatus(Status.CANCELLED);
+			sendCancellationMessage(apt);
 			System.out.println("Successfully cancelled!");
 		}
     }
