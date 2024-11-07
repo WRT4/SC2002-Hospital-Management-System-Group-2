@@ -34,7 +34,6 @@ public class Doctor extends User {
     }
     
     public void setAvailability() {
-    	Scanner sc = new Scanner(System.in);
     	System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n-1. Exit");
     	int choice = getChoice();
     	while (choice != 1 && choice != 2 && choice != -1) {
@@ -232,13 +231,12 @@ public class Doctor extends User {
 			System.out.println("No patients under care.");
 			return null;
 		}
-    	Scanner sc = new Scanner(System.in);
         // Implement method to get a patient object
     	for (Patient patient : patientsUnderCare) {
     		System.out.println(patient);
     	}
         System.out.println("Enter Patient ID or -1 to exit: ");
-        String choice = sc.next();
+        String choice = scanner.next();
         if (choice.equals("-1")) return null;
         for (Patient patient : patientsUnderCare) {
         	if (choice.equals(patient.getPatientId())) {
@@ -292,13 +290,12 @@ public class Doctor extends User {
 			return;
 		}
 		System.out.println("Which requestID would you like to accept/reject?");
-		Scanner sc = new Scanner(System.in);
 		int requestID;
 		AppointmentRequest request = null;
 		while (true) {
 			try {
 				System.out.println("Enter requestID or -1 to exit: ");
-				requestID = sc.nextInt();
+				requestID = scanner.nextInt();
 				if (requestID == -1) return;
 				int i = 0;
 				for (i = 0; i < requests.size(); i++) {
@@ -365,7 +362,6 @@ public class Doctor extends User {
 	
 	public void recordAppointmentOutcomes() {
 		int num1 = 0,num2 = 0;
-		Scanner sc = new Scanner(System.in);
 		ArrayList<Appointment> appointments = schedule.getAppointments();
 		if (appointments.size() == 0) {
 			System.out.println("No scheduled appointments!");
@@ -462,14 +458,14 @@ public class Doctor extends User {
 			else if (choice == 1) {
 				System.out.println("Setting Service Type...");
 				System.out.println("Enter Service Type: ");
-				String ser = sc.next();
+				String ser = scanner.next();
 				apt.setServiceType(ser);
 				System.out.println("Service Type added!");
 			}
 			else if (choice == 2) {
 				System.out.println("Setting prescription...");
 				System.out.println("Enter prescription: ");
-				String pres = sc.next();
+				String pres = scanner.next();
 				apt.setPrescription(pres);
 				apt.getPatient().getRecord().addPrescription(pres);
 				apt.setPrescriptionStatus(Status.PENDING);
@@ -479,7 +475,7 @@ public class Doctor extends User {
 			else if (choice == 3) {
 				System.out.println("Setting Consultation notes...");
 				System.out.println("Enter Consultation notes: ");
-				String note = sc.nextLine();
+				String note = scanner.nextLine();
 				apt.setNotes(note);
 				System.out.println("Consultation notes added!");
 			}
