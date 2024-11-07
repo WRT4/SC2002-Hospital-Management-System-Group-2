@@ -33,6 +33,7 @@ public class DoctorController {
     		message = "Message at " + LocalDate.now() + ": Appointment request rejected by " + doctor.getName() + "\n" +
     				"Rejected request Details - " + timeslot.toString();
     	}
+    	request.getPatient().getMessages().add(0, message);
     }
     
     public static void sendCancellationMessage(Appointment tempApp) {
@@ -168,28 +169,16 @@ public class DoctorController {
     		return;
     	}
     }
-
-	public static void viewRequests(Doctor doctor) {
-		int num = 0;
-		ArrayList<AppointmentRequest> requests = doctor.getRequests();
-		for (AppointmentRequest request: requests) {
-			if (request.getStatus() == Status.PENDING){
-				System.out.println(request);
-				num++;
-			}
-		}
-		if (num == 0) {
-			System.out.println("No appointment requests yet!");
-			return;
-		}
-		System.out.println("Which requestID would you like to accept/reject?");
-		int requestID;
+	
+	public static AppointmentRequest findRequest(ArrayList<AppointmentRequest> requests, boolean isPatient) {
 		AppointmentRequest request = null;
 		while (true) {
 			try {
+				request = null;
+				int requestID;
 				System.out.println("Enter requestID or -1 to exit: ");
 				requestID = scanner.nextInt();
-				if (requestID == -1) return;
+				if (requestID == -1) return null;
 				int i = 0;
 				for (i = 0; i < requests.size(); i++) {
 		            if (requests.get(i).getRequestID() == requestID) {
@@ -197,8 +186,19 @@ public class DoctorController {
 		                break;
 		            }
 		        }
-				if (request == null) throw new RuntimeException("ID does not exist! ");
-				if (request.getStatus() != Status.PENDING) throw new RuntimeException("Request has been already accepted, declined or cancelled! ");
+				if (request == null) throw new RuntimeException("RequestID does not exist! ");
+				if (request.getStatus() != Status.PENDING) {
+					if (request.getStatus() == Status.CANCELLED) {
+						throw new RuntimeException("Request already cancelled!");
+					}
+					else if (request.getStatus() == Status.ACCEPTED) {
+						if (isPatient) throw new RuntimeException("Request already accepted! Cancel appointment instead!");
+						throw new RuntimeException("Request already accepted!");
+					}
+					else if (request.getStatus() == Status.DECLINED) {
+						throw new RuntimeException("Request already declined!");
+					}
+				}
 				break;
 			}
 			catch (InputMismatchException e) {
@@ -217,6 +217,25 @@ public class DoctorController {
 				continue;
 			}
 		}
+		return request;
+	}
+	
+	public static void viewRequests(Doctor doctor) {
+		int num = 0;
+		ArrayList<AppointmentRequest> requests = doctor.getRequests();
+		for (AppointmentRequest request: requests) {
+			if (request.getStatus() == Status.PENDING){
+				System.out.println(request);
+				num++;
+			}
+		}
+		if (num == 0) {
+			System.out.println("No appointment requests yet!");
+			return;
+		}
+		System.out.println("Which requestID would you like to accept/reject?");
+		AppointmentRequest request = findRequest(requests, false);
+		if (request == null) return;
 		System.out.println("Please input 1 for Accept or 2 for Reject. Enter -1 to exit.");
 		int choice = getChoice();
 		while (choice != 1 && choice != 2 && choice != -1) {
@@ -224,6 +243,20 @@ public class DoctorController {
 			choice = getChoice();
 		}
 		if (choice == 1) {
+			// check overlap of requests or busy
+			if (doctor.getSchedule().checkOverlapping(request.getTimeSlot()) || request.getTimeSlot().getOccupied()) {
+				System.out.println("Timeslot is not available! Would you like to reject request instead? 1. Yes -1. Exit");
+				int choice2 = getChoice();
+				while (choice2 != 1 && choice2 != -1) {
+					choice2 = getChoice();
+				}
+				if (choice2 == -1) return;
+				else {
+					request.declineRequest();
+					sendAcceptanceMessage(request,false);
+					return;
+				}
+			}
 			request.acceptRequest();
 			sendAcceptanceMessage(request,true);
 			doctor.getPatientsUnderCare().add(request.getPatient());
@@ -247,8 +280,68 @@ public class DoctorController {
         }
         if (num == 0) {
 			System.out.println("No scheduled appointments! ");
+			return;
+		}
+        System.out.println("Would you like to cancel an appointment? 1. Yes -1. Exit");
+        int choice = getChoice();
+		while(choice != 1 && choice != -1) {
+			System.out.println("Option doesn't exist! ");
+			choice = getChoice();
+		}
+		if (choice == -1) return;
+		if (choice == 1) {
+			System.out.println("Which AppoitnmentID would would like to cancel? Enter ID or -1 to exit.");
+			Appointment apt = findAppointment(doctor.getSchedule().getAppointments(), true);
+			if (apt == null) return;
+			apt.setStatus(Status.CANCELLED);
+			System.out.println("Successfully cancelled!");
 		}
     }
+	
+	public static Appointment findAppointment(ArrayList<Appointment> appointments, boolean noConfirmed) {
+		Appointment apt = null;
+		while (true) {
+			try {
+				apt = null;
+				int id = getChoice();
+				if (id == -1) return null;
+				for (Appointment appointment : appointments) {
+					if (appointment.getAppointmentID() == id) {
+						apt = appointment;
+						break;
+					}
+				}
+				if (apt == null) {
+					throw new RuntimeException("AppointmentID does not exist! ");
+				}
+				if (apt.getStatus() == Status.CANCELLED) {
+					throw new RuntimeException("Appointment had been cancelled! ");
+				}
+				if (noConfirmed) {
+					if (apt.getStatus() == Status.COMPLETED) {
+						throw new RuntimeException("Appointment had been completed! ");
+					}
+				}
+				break;
+			}
+			catch (InputMismatchException e) {
+				System.out.println("Wrong input type! Try Again!");
+				scanner.nextLine();
+				continue;
+			}
+			catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				scanner.nextLine();
+				continue;
+			}
+			catch (Exception e) {
+				System.out.println("Error! Try Again!");
+				scanner.nextLine();
+				continue;
+			}
+		}
+		return apt;
+	}
 	
 	public static void recordAppointmentOutcomes(Doctor doctor) {
 		int num1 = 0,num2 = 0;
@@ -280,23 +373,8 @@ public class DoctorController {
 		}
 		System.out.println();
 		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to exit: ");
-		int id = getChoice();
-		if (id == -1) return;
-		Appointment apt = null;
-		for (Appointment appointment : appointments) {
-			if (appointment.getAppointmentID() == id) {
-				apt = appointment;
-				break;
-			}
-		}
-		if (apt == null) {
-			System.out.println("Appointment does not exist! ");
-			return;
-		}
-		if (apt.getStatus() == Status.CANCELLED) {
-			System.out.println("Appointment had been cancelled! ");
-			return;
-		}
+		Appointment apt = findAppointment(appointments, false);
+		if (apt == null) return;
 		if (apt.getStatus() == Status.CONFIRMED) {
 			if (apt.getTimeSlot().getDate().isBefore(LocalDate.now().plusDays(1))) {
 				if (apt.getTimeSlot().getDate().isBefore(LocalDate.now())){
@@ -365,7 +443,7 @@ public class DoctorController {
 			else if (choice == 3) {
 				System.out.println("Setting Consultation notes...");
 				System.out.println("Enter Consultation notes: ");
-				String note = scanner.nextLine();
+				String note = scanner.next();
 				apt.setNotes(note);
 				System.out.println("Consultation notes added!");
 			}
