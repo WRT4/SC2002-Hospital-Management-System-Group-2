@@ -21,7 +21,7 @@ public class Doctor extends User {
 	
     public Doctor(String id, String name) {
         super(id, name, "Doctor");
-        this.schedule = new Schedule(this);
+        this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
 		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
