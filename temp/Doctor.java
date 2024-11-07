@@ -23,22 +23,15 @@ public class Doctor extends User {
 		this.messages = new ArrayList<String>();
     }
     
+    
     private int getChoice() {
-		int choice = -1;
-		Scanner sc = new Scanner(System.in);
-		while (true) {
-			System.out.println("Enter choice: ");
-			try {
-				choice = sc.nextInt();
-				break;
-			}
-			catch (Exception e) {
-				System.out.println("Error input! Try again!");
-				sc.nextLine();
-			}
-		}
-		return choice;
-	}
+        System.out.print("Enter choice: ");
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Enter a number.");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
     
     public void setAvailability() {
     	Scanner sc = new Scanner(System.in);
@@ -179,7 +172,11 @@ public class Doctor extends User {
             System.out.println("7. Record Appointment Outcome");
             System.out.println("8. Logout");
             System.out.println("Choose an action:");
-            choice = scanner.nextInt();
+            choice = getChoice();
+            while (choice < 1 || choice > 8) {
+            	System.out.println("Invalid option! Try again!");
+				choice = getChoice();
+            }
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
@@ -441,8 +438,18 @@ public class Doctor extends User {
 			}
 			else {
 				System.out.println("Appointment has not started!");
-				return;
-			}
+				System.out.println("Would you like to forcefully set as completed? \n1. Yes \n-1. Exit");
+				int choice3 = getChoice();
+				while (choice3 != 1 && choice3 != -1) {
+					System.out.println("Invalid option! Try again!");
+					choice3 = getChoice();
+				}
+				if (choice3 == 1) {
+					apt.setStatus(Status.COMPLETED);
+				}
+				else return;
+				
+			}			
 		}
 		if (apt.getStatus() == Status.COMPLETED) {
 			System.out.println("What would you like to Record? \n1. Service Type \n2. Prescription \n3. Consultation notes \n-1. Exit");
