@@ -3,6 +3,7 @@ package controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.*;
@@ -28,6 +29,19 @@ public class PatientController {
 		messageToDoctor = "Message at " + LocalDate.now() + ": Appointment cancelled by " + tempApp.getPatient().getName() + "\n" +
 				"Appointment Details - " + tempApp.getTimeSlot().toString();
 		tempApp.getDoctor().getMessages().add(0,messageToDoctor);
+	}
+	
+	public static void sendRequestMessage(AppointmentRequest request, boolean rescheduled) {
+		String messageToDoctor;
+		if (rescheduled == false) {
+			messageToDoctor = "Message at " + LocalDate.now() + ": Appointment Request sent by " + request.getPatient().getName() + "\n" +
+					"Appointment Details - " + request.getTimeSlot().toString();
+		}
+		else {
+			messageToDoctor = "Message at " + LocalDate.now() + ": Rescheduled appointment Request sent by " + request.getPatient().getName() + "\n" +
+					"Appointment Details - " + request.getTimeSlot().toString();
+		}
+		request.getDoctor().getMessages().add(0,messageToDoctor);
 	}
 	
 	public static void updatePersonalInfo(Patient patient) {
@@ -167,9 +181,11 @@ public class PatientController {
 			AppointmentRequest temp = new AppointmentRequest(date, requestTime, doctor, patient);
 			patient.getRequests().add(temp);
 			doctor.addRequest(temp);
+			sendRequestMessage(temp, false);
 			System.out.println("Appointment Request Sent!");
 		}
 	}
+	
 	
 	public static void rescheduleAppointments(Patient patient) {
 		int num = 0;
@@ -185,28 +201,11 @@ public class PatientController {
 			return;
 		}
 		System.out.println("Which appointment ID would you like to cancel? Enter Appointment ID or -1 to exit. ");
-		int apptID = getChoice();
-
-		while (apptID > appointments.size() || (apptID < 1 && apptID != -1)) {
-			System.out.println("Error input! Try again! ");
-			apptID = getChoice();
-		}
-		if (apptID == -1) return;
-
-
-		Appointment temp = null;
-		for (Appointment appointment : appointments) {
-			if (appointment.getAppointmentID() == apptID) {
-				temp = appointment;
-				break;
-			}
-		}
-		if (temp == null) {
-			System.out.println("Error! AppointmentID does not exist!");
-			return;
-		}
+		Appointment temp = DoctorController.findAppointment(appointments, true);
+		if (temp == null) return;
+		
 		// reschedule and free slot
-		System.out.println("Changing appointment " + apptID + " ...");
+		System.out.println("Changing appointment " + temp.getAppointmentID() + " ...");
 		System.out.println("Enter new date: ");
 
 		LocalDate date = ScheduleController.inputDate(true);
@@ -235,6 +234,7 @@ public class PatientController {
 		patient.getRequests().add(request);
 		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
 		sendCancellationMessage(temp);
+		sendRequestMessage(request,true);
 		System.out.println("Successfully Rescheduled! New request sent!");
 	}
 	
@@ -252,27 +252,8 @@ public class PatientController {
 			return;
 		}
 		System.out.println("Which appointment would you like to cancel? Enter Appointment ID or -1 to exit.");
-		int apptID = getChoice();
-		while (apptID > appointments.size() || (apptID < 1 && apptID != -1)) {
-			System.out.println("Error input! Try again! ");
-			apptID = getChoice();
-		}
-		if (apptID == -1) return;
-		Appointment temp = null;
-		for (Appointment appointment : appointments) {
-			if (appointment.getAppointmentID() == apptID) {
-				temp = appointment;
-				break;
-			}
-		}
-		if (temp == null) {
-			System.out.println("Error! AppointmentID does not exist!");
-			return;
-		}
-		if (temp.getStatus() != Status.CONFIRMED) {
-			System.out.println("Error! Appointment is COMPLETED or CANCELLED!");
-			return;
-		}
+		Appointment temp = DoctorController.findAppointment(appointments, true);
+		if (temp == null) return;
 		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
 		temp.setStatus(Status.CANCELLED);
 
@@ -290,7 +271,7 @@ public class PatientController {
 		for (AppointmentRequest request : requests) {
 			System.out.println(request);
 		}
-		System.out.println("Would you like to cancel? 1. Yes -1. Go back ");
+		System.out.println("Would you like to cancel a request? 1. Yes -1. Exit ");
 		int choice = getChoice();
 		while(choice != 1 && choice != -1) {
 			System.out.println("Option doesn't exist! ");
@@ -299,36 +280,10 @@ public class PatientController {
 		if (choice == -1) return;
 		if (choice == 1) {
 			System.out.println("Which requestID would would like to cancel? Enter ID or -1 to exit.");
-			int id = getChoice();
-			if (id == -1) return;
-			AppointmentRequest req = null;
-			for (AppointmentRequest request : requests) {
-				if (request.getRequestID() == id) {
-					req = request;
-				}
-			}
-			if (req == null) {
-				System.out.println("Request does not exist!");
-				return;
-			}
-			if (req.getStatus() != Status.PENDING) {
-				if (req.getStatus() == Status.CANCELLED) {
-					System.out.println("Request already cancelled!");
-					return;
-				}
-				else if (req.getStatus() == Status.ACCEPTED) {
-					System.out.println("Request already accepted! Cancel appointment instead!");
-					return;
-				}
-				else if (req.getStatus() == Status.DECLINED) {
-					System.out.println("Request already declined!");
-					return;
-				}
-			}
-			else {
-				req.setStatus(Status.CANCELLED);
-				System.out.println("Request Cancelled!");
-			}
+			AppointmentRequest req = DoctorController.findRequest(requests, true);
+			if (req == null) return;
+			req.setStatus(Status.CANCELLED);
+			System.out.println("Request Cancelled!");
 		}
 	}
 	
