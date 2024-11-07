@@ -2,51 +2,104 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class Doctor extends User {
-
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
+	private ArrayList<Patient> patientsUnderCare;
+	private ArrayList<String> messages;
 
+	@Override
+	public void showMenu() {
+		// TODO Auto-generated method stub
+		
+	}
+	
     public Doctor(String id, String name) {
         super(id, name, "Doctor");
-        this.schedule = new Schedule(id);
-        this.requests = new ArrayList<>();
+        this.schedule = new Schedule(this);
+        this.requests = new ArrayList<AppointmentRequest>();
+		this.patientsUnderCare = new ArrayList<Patient>();
+		this.messages = new ArrayList<String>();
+    }
+    
+    public String toString() {
+    	return "Doctor ID: " + getId() + " Name: " + getName();
     }
 
-    public Schedule getSchedule() {
-        return schedule;
-    }
+	public String getId() {
+		return this.id;
+	}
 
-    public ArrayList<AppointmentRequest> getRequests() {
-        return requests;
-    }
+	public String getName() {
+		return this.name;
+	}
 
-    public void addRequest(AppointmentRequest request) {
-        requests.add(request);
-    }
+	public Schedule getSchedule() {
+		return schedule;
+	}
 
-    public void removeAppointment(Appointment appointment) {
-        schedule.getAppointments().remove(appointment);
-    }
+	public ArrayList<String> getMessages(){
+		return messages;
+	}
 
-    public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
-        return this.schedule.findTimeSlot(date, time);
-    }
+	public void addRequest(AppointmentRequest request) {
+		requests.add(request);
+	}
 
-    public Appointment findAppointment(int id) {
-        for (Appointment apt : schedule.getAppointments()) {
-            if (apt.getAppointmentID() == id) {
-                return apt;
-            }
+	public Appointment findAppointment(int id) {
+		for (Appointment apt : schedule.getAppointments()) {
+			if (apt.getAppointmentID() == id) {
+				return apt;
+			}
+		}
+		return null;
+	}
+
+	public void removeAppointment(Appointment appointment) {
+		schedule.getAppointments().remove(appointment);
+	}
+	
+	public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
+		TimeSlot timeslot = this.schedule.findTimeSlot(date, time);
+		if (timeslot == null) {
+			System.out.println("TimeSlot not found!");
+			return null;
+		}
+		return timeslot;
+	}
+
+	public ArrayList<AppointmentRequest> getRequests() {
+		return requests;
+	}
+	
+	// Placeholder methods for getting patient, diagnosis, and prescription
+    public Patient getPatient(Scanner scanner) {
+		if (patientsUnderCare==null || patientsUnderCare.size()==0){
+			System.out.println("No patients under care.");
+			return null;
+		}
+        // Implement method to get a patient object
+    	for (Patient patient : patientsUnderCare) {
+    		System.out.println(patient);
+    	}
+        System.out.println("Enter Patient ID or -1 to exit: ");
+        String choice = scanner.next();
+        if (choice.equals("-1")) return null;
+        for (Patient patient : patientsUnderCare) {
+        	if (choice.equals(patient.getPatientId())) {
+        		return patient;
+        	}
         }
+		System.out.println("Patient not found. ");
         return null;
     }
 
-    @Override
-    public String toString() {
-        return "Doctor ID: " + getId() + " Name: " + getName();
-    }
+	public ArrayList<Patient> getPatientsUnderCare() {
+		return this.patientsUnderCare;
+	}
 }
-
