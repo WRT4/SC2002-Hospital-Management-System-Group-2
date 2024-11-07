@@ -23,6 +23,72 @@ public class Doctor extends User {
 		this.messages = new ArrayList<String>();
     }
     
+    @Override
+    public void showMenu() {
+		remindPendingRequests();
+		System.out.println("Message Box: ");
+		int counter = 0;
+		for (String message: messages){
+			System.out.println((counter+1) + " - " + message);
+			System.out.println();
+			counter++;
+		}
+		if (counter ==0)
+			System.out.println("No messages yet!");
+
+		int choice;
+        do {
+        	System.out.println("Doctor Menu: ");
+            System.out.println("1. View Patient Medical Records");
+            System.out.println("2. Update Patient Medical Records");
+            System.out.println("3. View Personal Schedule");
+            System.out.println("4. Set Availability for Appointments / Update Personal Schedule");
+            System.out.println("5. Accept or Decline Appointment Requests");
+            System.out.println("6. View Upcoming Appointments");
+            System.out.println("7. Record Appointment Outcome");
+            System.out.println("8. Logout");
+            System.out.println("Choose an action:");
+            choice = getChoice();
+            while (choice < 1 || choice > 8) {
+            	System.out.println("Invalid option! Try again!");
+				choice = getChoice();
+            }
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    // Assuming you have a method to get a patient object
+					viewMedicalRecords();
+                    break;
+                case 2:
+                    // Assuming you have methods to get diagnosis and prescription
+                    updateMedicalRecord();
+                    break;
+                case 3:
+                    viewSchedule();
+                    break;
+                case 4:
+                    setAvailability();
+                    break;
+                case 5:
+                    // Implement accept or decline appointment requests
+                	viewRequests();
+                    break;
+                case 6:
+                    viewAppointments();
+                    break;
+                case 7:
+                    // Implement record appointment outcome
+                	recordAppointmentOutcomes();
+                    break;
+                case 8:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 8);
+    }
     
     private int getChoice() {
         System.out.print("Enter choice: ");
@@ -135,94 +201,27 @@ public class Doctor extends User {
 		schedule.viewAllSlots(date);
     }
 
-    public void viewMedicalRecords(Patient patient) {
-        patient.getRecord().printMedicalRecord();
+    public void viewMedicalRecords() {
+    	Patient patient = getPatient();
+		if (patient != null){
+			patient.getRecord().printMedicalRecord();
+		}
     }
 
-    public void updateMedicalRecord(Patient patient, String diagnosis, String prescription) {
+    public void updateMedicalRecord() {
+    	Patient patient = getPatient();
+		if (patient==null){
+			return;
+		}
+        System.out.println("Enter -1 to exit.");
+        String diagnosis = getDiagnosis();
+        if (diagnosis.equals("-1")) return;
+        String prescription = getPrescription();
+        if (prescription.equals("-1")) return;
         MedicalRecord record = patient.getMedicalRecord();
         record.addDiagnosis(diagnosis, this);
         record.addPrescription(prescription);
         System.out.println("Medical record updated for patient: " + patient.getName());
-    }
-
-    @Override
-    public void showMenu() {
-		remindPendingRequests();
-		System.out.println("Message Box: ");
-		int counter = 0;
-		for (String message: messages){
-			System.out.println((counter+1) + " - " + message);
-			System.out.println();
-			counter++;
-		}
-		if (counter ==0)
-			System.out.println("No messages yet!");
-
-		int choice;
-        do {
-        	System.out.println("Doctor Menu: ");
-            System.out.println("1. View Patient Medical Records");
-            System.out.println("2. Update Patient Medical Records");
-            System.out.println("3. View Personal Schedule");
-            System.out.println("4. Set Availability for Appointments / Update Personal Schedule");
-            System.out.println("5. Accept or Decline Appointment Requests");
-            System.out.println("6. View Upcoming Appointments");
-            System.out.println("7. Record Appointment Outcome");
-            System.out.println("8. Logout");
-            System.out.println("Choose an action:");
-            choice = getChoice();
-            while (choice < 1 || choice > 8) {
-            	System.out.println("Invalid option! Try again!");
-				choice = getChoice();
-            }
-            scanner.nextLine(); // Consume newline
-
-            switch (choice) {
-                case 1:
-                    // Assuming you have a method to get a patient object
-                    Patient patient = getPatient();
-					if (patient != null){
-						viewMedicalRecords(patient);
-					}
-                    break;
-                case 2:
-                    // Assuming you have methods to get diagnosis and prescription
-                    patient = getPatient();
-					if (patient==null){
-						break;
-					}
-                    System.out.println("Enter -1 to exit.");
-                    String diagnosis = getDiagnosis();
-                    if (diagnosis.equals("-1")) return;
-                    String prescription = getPrescription();
-                    if (prescription.equals("-1")) return;
-                    updateMedicalRecord(patient, diagnosis, prescription);
-                    break;
-                case 3:
-                    viewSchedule();
-                    break;
-                case 4:
-                    setAvailability();
-                    break;
-                case 5:
-                    // Implement accept or decline appointment requests
-                	viewRequests();
-                    break;
-                case 6:
-                    viewAppointments();
-                    break;
-                case 7:
-                    // Implement record appointment outcome
-                	recordAppointmentOutcomes();
-                    break;
-                case 8:
-                    System.out.println("Logging out...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        } while (choice != 8);
     }
 
     // Placeholder methods for getting patient, diagnosis, and prescription
@@ -310,43 +309,25 @@ public class Doctor extends User {
 			}
 			catch (InputMismatchException e) {
 				System.out.println("Wrong input type! Try Again!");
-				sc.nextLine();
+				scanner.nextLine();
 				continue;
 			}
 			catch (RuntimeException e) {
 				System.out.println(e.getMessage());
-				sc.nextLine();
+				scanner.nextLine();
 				continue;
 			}
 			catch (Exception e) {
 				System.out.println("Error! Try Again!");
-				sc.nextLine();
+				scanner.nextLine();
 				continue;
 			}
 		}
 		System.out.println("Please input 1 for Accept or 2 for Reject. Enter -1 to exit.");
-		int choice;
-		while (true) {
-			try {
-				choice = sc.nextInt();
-				if (choice != 1 && choice != 2 && choice != -1) throw new RuntimeException("Choice does not exist! ");
-				break;
-			}
-			catch (InputMismatchException e) {
-				System.out.println("Wrong input type! Try Again!");
-				sc.nextLine();
-				continue;
-			}
-			catch (RuntimeException e) {
-				System.out.println(e.getMessage());
-				sc.nextLine();
-				continue;
-			}
-			catch (Exception e) {
-				System.out.println("Error! Try Again!");
-				sc.nextLine();
-				continue;
-			}
+		int choice = getChoice();
+		while (choice != 1 && choice != 2 && choice != -1) {
+			System.out.println("Invalid option! Try again!");
+			choice = getChoice();
 		}
 		if (choice == 1) {
 			request.acceptRequest();
