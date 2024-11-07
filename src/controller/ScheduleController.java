@@ -140,10 +140,4 @@ public class ScheduleController {
 		}
 	}
 
-	public static void viewSchedule(Schedule schedule) {
-		System.out.println("Schedule for Doctor ID: " + schedule.getDoctor().getId() + ", Name: " + schedule.getDoctor().getName());
-		for (Appointment appt : schedule.getAppointments()) {
-			System.out.println(appt);
-		}
-	}
 }
