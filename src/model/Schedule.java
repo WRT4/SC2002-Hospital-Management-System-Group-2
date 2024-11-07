@@ -11,13 +11,13 @@ import java.time.temporal.ChronoUnit;
 
 //schedule has appointments and workDays()
 public class Schedule {
-	private Doctor doctor;
+	private String doctorID;
     private ArrayList<Appointment> appointments;
     private ArrayList<TimeSlot> workingSlots;
 
 
-    public Schedule(Doctor doctor){
-		this.doctor = doctor;
+    public Schedule(String doctorID){
+		this.doctorID = doctorID;
         //create working slots for 2 weeks timeframe
 		workingSlots = new ArrayList<TimeSlot>();
 		createWorkingSlots30Days();
@@ -122,8 +122,8 @@ public class Schedule {
 		return apt;
 	}
 
-	public Doctor getDoctor() {
-		return doctor;
+	public String getDoctorID() {
+		return doctorID;
 	}
 
 }
