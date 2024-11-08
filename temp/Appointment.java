@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.InputMismatchException;
@@ -15,7 +16,7 @@ public class Appointment {
     private Status prescriptionStatus;
     private int appointmentID;
     private static int count;
-    private String prescription;
+    private ArrayList<Medication> prescriptions = new ArrayList<>();
     private String diagnosis;
     private String serviceType;
     private String note;
@@ -36,7 +37,7 @@ public class Appointment {
         this.timeslot.setOccupied();
         this.status = Status.PENDING;
         count++;
-        this.appointmentID = count;
+        this.appointmentID = count;     
     }
     
     public LocalDate getDate() {
@@ -70,7 +71,6 @@ public class Appointment {
     public void setPrescriptionStatus(Status prescriptionStatus) {
         this.prescriptionStatus = prescriptionStatus;
     }
-
     //to confirm with "Schedule" entity
     public void printScheduledAppointment(){
     	System.out.println("Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName());//getName for doctor
@@ -82,7 +82,7 @@ public class Appointment {
     public void printAppointmentOutcome(){
         System.out.println("Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " with Doctor " + doctor.getName());//add outcomes
         System.out.println("Service Type: " + serviceType);
-        System.out.println("Prescription: " + prescription + " Status :" + prescriptionStatus);
+        System.out.println("Prescription: " + getPrescription() + " Status :" + prescriptionStatus);
         System.out.println("Consultation notes: " + note);
         System.out.println();
     }
@@ -92,16 +92,27 @@ public class Appointment {
     }
 
 	public int getAppointmentID() {
-		// TODO Auto-generated method stub
 		return this.appointmentID;
 	}
 
-	public String getPrescription() {
-		return this.prescription;
+	public ArrayList<Medication> getPrescription() {
+		if(this.prescriptions == null) {
+			System.out.println("No prescriptions yet.");
+			return null;
+		}
+		else	
+			return this.prescriptions;
 	}
 	
-	public void setPrescription(String prescription) {
-		this.prescription = prescription;
+	public void setPrescription() {
+		//error handling not done
+		Scanner sc = new Scanner(System.in);
+		System.out.println("What medicine do you want to prescribe?");
+		String name = sc.next();
+		System.out.println("What is the dosage?");
+		int dosage = sc.nextInt();
+		Medication prescribedMed = new Medication(name,dosage);
+		prescriptions.add(prescribedMed);
 	}
 
 	public Doctor getDoctor() {
@@ -132,5 +143,13 @@ public class Appointment {
 	public String getNotes() {
 		return note;
 	}
-
+	
+	
+	public String getDetails() {
+	    return "Appointment ID: " + this.appointmentID + ", Date: " + this.date + 
+	           ", Time: " + this.timeslot.getStartTime() + ", Doctor: " + this.doctor.getName() + 
+	           ", Patient: " + this.patient.getName() + ", Status: " + this.status;
+	    }
 }
+
+
