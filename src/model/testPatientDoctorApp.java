@@ -1,10 +1,7 @@
 package model;
 
 import java.util.Scanner;
-import java.time.*;
-import model.*;
 import controller.*;
-import view.*;
 
 public class testPatientDoctorApp {
 
@@ -35,7 +32,8 @@ public class testPatientDoctorApp {
                         if (doctorChoice !=1 && doctorChoice !=2 ){
                             System.out.println("Invalid Input of doctor");
                         }
-                        DoctorView.showMenu(Database.doctors.get(doctorChoice-1));
+                        DoctorController dC = new DoctorController(Database.doctors.get(doctorChoice-1), scanner);
+                        dC.showMenu();
                         break;
                     case 2:
                         for (Patient patient: Database.patients){
@@ -47,7 +45,8 @@ public class testPatientDoctorApp {
                         if (patientChoice !=1 && patientChoice !=2 ){
                             System.out.println("Invalid Input of patient");
                         }
-                        PatientView.showMenu(Database.patients.get(patientChoice-1));
+                        PatientController pC = new PatientController(Database.patients.get(patientChoice-1), scanner);
+                        pC.showMenu();
                         break;
                     case 3:
                         System.out.println("Exiting the application.");

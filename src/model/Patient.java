@@ -1,10 +1,6 @@
 package model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.time.temporal.ChronoUnit;
 
 public class Patient extends User {
 	
@@ -12,8 +8,6 @@ public class Patient extends User {
 	private ArrayList<Appointment> appointments;
 	private ArrayList<AppointmentRequest> requests;
 	private ArrayList<String> messages;
-	
-	Scanner scanner = new Scanner(System.in);
 	
 	public void showMenu() {}
 	
@@ -44,15 +38,6 @@ public class Patient extends User {
 	public void setName(String name) {
 		record.setName(name);
 	}
-	
-	private int getChoice() {
-        System.out.print("Enter choice: ");
-        while (!scanner.hasNextInt()) {
-            System.out.println("Invalid input. Enter a number.");
-            scanner.next();
-        }
-        return scanner.nextInt();
-    }
 	
 	public void updateEmail(String email) {
 		record.setEmail(email);

@@ -3,10 +3,6 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.time.temporal.ChronoUnit;
 
 //schedule has appointments and workDays()
