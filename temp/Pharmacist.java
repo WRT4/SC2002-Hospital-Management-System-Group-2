@@ -1,75 +1,120 @@
 package model;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Pharmacist extends User {
-    private MedicationBank medicationBank;
-    private Administrator administrator;
+    //private MedicationBank medicationBank;
+    private ArrayList<RefillRequest> requests;
     Scanner sc = new Scanner(System.in);
 
-    public Pharmacist(String id, String name, MedicationBank medicationBank, Administrator administrator) {
+    public Pharmacist(String id, String name) {
         super(id, name, "Pharmacist");
-        this.medicationBank = medicationBank;
-        this.administrator = administrator; // Initialize Administrator
+        this.requests = new ArrayList<>();
     }
-
-    private void viewMedicationInventory() {
-        medicationBank.viewInventory();
+    
+    public Pharmacist(String id, String name, String Password, String Role) {
+    	super(id,name,Password,"Pharmacist");
+    	this.requests = new ArrayList<>();
     }
-    public void submitReplenishmentRequest(String medicationName, int requestedAmount) {
-        if (!medicationBank.inventory.containsKey(medicationName)) {
-            System.out.println("Error: Medication not found in inventory.");
-            return;
+    
+    public Administrator getAdmin() {
+        // Display available administrators
+        for (Administrator admin : Database.administrators) {
+            System.out.println(admin);
         }
 
-        Medication medication = medicationBank.inventory.get(medicationName);
+        // Prompt user for Admin ID
+        System.out.println("Enter Admin ID or -1 to go back: ");
+        String id = sc.next().trim(); // Read trimmed input
+        if (id.equals("-1")) return null; // Allow user to go back
+
+        // Find the matching administrator
+        for (Administrator admin : Database.administrators) {
+            if (admin.getId().equals(id)) {
+                return admin; // Return the found admin
+            }
+        }
+
+        // If no match is found, notify the user
+        System.out.println("Administrator not found!");
+        return null; // Explicitly return null if admin is not found
+    }
+    
+    public Patient getPatient() {
+        // Display available administrators
+        for (Patient pat : Database.patients) {
+            System.out.println(pat);
+        }
+
+        // Prompt user for Admin ID
+        System.out.println("Enter Patient ID or -1 to go back: ");
+        String id = sc.next().trim(); // Read trimmed input
+        if (id.equals("-1")) return null; // Allow user to go back
+
+        // Find the matching administrator
+        for (Patient pat : Database.patients) {
+            if (pat.getId().equals(id)) {
+                return pat; // Return the found admin
+            }
+        }
+
+        // If no match is found, notify the user
+        System.out.println("Patient not found!");
+        return null; // Explicitly return null if admin is not found
+    }
+
+
+    private void viewMedicationInventory() {
+        Database.medicationBank.viewInventory();
+    }
+    
+
+    public void submitReplenishmentRequest() {
+    	
+    	System.out.print("Enter Medication Name for replenishment request: ");
+	    String medicationName = sc.next();
+	     if (!Database.medicationBank.inventory.containsKey(medicationName)) {
+	            System.out.println("Error: Medication not found in inventory.");
+	            return;
+	        }
+	    sc.nextLine();
+	    System.out.print("Enter quantity to request: ");
+	    int requestedAmount = sc.nextInt();
+	    
+	    Administrator admin = getAdmin();
+	    if (admin == null) {
+            System.out.println("Replenishment request canceled.");
+            return; // Stop if no valid admin is selected
+        }
+
+        Medication medication = Database.medicationBank.inventory.get(medicationName);
         if (medication.isStockLow()) {
             RefillRequest request = new RefillRequest(medicationName, requestedAmount);
-            administrator.receiveRefillRequest(request); // Use the Administrator instance
+            requests.add(request);
+            admin.receiveRefillRequest(request); // Use the Administrator instance
             System.out.println("Replenishment request submitted for " + medicationName);
         } else {
             System.out.println("Stock is sufficient for " + medicationName);
-        }
+        }        
     }
 
+   
     public void viewAppointmentOutcomeRecords() {
-        for (Patient patient: Database.patients){
-            System.out.println(patient);
-        }
-        int patientChoice = 0;
-        System.out.println("Choose Patient ID to view Appointment Outcome");
-        patientChoice = sc.nextInt();
-        if (patientChoice !=1 && patientChoice !=2 ){
-            System.out.println("Invalid Input of patient");
-        }
-        Database.patients.get(patientChoice-1).viewAppointmentOutcomes();
+        Patient patient1 = getPatient();
+        patient1.viewAppointmentOutcomes();
     }
     
-    
-    
-    public void updatePrescriptionStatus () {
-        for (Patient patient: Database.patients){
-            System.out.println(patient);
-        }
-        int patientChoice = 0;
-        System.out.println("Choose Patient ID to update Prescription Status");
-        patientChoice = sc.nextInt();
-        if (patientChoice !=1 && patientChoice !=2 ){
-            System.out.println("Invalid Input of patient");
-        }
-        Database.patients.get(patientChoice-1).viewAppointmentOutcomes();
+    public void updatePrescriptionStatus () {        
+        Patient patient1 = getPatient();
+        patient1.viewAppointmentOutcomes();
         int apptChoice = 0;
-        if (Database.patients.get(patientChoice - 1).getAppointments().isEmpty())
+        if (patient1.getAppointments().isEmpty())
         	return;
         System.out.println("Choose Appointment ID to update Prescription Status");
         apptChoice = sc.nextInt();
-       /* if (apptChoice < 1 || apptChoice > Database.patients.get(patientChoice-1).getAppointments().size()) {
-            System.out.println("Error occurred. Please enter a valid number. BLAH");
-            return;
-        }*/
-        //Appointment selectedAppointment = Database.patients.get(patientChoice - 1).getAppointments().get(apptChoice - 1);
         Appointment selectedAppointment = null;
-        for (Appointment appointment : Database.patients.get(patientChoice-1).getAppointments()) {
+        for (Appointment appointment : patient1.getAppointments()) {
             if (appointment.getAppointmentID() == apptChoice) {
                 selectedAppointment = appointment;
                 break;
@@ -95,13 +140,13 @@ public class Pharmacist extends User {
             String medName = prescribedMed.getName();
             int requiredQuantity = prescribedMed.getDosage();
             
-            if (!medicationBank.inventory.containsKey(medName)) {
+            if (!Database.medicationBank.inventory.containsKey(medName)) {
                 System.out.println("Medication " + medName + " is not available in the inventory.");
                 allMedicationsDispensed = false;
                 continue;
             }
             
-            Medication inventoryMed = medicationBank.inventory.get(medName);
+            Medication inventoryMed = Database.medicationBank.inventory.get(medName);
             
             if (inventoryMed.getStockLevel() < requiredQuantity) {
                 System.out.println("Insufficient stock for " + medName + ". Unable to dispense.");
@@ -114,12 +159,6 @@ public class Pharmacist extends User {
 
         return allMedicationsDispensed;
     }
-    	/*System.out.println("What is the prescription status?");
-     	String stat = sc.next().trim();
-    	Status status = Status.valueOf(stat.toUpperCase());
-        
-        selectedAppointment.setPrescriptionStatus(status);
-        System.out.println("Prescription status updated successfully for the selected appointment.");*/
 
     public void showMenu() {
     	
@@ -145,14 +184,8 @@ public class Pharmacist extends User {
     		case 3: 			
     			viewMedicationInventory();
     			break;
-    		case 4:
-    		    System.out.print("Enter Medication Name for replenishment request: ");
-    		    String medicationName = sc.nextLine();
-    		    System.out.print("Enter quantity to request: ");
-    		    int requestedAmount = sc.nextInt();
-    		    sc.nextLine(); // consume newline
-    		    // Assuming you have an Administrator object already created or passed into this method
-    		    submitReplenishmentRequest(medicationName, requestedAmount); 
+    		case 4: 
+    		    submitReplenishmentRequest(); 
     		    break;
     		case 5:
     			System.out.println("Logging out...");
@@ -174,9 +207,6 @@ public class Pharmacist extends User {
     public String getName() {
     	return this.name;
     }
-    // Other methods unchanged
 }
-
-
 
 
