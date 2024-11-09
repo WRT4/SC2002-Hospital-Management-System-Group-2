@@ -21,7 +21,7 @@ public class Patient extends User {
 		this.messages = new ArrayList<String>();
 	}
 	
-	public Patient(String id, String name, String Password, String role,MedicalRecord record) {
+	public Patient(String id, String name, String Password, MedicalRecord record) {
 		super(id,name,Password,"Patient");
 		this.record = record;
 		this.appointments = new ArrayList<Appointment>();
