@@ -13,11 +13,17 @@ public class Patient extends User {
 	private ArrayList<AppointmentRequest> requests;
 	private ArrayList<String> messages;
 	
-	Scanner scanner = new Scanner(System.in);
+	public Patient(String id, String name, MedicalRecord record) {
+		super(id,name,"Patient");
+		this.record = record;
+		this.appointments = new ArrayList<Appointment>();
+		this.requests = new ArrayList<AppointmentRequest>();
+		this.messages = new ArrayList<String>();
+	}
 	
-	public Patient(String id, String password, String name) {
-		super(id, password, name, "Patient");
-		this.record = new MedicalRecord(id, name);
+	public Patient(String id, String name, String Password, String role,MedicalRecord record) {
+		super(id,name,Password,"Patient");
+		this.record = record;
 		this.appointments = new ArrayList<Appointment>();
 		this.requests = new ArrayList<AppointmentRequest>();
 		this.messages = new ArrayList<String>();
@@ -111,13 +117,14 @@ public class Patient extends User {
 			}
 		}
 
+		Scanner sc = new Scanner(System.in);
 		String docInputID;
 		System.out.println("List of doctors: ");
 		for (Doctor doctor : Database.doctors) {
 			System.out.println(doctor.getId() + "- " + doctor.getName());
 		}
 		System.out.println("Enter the ID of doctor to check available slots:");
-		docInputID = scanner.next();
+		docInputID = sc.next();
 		for (Doctor doctor : Database.doctors) {
 			if (docInputID.compareTo(doctor.getId())==0){
 				doctor.getSchedule().viewAvailableSlots(date);
@@ -133,7 +140,7 @@ public class Patient extends User {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setDateOfBirth(String dob) {
 		record.setDateOfBirth(dob);
 	}
@@ -147,13 +154,21 @@ public class Patient extends User {
 	}
 
 	private int getChoice() {
-        System.out.print("Enter choice: ");
-        while (!scanner.hasNextInt()) {
-            System.out.println("Invalid input. Enter a number.");
-            scanner.next();
-        }
-        return scanner.nextInt();
-    }
+		int choice = -1;
+		Scanner sc = new Scanner(System.in);
+		while (true) {
+			System.out.println("Enter choice: ");
+			try {
+				choice = sc.nextInt();
+				break;
+			}
+			catch (Exception e) {
+				System.out.println("Error input! Try again!");
+				sc.nextLine();
+			}
+		}
+		return choice;
+	}
 	
 	public void viewRecord() {
 		record.printMedicalRecord();
@@ -170,6 +185,7 @@ public class Patient extends User {
 		System.out.println("1. Update Contact info");
 		System.out.println("-1. Exit");
 		int choice = 0, choice2 = 0;
+		Scanner sc = new Scanner(System.in);
 		choice = getChoice();
 		while(choice != 1 && choice != -1) {
 			System.out.println("Option doesn't exist! ");
@@ -183,12 +199,12 @@ public class Patient extends User {
 			choice2 = getChoice();
 			if (choice2 == 1) {
 				System.out.println("Enter new email: ");
-				String email = scanner.next();
+				String email = sc.next();
 				updateEmail(email);
 			}
 			else if (choice2 == 2) {
 				System.out.println("Enter new Phone Number: ");
-				String phoneNumber = scanner.next();
+				String phoneNumber = sc.next();
 				updatePhoneNumber(phoneNumber);
 			}
 			else break;
@@ -198,16 +214,18 @@ public class Patient extends User {
 		}
 	}
 	public void enterBasicInfo(){
+		Scanner sc = new Scanner(System.in);
+
 		System.out.println("Enter your full name: ");
-		String name = scanner.nextLine();
+		String name = sc.nextLine();
 		setName(name);
 
 		System.out.println("Enter your gender (Female / Male): ");
-		String gender = scanner.next();
+		String gender = sc.next();
 		setGender(gender);
 
 		System.out.println("Enter your date of birth (in DD/MM/YYYY): ");
-		String dob = scanner.next();
+		String dob = sc.next();
 		setDateOfBirth(dob);
 
 	}
@@ -234,11 +252,12 @@ public class Patient extends User {
 	}
 	
 	public void scheduleAppointment() {
+		Scanner sc = new Scanner(System.in);
 		for (Doctor doctor : Database.doctors) {
 			System.out.println(doctor);
 		}
 		System.out.println("Enter Doctor id or -1 to go back: ");
-		String id = scanner.next();
+		String id = sc.next();
 		if (id.equals("-1")) return;
 		Doctor doctor = null;
 		for (Doctor doctor1 : Database.doctors) {
@@ -344,6 +363,7 @@ public class Patient extends User {
 	}
 	
 	public void cancelAppointment () {
+		Scanner sc = new Scanner(System.in);
 		int num = 0;
 		for (Appointment appointment : appointments) {
 			if (appointment.getStatus() == Status.CONFIRMED) {
