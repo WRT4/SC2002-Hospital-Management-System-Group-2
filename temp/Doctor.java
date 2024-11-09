@@ -23,7 +23,7 @@ public class Doctor extends User {
 		this.messages = new ArrayList<String>();
     }
     
-    public Doctor(String id, String name, String Password, String Role) {
+    public Doctor(String id, String name, String Role) {
     	super(id,name,Password,"Doctor");
     	this.schedule = new Schedule (id);
     	this.requests = new ArrayList<>();
