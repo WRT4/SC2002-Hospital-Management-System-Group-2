@@ -13,7 +13,7 @@ public class Pharmacist extends User {
         this.requests = new ArrayList<>();
     }
     
-    public Pharmacist(String id, String name, String Password, String Role) {
+    public Pharmacist(String id, String name, String Password) {
     	super(id,name,Password,"Pharmacist");
     	this.requests = new ArrayList<>();
     }
