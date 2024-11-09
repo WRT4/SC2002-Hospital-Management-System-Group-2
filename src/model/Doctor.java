@@ -2,7 +2,6 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,6 +10,7 @@ public class Doctor extends User {
     private ArrayList<AppointmentRequest> requests;
 	private ArrayList<String> messages;
 	private HashMap<Patient, Integer> appointmentCounter;
+	private int unreadIndex;
 
     public Doctor(String id, String password, String name) {
         super(id, password, name, "Doctor");
@@ -18,6 +18,7 @@ public class Doctor extends User {
         this.requests = new ArrayList<AppointmentRequest>();
 		this.messages = new ArrayList<String>();
 		this.appointmentCounter = new HashMap<>();
+		this.unreadIndex = 0;
     }
     
 	@Override
@@ -94,18 +95,11 @@ public class Doctor extends User {
 		}
 	}
 
-	public ArrayList<AppointmentRequest> checkPendingRequests(){
-		ArrayList<AppointmentRequest> pendingRequests = new ArrayList<>();
-		for (AppointmentRequest request: this.getRequests()){
-			if (request.getStatus()==Status.PENDING && ChronoUnit.DAYS.between(LocalDate.now(), request.getDate()) < 3){
-				pendingRequests.add(request);
-			}
-		}
-		return pendingRequests;
+	public int getUnreadIndex() {
+		return unreadIndex;
 	}
-
-	public void pushPendingRequestMessage(AppointmentRequest urgentRequest){
-		String pendingRequest = "Urgent: Please be reminded that you have a pending appointment request: \n" + urgentRequest.toString();
-		getMessages().add(0,pendingRequest);
+	
+	public void setUnreadIndex(int i) {
+		this.unreadIndex = i;
 	}
 }

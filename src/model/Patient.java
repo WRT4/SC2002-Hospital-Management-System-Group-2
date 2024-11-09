@@ -8,6 +8,7 @@ public class Patient extends User {
 	private ArrayList<Appointment> appointments;
 	private ArrayList<AppointmentRequest> requests;
 	private ArrayList<String> messages;
+	private int unreadIndex;
 
 	
 	public void showMenu() {}
@@ -18,6 +19,7 @@ public class Patient extends User {
 		this.appointments = new ArrayList<Appointment>();
 		this.requests = new ArrayList<AppointmentRequest>();
 		this.messages = new ArrayList<String>();
+		this.unreadIndex = 0;
 	}
 	
 	public String getPatientId() {
@@ -66,6 +68,14 @@ public class Patient extends User {
 
 	public ArrayList<AppointmentRequest> getRequests() {
 		return requests;
+	}
+
+	public int getUnreadIndex() {
+		return unreadIndex;
+	}
+	
+	public void setUnreadIndex(int i) {
+		this.unreadIndex = i;
 	}
 
 }

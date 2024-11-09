@@ -85,7 +85,7 @@ public class Schedule {
     }
 	//free up time slots
     
-    public void setAvailability(LocalDate date, TimeSlot timeslot) {
+    public void setAvailability(TimeSlot timeslot) {
 		timeslot.free();
     }
 
