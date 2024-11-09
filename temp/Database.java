@@ -28,13 +28,13 @@ public class Database {
     // Method to initialize predefined users
     private static void initializeUsers() {
         // Adding predefined users with default password "Password123"
-        userDatabase.put("D001", new Doctor("D001", "Password123", "John Smith", "doctor"));
-        userDatabase.put("D002", new Doctor("D002", "Password123", "Emily Clarke", "doctor"));
-        userDatabase.put("P001", new Pharmacist("P001", "Password123", "Mark Lee", "pharmacist"));
-        userDatabase.put("A001", new Administrator("A001", "Password123", "Sarah Lee", "administrator"));
-        userDatabase.put("P1001", new Patient("P1001", "Password123", "Alice Brown", "patient"));
-        userDatabase.put("P1002", new Patient("P1002", "Password123", "Bob Stone", "patient"));
-        userDatabase.put("P1003", new Patient("P1003", "Password123", "Charlie White", "patient"));
+        userDatabase.put("D001", new Doctor("D001", "Password123", "John Smith"));
+        userDatabase.put("D002", new Doctor("D002", "Password123", "Emily Clarke"));
+        userDatabase.put("P001", new Pharmacist("P001", "Password123", "Mark Lee"));
+        userDatabase.put("A001", new Administrator("A001", "Password123", "Sarah Lee"));
+        userDatabase.put("P1001", new Patient("P1001", "Password123", "Alice Brown"));
+        userDatabase.put("P1002", new Patient("P1002", "Password123", "Bob Stone"));
+        userDatabase.put("P1003", new Patient("P1003", "Password123", "Charlie White"));
 
         System.out.println("Predefined users have been initialized in the database.");
     }
