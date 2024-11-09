@@ -1,5 +1,3 @@
-package model;
-
 import model.Database;
 import java.util.Scanner;
 import java.util.InputMismatchException;
@@ -16,6 +14,18 @@ public class User {
     protected boolean isFirstLogin;
     protected String name;
 
+    public User(String id, String name, String role) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.password = "password"; // Default password
+        //this.failedLoginAttempts = 0;
+        this.isLocked = false;
+        //this.passwordLastChanged = LocalDate.now(); // Password set to current date
+        //this.activityLog = new ArrayList<>();
+        //this.userRequests = new ArrayList<>();
+    }
+    
     public User(String id, String password, String name, String role) {
         this.id = id;
         this.password = password;
@@ -133,7 +143,7 @@ public class User {
      * @return The name of the user.
      */
     public String getName() {
-        return this.getName();
+        return this.name;
     }
     
     private boolean isLocked = false;
@@ -259,6 +269,10 @@ public class User {
 
     public String getRole() {
         return this.role;
+    }
+    
+    public String getId() {
+        return this.id;
     }
     
 }
