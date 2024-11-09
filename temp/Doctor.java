@@ -464,7 +464,7 @@ public class Doctor extends User {
 			else if (choice == 3) {
 				System.out.println("Setting Consultation notes...");
 				System.out.println("Enter Consultation notes: ");
-				String note = scanner.nextLine();
+				String note = scanner.next();
 				apt.setNotes(note);
 				System.out.println("Consultation notes added!");
 			}
