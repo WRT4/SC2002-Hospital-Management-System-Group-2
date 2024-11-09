@@ -1,3 +1,5 @@
+package model;
+
 import model.Database;
 import java.util.Scanner;
 import java.util.InputMismatchException;
