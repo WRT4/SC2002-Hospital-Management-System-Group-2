@@ -18,6 +18,7 @@ public class ScheduleView {
 	    String dayStr, monthStr, yearStr;
 	    int day = 0, month = 0, year = 0;
 	    LocalDate finalDate = null;
+	    System.out.println("\nEntering date...\n");
 	    while (true) {
 	        try {
 	            System.out.println("Enter Day (01-31) or -1 to exit: ");
@@ -76,6 +77,7 @@ public class ScheduleView {
 	    String hourStr, minStr;
 	    int hour = 0, min = 0;
 		LocalTime finalTime = null;
+		System.out.println("\nEntering time...\n");
 	    while (true) {
 	        try {
 	            System.out.println("Enter Hour (00-23) or -1 to exit: ");

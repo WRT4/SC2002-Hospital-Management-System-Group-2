@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 public class PatientView {
 	private Scanner scanner;
+	private final String RED = "\u001B[31m";
+    private final String RESET = "\u001B[0m";
 	
 	public PatientView(Scanner scanner){
 		this.scanner = scanner;
@@ -98,18 +100,54 @@ public class PatientView {
 		}
 	}
 	
+	public int viewInbox(Patient patient, int unreadIndex) {
+		ArrayList<String> messages = patient.getMessages();
+		System.out.println("Inbox:\n");
+		int counter = 0;
+		System.out.println("Unread Messages:");
+		for (int i = messages.size()-1; i >= unreadIndex; i--) {
+			System.out.println(RED + (i+1) + ". " +  "UNREAD - " + messages.get(i) + RESET);
+			System.out.println();
+			counter++;
+		}
+		if (counter == 0) System.out.println("No unread messages!\n");
+		int counter2 = 0;
+		System.out.println("Message history:");
+		for (int i = unreadIndex - 1; i >= 0; i--) {
+			System.out.println((i+1) + ". " + messages.get(i));
+			System.out.println();
+			counter++;
+		}
+		if (counter2 == 0) System.out.println("No message history!\n");
+		return messages.size();
+	}
+	
+	public void showMessageBox(Patient patient, int index) {
+		ArrayList<String> messages = patient.getMessages();
+		System.out.println("Message Box: ");
+		int counter = 0;;
+		for (int i = messages.size() - 1; i >= index; i--){
+			System.out.println(RED + "UNREAD - " + messages.get(i) + RESET);
+			System.out.println();
+			counter++;
+		}
+		if (counter ==0)
+			System.out.println("No unread messages!");
+	}
+	
 	public void showMenu() {
 		System.out.println("Patient Menu: ");
-		System.out.println("1. View medical record");
-		System.out.println("2. Enter and update personal information");
-		System.out.println("3. View available appointment slots");
-		System.out.println("4. Schedule an appointment");
-		System.out.println("5. Reschedule an appointment");
-		System.out.println("6. Cancel a scheduled appointment");
-		System.out.println("7. View/Cancel appointment requests");
-		System.out.println("8. View scheduled appointments");
-		System.out.println("9. View past appointment outcome records");
-		System.out.println("10. Logout");
+		System.out.println("1. View inbox");
+		System.out.println("2. View medical record");
+		System.out.println("3. Enter and update personal information");
+		System.out.println("4. View available appointment slots");
+		System.out.println("5. Schedule an appointment");
+		System.out.println("6. Reschedule an appointment");
+		System.out.println("7. Cancel a scheduled appointment");
+		System.out.println("8. View/Cancel appointment requests");
+		System.out.println("9. View scheduled appointments");
+		System.out.println("10. View past appointment outcome records");
+		System.out.println("11. Logout");
 		System.out.println("Choose an action:");
 	}
 }

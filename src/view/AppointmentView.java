@@ -37,7 +37,7 @@ public class AppointmentView {
                 
                 if (id == -1) return null;
                 
-                apt = AppointmentController.findAppointment(appointments, noConfirmed, id);  // Call to the controller’s logic
+                apt = AppointmentController.findAppointment(appointments, noConfirmed, id);  // Call to the controller’s logic, findAppointment throws RuntimeException
                 
                 break;  // If no exceptions are thrown, we can exit the loop
             } 
