@@ -2,6 +2,7 @@ package controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,72 +15,87 @@ public class DoctorController {
     private Scanner scanner;
     private Doctor doctor;
     private DoctorView doctorView;
+    private int unreadIndex;
     
     public DoctorController(Doctor d, Scanner s) {
     	doctor = d;
     	scanner = s;
     	doctorView = new DoctorView(s);
+    	unreadIndex = d.getUnreadIndex();
     }
     
     public void showMenu() {
 		remindPendingRequests();
-		System.out.println("Message Box: ");
-		int counter = 0;
-		for (String message: doctor.getMessages()){
-			System.out.println((counter+1) + " - " + message);
-			System.out.println();
-			counter++;
-		}
-		if (counter ==0)
-			System.out.println("No messages yet!");
-
 		int choice;
         do {
+        	doctorView.showMessageBox(doctor, unreadIndex);
         	doctorView.showMenu();
             choice = doctorView.getChoice();
-            while (choice < 1 || choice > 8) {
+            while (choice < 1 || choice > 9) {
             	System.out.println("Invalid option! Try again!");
 				choice = doctorView.getChoice();
             }
 
             switch (choice) {
-                case 1:
+            	case 1:
+            		unreadIndex = doctorView.viewInbox(doctor, unreadIndex);
+            		doctor.setUnreadIndex(unreadIndex);
+            		break;
+                case 2:
 					viewMedicalRecord();
                     break;
-                case 2:
+                case 3:
                     // Assuming you have methods to get diagnosis and prescription
                 	updateMedicalRecord();
                     break;
-                case 3:
+                case 4:
                 	doctorView.viewSchedule(doctor);
                     break;
-                case 4:
+                case 5:
                 	setAvailability();
                     break;
-                case 5:
+                case 6:
                     // Implement accept or decline appointment requests
                 	viewRequests();
                     break;
-                case 6:
+                case 7:
                 	viewAppointments();
                     break;
-                case 7:
+                case 8:
                     // Implement record appointment outcome
                 	recordAppointmentOutcomes();
                     break;
-                case 8:
+                case 9:
                     System.out.println("Logging out...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 8);
+        } while (choice != 9);
     }
     
+    public void setUnreadIndex(int i) {
+    	this.unreadIndex = i;
+    }
+    
+    public ArrayList<AppointmentRequest> checkPendingRequests(){
+		ArrayList<AppointmentRequest> pendingRequests = new ArrayList<>();
+		for (AppointmentRequest request: doctor.getRequests()){
+			if (request.getStatus()==Status.PENDING && ChronoUnit.DAYS.between(LocalDate.now(), request.getDate()) < 3){
+				pendingRequests.add(request);
+			}
+		}
+		return pendingRequests;
+	}
+    
+	public void pushPendingRequestMessage(AppointmentRequest urgentRequest){
+		String pendingRequest = "Urgent: Please be reminded that you have a pending appointment request: \n" + urgentRequest.toString();
+		doctor.getMessages().add(pendingRequest);
+	}
+    
     public void remindPendingRequests(){
-		String pendingRequest;
-		for (AppointmentRequest request: doctor.checkPendingRequests()){
-			doctor.pushPendingRequestMessage(request);
+		for (AppointmentRequest request: checkPendingRequests()){
+			pushPendingRequestMessage(request);
 		}
 	}
     
@@ -95,7 +111,7 @@ public class DoctorController {
     		message = "Message at " + LocalDate.now() + ": Appointment request rejected by " + doctor.getName() + "\n" +
     				"Rejected request Details - " + timeslot.toString();
     	}
-    	request.getPatient().getMessages().add(0, message);
+    	request.getPatient().getMessages().add(message);
     }
     
     public void sendCancellationMessage(Appointment tempApp) {
@@ -103,7 +119,7 @@ public class DoctorController {
     	TimeSlot timeslot = tempApp.getTimeSlot();
 		messageToPatient = "Message at " + LocalDate.now() + ": Appointment cancelled by " + doctor.getName() + "\n" +
 				"Appointment Details - " + timeslot.toString();
-		tempApp.getPatient().getMessages().add(0,messageToPatient);
+		tempApp.getPatient().getMessages().add(messageToPatient);
     }
     
     private String getDiagnosis() {
@@ -159,10 +175,8 @@ public class DoctorController {
     		choice = doctorView.getChoice();
     	}
     	if (choice == 1) {
-    		System.out.println("Enter date (YYYY-MM-DD):");
             LocalDate date = ScheduleView.inputDate(false);
             if (date == null) return;
-            System.out.println("Enter time (HH:MM):");
             LocalTime time = ScheduleView.inputTime();
             if (time == null) return;
             TimeSlot timeslot = doctor.getSchedule().findTimeSlot(date, time);
@@ -179,10 +193,8 @@ public class DoctorController {
             return;
     	}
     	else if (choice == 2) {
-    		System.out.println("Enter date (YYYY-MM-DD):");
             LocalDate date = ScheduleView.inputDate(false);
             if (date == null) return;
-            System.out.println("Enter time (HH:MM):");
             LocalTime time = ScheduleView.inputTime();
             if (time == null) return;
             Schedule schedule = doctor.getSchedule();
@@ -205,7 +217,7 @@ public class DoctorController {
             		choice2 = doctorView.getChoice();
             	}
             	if (choice2 == 1) {
-            		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
+            		temp.getDoctor().getSchedule().setAvailability(temp.getTimeSlot());
             		temp.setStatus(Status.CANCELLED);
 					sendCancellationMessage(temp);
             		System.out.println("Successfully cancelled!");
@@ -222,7 +234,7 @@ public class DoctorController {
     }
 	
 	public void viewRequests() {
-		DoctorView.viewRequests(doctor);
+		doctorView.viewRequests(doctor);
 		ArrayList<AppointmentRequest> requests = doctor.getRequests();
 		System.out.println("Which requestID would you like to accept/reject?");
 		AppointmentRequest request = RequestController.findRequest(requests, false, scanner);
@@ -263,8 +275,9 @@ public class DoctorController {
 			return;
 	}
 	
-	public  void viewAppointments() {
-    	DoctorView.viewAppointments(doctor);
+	public void viewAppointments() {
+    	int notEmpty = doctorView.viewAppointments(doctor);
+    	if (notEmpty == 0) return;
         System.out.println("Would you like to cancel an appointment? 1. Yes -1. Exit");
         int choice = doctorView.getChoice();
 		while(choice != 1 && choice != -1) {
@@ -273,18 +286,28 @@ public class DoctorController {
 		}
 		if (choice == -1) return;
 		if (choice == 1) {
-			System.out.println("Which AppointmentID would would like to cancel? Enter ID or -1 to exit.");
-			Appointment apt = AppointmentView.promptForAppointment(doctor.getSchedule().getAppointments(), true, scanner);
-			if (apt == null) return;
-			apt.setStatus(Status.CANCELLED);
-			doctor.subtractAppointmentCounter(apt.getPatient());
-			sendCancellationMessage(apt);
-			System.out.println("Successfully cancelled!");
+			int success = cancelAppointment();
+			if (success == 0) return;
 		}
     }
 	
+	public int cancelAppointment() {
+		System.out.println("Which AppointmentID would would like to cancel? Enter ID or -1 to exit.");
+		Appointment apt = AppointmentView.promptForAppointment(doctor.getSchedule().getAppointments(), true, scanner);
+		if (apt == null) return 0;
+		apt.setStatus(Status.CANCELLED);
+		apt.getTimeSlot().free();
+		doctor.subtractAppointmentCounter(apt.getPatient());
+		sendCancellationMessage(apt);
+		System.out.println("Successfully cancelled!");
+		return 1;
+	}
+	
+	
+	
+	
 	public void recordAppointmentOutcomes() {
-		DoctorView.viewAppointmentOutcomes(doctor);
+		doctorView.viewAppointmentOutcomes(doctor);
 		ArrayList<Appointment> appointments = doctor.getSchedule().getAppointments();
 		System.out.println();
 		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to exit: ");

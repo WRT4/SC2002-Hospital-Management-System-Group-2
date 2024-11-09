@@ -9,7 +9,7 @@ import view.AppointmentView;
 
 
 public class AppointmentController {
-	public static Appointment findAppointment(ArrayList<Appointment> appointments, boolean noConfirmed, int id) {
+	public static Appointment findAppointment(ArrayList<Appointment> appointments, boolean noConfirmed, int id) throws RuntimeException {
 	    Appointment apt = null;
 	    for (Appointment appointment : appointments) {
 	        if (appointment.getAppointmentID() == id) {
