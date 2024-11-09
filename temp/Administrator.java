@@ -28,22 +28,6 @@ public class Administrator extends User {
         this.userRequests = new ArrayList<>();
     }
 
-    /*private int getChoice() {
-        int choice = -1;
-        while (true) {
-            System.out.print("Enter choice: ");
-            try {
-                choice = scanner.nextInt();
-                scanner.nextLine(); // consume newline
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a number.");
-                scanner.nextLine(); // clear invalid input
-            }
-        }
-        return choice;
-    }*/
-
  
     public List<User> getStaff(){ 
     	return this.staff;
@@ -173,17 +157,14 @@ public class Administrator extends User {
         } else {
             System.out.println("Hospital Staff:");
 
-            // Display all doctors
             for (Doctor doctor : Database.doctors) {
                 System.out.println("ID: " + doctor.getId() + " Name: " + doctor.getName() + " Role: Doctor");
             }
 
-            // Display all pharmacists
             for (Pharmacist pharmacist : Database.pharmacists) {
                 System.out.println("ID: " + pharmacist.getId() + " Name: " + pharmacist.getName() + " Role: Pharmacist");
             }
 
-            // Display all administrators
             for (Administrator administrator : Database.administrators) {
                 System.out.println("ID: " + administrator.getId() + " Name: " + administrator.getName() + " Role: Administrator");
             }
@@ -233,15 +214,6 @@ public class Administrator extends User {
         }
     }
 
-    
-    /*public void displayAppointments() {	
-    	System.out.println("Appointments Details:");
-        for (Patient patient : Database.patients) {
-            for (Appointment appointment : patient.getAppointments()) {
-                System.out.println(appointment.getDetails());
-            }
-        }
-    }*/
     
     public void ViewAndManageMedInventory() {
     	int c; 
@@ -341,7 +313,6 @@ public class Administrator extends User {
     // Receive a refill request from pharmacists
     public void receiveRefillRequest(RefillRequest request) {
         refillRequests.add(request);
-        //System.out.println("Refill request received for medication: " + request.getMedication());
     }
 
     // Approve a specific refill request
@@ -359,22 +330,10 @@ public class Administrator extends User {
             }
             request.acceptRequest();
             Database.medicationBank.increaseStock(request.getMedication(), request.getRequestedAmount()); 
-            //refillRequests.remove(requestIndex); // Remove from list after approval
         } else {
             System.out.println("Invalid request index.");
         }
     }
-    // Decline a specific refill request
-    /*public void declineRefillRequest(int requestIndex) {
-        if (requestIndex >= 0 && requestIndex < refillRequests.size()) {
-            RefillRequest request = refillRequests.get(requestIndex);
-            request.declineRequest();
-            refillRequests.remove(requestIndex); // Remove from list after decline
-            System.out.println("Refill request declined for " + request.getMedication());
-        } else {
-            System.out.println("Invalid request index.");
-        }
-    }*/
 
     public void viewPendingRefillRequests() {
         int num = 0;
@@ -446,19 +405,19 @@ public class Administrator extends User {
             System.out.println("4. View and Approve Replenishment Requests");
             System.out.println("5. Logout");
             adminChoice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine(); 
 
             switch (adminChoice) {
-                case 1: // View and Manage Hospital Staff
+                case 1: 
                 	ViewAndManageStaff();
                 	break;
-                case 2: // View Appointments Details
+                case 2: 
                 	displayAppointments();
                     break;
-                case 3: // View and Manage Medication Inventory
+                case 3: 
                 	ViewAndManageMedInventory();
                     break;
-                case 4: // Approve Replenishment Requests
+                case 4: 
                 	ViewAndManageRefillRequests();
                     break;
                 case 5:
@@ -469,7 +428,13 @@ public class Administrator extends User {
             }
         } while (adminChoice != 5);
     }
-    
+
+
+
+
+
+
+    //********************************* This part onwards is mainly extras, not for test cases ******************************************8**
 
     // Keeping original methods for handling user requests, account locking, password resetting, and logging
     public void receiveUserRequest(Request request) {
@@ -553,5 +518,19 @@ public class Administrator extends User {
     public String toString() {
     	return "Administrator ID: " + getId() + " Name: " + getName();
     }
+
+	//No need for decline Refill request(?) Keeping it here jic.
+     // Decline a specific refill request
+    /*public void declineRefillRequest(int requestIndex) {
+        if (requestIndex >= 0 && requestIndex < refillRequests.size()) {
+            RefillRequest request = refillRequests.get(requestIndex);
+            request.declineRequest();
+            refillRequests.remove(requestIndex); // Remove from list after decline
+            System.out.println("Refill request declined for " + request.getMedication());
+        } else {
+            System.out.println("Invalid request index.");
+        }
+    }*/
+
     
 }
