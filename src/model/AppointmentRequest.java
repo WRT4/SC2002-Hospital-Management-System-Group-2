@@ -19,24 +19,6 @@ public class AppointmentRequest implements Request {
 		status = Status.PENDING;
 		requestID = ++count;
 	}
-	
-	public void acceptRequest() {
-		this.status = Status.ACCEPTED;
-		Appointment temp = new Appointment(date, timeslot, doctor, patient);
-		patient.getAppointments().add(temp);
-		doctor.getSchedule().getAppointments().add(temp);
-		temp.setStatus(Status.CONFIRMED);
-		System.out.println("Appointment Accepted!");
-	}
-	
-	public void declineRequest() {
-		this.status = Status.DECLINED;
-		System.out.println("Appointment Declined!");
-	}
-	
-	public void cancelRequest() {
-		this.status = Status.CANCELLED;
-	}
 
 	public String toString() {
 		return "Request ID: " + requestID + " Patient Name: " + patient.getName() + ", Doctor Name: " + doctor.getName() + " "+ timeslot.toString() + " Status: " + status;
@@ -45,13 +27,13 @@ public class AppointmentRequest implements Request {
 	public Status getStatus() {
 		return status;
 	}
-	
-	public int getRequestID() {
-		return requestID;
-	}
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public int getRequestID() {
+		return requestID;
 	}
 
 	public Patient getPatient(){
@@ -69,5 +51,24 @@ public class AppointmentRequest implements Request {
 	public TimeSlot getTimeSlot() {
 		return timeslot;
 	}
+
+	public void acceptRequest() {
+		this.status = Status.ACCEPTED;
+		Appointment temp = new Appointment(date, timeslot, doctor, patient);
+		patient.getAppointments().add(temp);
+		doctor.getSchedule().getAppointments().add(temp);
+		temp.setStatus(Status.CONFIRMED);
+		System.out.println("Appointment Accepted!");
+	}
+
+	public void declineRequest() {
+		this.status = Status.DECLINED;
+		System.out.println("Appointment Declined!");
+	}
+
+	public void cancelRequest() {
+		this.status = Status.CANCELLED;
+	}
+
 
 }
