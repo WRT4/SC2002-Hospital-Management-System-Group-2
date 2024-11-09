@@ -26,7 +26,7 @@ public class ScheduleController {
 	            if (day < 1 || day > 31) {
 	                throw new RuntimeException("Invalid input for Day! Please enter a valid day between 01 and 31.");
 	            }
-	            
+
 	            System.out.println("Enter Month (01-12) or -1 to exit: ");
 	            monthStr = scanner.next();
 	            month = Integer.parseInt(monthStr);
@@ -34,7 +34,7 @@ public class ScheduleController {
 	            if (month < 1 || month > 12) {
 	                throw new RuntimeException("Invalid input for Month! Please enter a valid month between 01 and 12.");
 	            }
-	            
+
 	            System.out.println("Enter Year (Current year - Current year + 1) or -1 to exit: ");
 	            yearStr = scanner.next();
 	            year = Integer.parseInt(yearStr);
@@ -70,7 +70,7 @@ public class ScheduleController {
 	    }
 	    return finalDate;
 	}
-	
+
 	public static LocalTime inputTime() {
 	    String hourStr, minStr;
 	    int hour = 0, min = 0;
@@ -84,7 +84,7 @@ public class ScheduleController {
 	            if (hour < 0 || hour > 23) {
 	                throw new RuntimeException("Invalid input for Hour! Please enter a valid hour between 00 and 23.");
 	            }
-	            
+
 	            System.out.println("Enter Minute (00-59) or -1 to exit: ");
 	            minStr = scanner.next();
 	            min = Integer.parseInt(minStr);
@@ -131,7 +131,7 @@ public class ScheduleController {
 			}
 		}
 	}
-	
+
 	public static void viewAvailableSlots(LocalDate date, Schedule schedule){
 		System.out.println("Free slots on " + date + " :");
 		for (TimeSlot timeSlot: schedule.getWorkingSlots()){

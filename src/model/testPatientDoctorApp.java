@@ -19,7 +19,7 @@ public class testPatientDoctorApp {
             System.out.println("1. Doctor \n2. Patient \n3. Exit \nEnter Choice: ");
             //try {
                 choice = scanner.nextInt();
-                
+
                 // Handle user choices
                 switch (choice) {
                     case 1:
@@ -50,7 +50,7 @@ public class testPatientDoctorApp {
                         break;
                     case 3:
                         System.out.println("Exiting the application.");
-                        
+
                         scanner.close(); // Close the scanner before exiting
                         return; // Exit the main method
                     default:

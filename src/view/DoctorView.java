@@ -1,4 +1,6 @@
 package view;
+import controller.DoctorController;
+import controller.PatientController;
 import model.*;
 
 import java.time.LocalDate;
@@ -21,13 +23,12 @@ public class DoctorView {
         return scanner.nextInt();
     }
 	
-	public void viewMedicalRecords(Doctor doctor) {
-    	Patient patient = doctor.getPatient(scanner);
+	public void viewMedicalRecords(Patient patient, Doctor doctor) {
 		if (patient != null){
 			patient.getRecord().printMedicalRecord();
 		}
     }
-	
+
 	public void viewSchedule(Doctor doctor) {
     	System.out.println("Viewing Personal Schedule for Doctor " + doctor.getId() + ", Name: " + doctor.getName() + ": ");
 		System.out.println("Enter date: ");

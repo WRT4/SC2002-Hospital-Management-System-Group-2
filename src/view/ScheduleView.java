@@ -13,6 +13,7 @@ import model.TimeSlot;
 
 public class ScheduleView {
 	static Scanner scanner = new Scanner(System.in);
+
 	public static LocalDate inputDate(boolean isPatient) {
 	    String dayStr, monthStr, yearStr;
 	    int day = 0, month = 0, year = 0;

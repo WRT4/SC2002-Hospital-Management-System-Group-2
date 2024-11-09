@@ -8,6 +8,7 @@ public class Patient extends User {
 	private ArrayList<Appointment> appointments;
 	private ArrayList<AppointmentRequest> requests;
 	private ArrayList<String> messages;
+
 	
 	public void showMenu() {}
 	

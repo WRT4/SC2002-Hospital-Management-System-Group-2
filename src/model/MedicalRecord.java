@@ -25,7 +25,10 @@ public class MedicalRecord {
         this.diagnoses = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
     }
-    
+    public MedicalRecord(String patientID) {
+        this.patientID = patientID;
+    }
+
     public MedicalRecord() {
     	this("","","","","","","");
     }
@@ -40,13 +43,9 @@ public class MedicalRecord {
         }
     }
     
-    public void addDiagnosis(String diagnosis) {
-    	diagnoses.add(diagnosis);
-    }
-    
     public void addPrescription(String prescription, Doctor doctor) {
         if (doctor != null){
-            diagnoses.add(prescription);
+            prescriptions.add(prescription);
             System.out.println("Prescription added by Dr. " + doctor.getName());
         }
         else{

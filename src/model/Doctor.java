@@ -2,7 +2,9 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Doctor extends User {
@@ -10,21 +12,23 @@ public class Doctor extends User {
     private ArrayList<AppointmentRequest> requests;
 	private ArrayList<Patient> patientsUnderCare;
 	private ArrayList<String> messages;
+	private HashMap<Patient, Integer> appointmentCounter;
 
-	@Override
-	public void showMenu() {
-		// TODO Auto-generated method stub
-		
-	}
-	
     public Doctor(String id, String name) {
         super(id, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
 		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
+		this.appointmentCounter = new HashMap<>();
     }
-    
+
+	@Override
+	public void showMenu() {
+		// TODO Auto-generated method stub
+
+	}
+
     public String toString() {
     	return "Doctor ID: " + getId() + " Name: " + getName();
     }
@@ -43,6 +47,10 @@ public class Doctor extends User {
 
 	public ArrayList<String> getMessages(){
 		return messages;
+	}
+
+	public HashMap<Patient, Integer> getAppointmentCounter(){
+		return appointmentCounter;
 	}
 
 	public void addRequest(AppointmentRequest request) {
@@ -99,5 +107,35 @@ public class Doctor extends User {
 
 	public ArrayList<Patient> getPatientsUnderCare() {
 		return this.patientsUnderCare;
+	}
+
+	public void addAppointmentCounter (Patient patient) {
+		getPatientsUnderCare().add(patient);
+		appointmentCounter.put(patient, appointmentCounter.getOrDefault(patient, 0) + 1);
+	}
+
+	public void subtractAppointmentCounter(Patient patient) {
+		int currentCount = appointmentCounter.get(patient);
+		if (currentCount > 1) {
+			appointmentCounter.put(patient, currentCount - 1);
+		} else {
+			// Remove the patient from the map if counter becomes 0
+			appointmentCounter.remove(patient);
+		}
+	}
+
+	public ArrayList<AppointmentRequest> checkPendingRequests(){
+		ArrayList<AppointmentRequest> pendingRequests = new ArrayList<>();
+		for (AppointmentRequest request: this.getRequests()){
+			if (request.getStatus()==Status.PENDING && ChronoUnit.DAYS.between(LocalDate.now(), request.getDate()) < 3){
+				pendingRequests.add(request);
+			}
+		}
+		return pendingRequests;
+	}
+
+	public void pushPendingRequestMessage(AppointmentRequest urgentRequest){
+		String pendingRequest = "Urgent: Please be reminded that you have a pending appointment request: \n" + urgentRequest.toString();
+		getMessages().add(0,pendingRequest);
 	}
 }
