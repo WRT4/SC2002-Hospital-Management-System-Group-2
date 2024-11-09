@@ -1,4 +1,3 @@
-
 package model;
 
 import java.util.ArrayList;
@@ -23,19 +22,19 @@ public class Database {
     // Method to initialize predefined users
     private static void initializeUsers() {
         // Adding predefined doctors
-        doctors.add(new Doctor("D001", "Password123", "John Smith", "Doctor"));
-        doctors.add(new Doctor("D002", "Password123", "Emily Clarke", "Doctor"));
+        doctors.add(new Doctor("D001", "Password123", "John Smith"));
+        doctors.add(new Doctor("D002", "Password123", "Emily Clarke"));
 
         // Adding predefined pharmacists
-        pharmacists.add(new Pharmacist("P001", "Password123", "Mark Lee", "Pharmacist"));
+        pharmacists.add(new Pharmacist("P001", "Password123", "Mark Lee"));
 
         // Adding predefined administrators
-        administrators.add(new Administrator("A001", "Password123", "Sarah Lee", "Administrator"));
+        administrators.add(new Administrator("A001", "Password123", "Sarah Lee"));
 
         // Adding predefined patients
-        patients.add(new Patient("P1001", "Password123", "Alice Brown", "Patient",new MedicalRecord()));
-        patients.add(new Patient("P1002", "Password123", "Bob Stone", "Patient",new MedicalRecord()));
-        patients.add(new Patient("P1003", "Password123", "Charlie White", "Patient",new MedicalRecord()));
+        patients.add(new Patient("P1001", "Password123", "Alice Brown", new MedicalRecord()));
+        patients.add(new Patient("P1002", "Password123", "Bob Stone", new MedicalRecord()));
+        patients.add(new Patient("P1003", "Password123", "Charlie White", new MedicalRecord()));
 
         System.out.println("Predefined users have been initialized in the database.");
     }
