@@ -1,3 +1,6 @@
+
+package model;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -11,9 +14,9 @@ public class MedicationBank {
 
     // Initialize predefined medications
     private void initializeMedications() {
-        Medication paracetamol = new Medication("Paracetamol", 100, "500mg", LocalDate.of(2025, 12, 31), 20);
-        Medication ibuprofen = new Medication("Ibuprofen", 50, "200mg", LocalDate.of(2024, 6, 30), 10);
-        Medication amoxicillin = new Medication("Amoxicillin", 75, "250mg", LocalDate.of(2026, 5, 15), 15);
+        Medication paracetamol = new Medication("Paracetamol", 0, LocalDate.of(2025, 12, 31), 20);
+        Medication ibuprofen = new Medication("Ibuprofen",  200, LocalDate.of(2024, 6, 30), 10);
+        Medication amoxicillin = new Medication("Amoxicillin",  250, LocalDate.of(2026, 5, 15), 15);
 
         addMedication(paracetamol);
         addMedication(ibuprofen);
@@ -31,13 +34,24 @@ public class MedicationBank {
     }
 
     // Update stock for a medication
-    public void updateStock(String medicationName, int amount) {
+    public void increaseStock(String medicationName, int amount) {
         Medication medication = inventory.get(medicationName);
         if (medication == null) {
             System.out.println("Medication not found in the inventory.");
             return;
         }
         medication.addStock(amount);
+        System.out.println(medicationName + " stock updated. New stock level: " + medication.getStockLevel());
+        checkAndAlertForLowStock(medication);  // Check for low stock after update
+    }
+    
+    public void decreaseStock(String medicationName, int amount) {
+        Medication medication = inventory.get(medicationName);
+        if (medication == null) {
+            System.out.println("Medication not found in the inventory.");
+            return;
+        }
+        	medication.minusStock(amount);
         System.out.println(medicationName + " stock updated. New stock level: " + medication.getStockLevel());
         checkAndAlertForLowStock(medication);  // Check for low stock after update
     }
@@ -73,3 +87,4 @@ public class MedicationBank {
         }
     }
 }
+
