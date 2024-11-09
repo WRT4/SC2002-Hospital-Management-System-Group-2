@@ -319,15 +319,12 @@ public class Doctor extends User {
 				System.out.println("Wrong input type! Try Again!");
 				scanner.nextLine();
 				continue;
-				//Shane code no continue;
 			}
 			catch (RuntimeException e) {
 				System.out.println(e.getMessage());
 				scanner.nextLine();
 				continue;
-				//Shane code no continue;
 			}
-			//Shane code no catching of exception e
 			catch (Exception e) {
 				System.out.println("Error! Try Again!");
 				scanner.nextLine();
