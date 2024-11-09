@@ -21,7 +21,7 @@ public class Administrator extends User {
         this.userRequests = new ArrayList<>();
     }
     
-    public Administrator(String id, String password, String name, String Role) {
+    public Administrator(String id, String password, String name) {
     	super(id,password,name,"Administrator");
         this.staff = new ArrayList<>();
         this.refillRequests = new ArrayList<>();
