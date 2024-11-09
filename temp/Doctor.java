@@ -453,10 +453,10 @@ public class Doctor extends User {
 			}
 			else if (choice == 2) {
 				System.out.println("Setting prescription...");
-				//System.out.println("Enter prescription: ");
-				//String pres = scanner.next();
+				System.out.println("Enter prescription to put in record Medication/Dosage : ");
+				String pres = scanner.next();
+				apt.getPatient().getRecord().addPrescription(pres);
 				apt.setPrescription();
-				//apt.getPatient().getRecord().addPrescription(pres);
 				apt.setPrescriptionStatus(Status.PENDING);
 				// send prescription request
 				System.out.println("Prescription added!");
