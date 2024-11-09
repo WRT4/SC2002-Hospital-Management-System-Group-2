@@ -4,19 +4,26 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class RefillRequest implements Request {
+	//private Pharmacist pharmacist;
+	//private Administrator admin;
     private String medication;
     private int requestedAmount;
     private Status status;  // Updated to use Status enum
     private LocalDate requestDate;
     private LocalTime requestTime;
+    private static int count = 0;
+    private int reqID;
+    
 
     public RefillRequest(String medication, int requestedAmount) {
         this.medication = medication;
         this.requestedAmount = requestedAmount;
-        this.status = Status.PENDING;  // Default to PENDING
+        this.status = Status.PENDING;  
         this.requestDate = LocalDate.now();
         this.requestTime = LocalTime.now();
+        this.reqID = ++count;
     }
+    
 
     public String getMedication() { return medication; }
     public int getRequestedAmount() { return requestedAmount; }
@@ -26,7 +33,7 @@ public class RefillRequest implements Request {
 
     @Override
     public void acceptRequest() {
-        this.status = Status.ACCEPTED;
+        this.status = Status.COMPLETED;
         System.out.println("Refill request approved for " + medication);
     }
 
@@ -35,12 +42,15 @@ public class RefillRequest implements Request {
         this.status = Status.DECLINED;
         System.out.println("Refill request declined for " + medication);
     }
+    
 
     @Override
     public String toString() {
-        return "Medication: " + medication + 
+        return "Request ID:" + reqID +
+        		" Medication: " + medication + 
                ", Requested Amount: " + requestedAmount + 
                ", Status: " + status + 
                ", Requested on: " + requestDate + " at " + requestTime;
     }
 }
+
