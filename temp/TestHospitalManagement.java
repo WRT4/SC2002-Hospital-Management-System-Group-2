@@ -12,10 +12,17 @@ public class TestHospitalManagement {
         // Main loop for the application
         while (true) {
             // Prompt the user for their User ID
-            System.out.print("Enter User ID: ");
+            System.out.print("Enter User ID (-1 to exit): ");
             user = null;
             while (user == null) {
                 String userID = scanner.nextLine();
+                
+                if (userID.equals("-1")) {
+                    System.out.println("Exiting the application!");
+                    scanner.close();
+                    return; // Exit the program
+                }
+
                 user = Database.getUser(userID);
                 if (user == null) {
                     System.out.print("Invalid User ID. Please try again: ");
@@ -39,4 +46,3 @@ public class TestHospitalManagement {
         }
     }
 }
-
