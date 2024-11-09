@@ -56,6 +56,7 @@ public class PatientView {
 			System.out.println("No scheduled appointments! ");
 			return;
 		}
+		System.out.println("Note: Appointment request that hasn't been accepted by doctor could be found in Menu Option 7");
 	}
 	
 	public void viewAppointmentOutcomes(Patient patient) {
