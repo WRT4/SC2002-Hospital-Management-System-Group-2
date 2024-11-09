@@ -221,6 +221,7 @@ public class Doctor extends User {
 		if (patient==null){
 			return;
 		}
+	scanner.nextLine();
         System.out.println("Enter -1 to exit.");
         String diagnosis = getDiagnosis();
         if (diagnosis.equals("-1")) return;
@@ -256,12 +257,12 @@ public class Doctor extends User {
 
     private String getDiagnosis() {
         System.out.println("Enter diagnosis:");
-        return scanner.next();
+        return scanner.nextLine();
     }
 
     private String getPrescription() {
         System.out.println("Enter prescription:");
-        return scanner.next();
+        return scanner.nextLine();
     }
 
 	public String getId() {
@@ -464,7 +465,7 @@ public class Doctor extends User {
 			else if (choice == 3) {
 				System.out.println("Setting Consultation notes...");
 				System.out.println("Enter Consultation notes: ");
-				String note = scanner.next();
+				String note = scanner.nextLine();
 				apt.setNotes(note);
 				System.out.println("Consultation notes added!");
 			}
