@@ -159,10 +159,9 @@ public class PatientController {
 		String gender = scanner.next();
 		patient.setGender(gender);
 
-		System.out.println("Enter your date of birth (in DD/MM/YYYY): ");
+		System.out.println("Enter your date of birth (in DD-MM-YYYY): ");
 		String dob = scanner.next();
 		patient.setDateOfBirth(dob);
-
 	}
 	
 	public void scheduleAppointment() {
@@ -209,7 +208,6 @@ public class PatientController {
 			System.out.println("Appointment Request Sent!");
 		}
 	}
-	
 	
 	public void rescheduleAppointments() {
 		ArrayList<Appointment> appointments = patient.getAppointments();
@@ -261,8 +259,10 @@ public class PatientController {
 				num++;
 			}
 		}
+		System.out.println("Note: Appointment request that hasn't been accepted by doctor could be found in Menu Option 7");
 		if (num == 0) {
 			System.out.println("No scheduled appointments!");
+			System.out.println("Note: Appointment request that hasn't been accepted by doctor could be found in Menu Option 7");
 			return;
 		}
 		System.out.println("Which appointment would you like to cancel? Enter Appointment ID or -1 to exit.");
@@ -270,7 +270,7 @@ public class PatientController {
 		if (temp == null) return;
 		temp.getDoctor().getSchedule().setAvailability(temp.getDate(), temp.getTimeSlot());
 		temp.setStatus(Status.CANCELLED);
-
+		temp.getDoctor().subtractAppointmentCounter(patient);
 		sendCancellationMessage(temp);
 		System.out.println("Successfully cancelled!");
 	}

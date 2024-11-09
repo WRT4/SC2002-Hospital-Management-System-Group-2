@@ -45,8 +45,7 @@ public class DoctorController {
 
             switch (choice) {
                 case 1:
-                    // Assuming you have a method to get a patient object
-                	doctorView.viewMedicalRecords(doctor);
+					viewMedicalRecord();
                     break;
                 case 2:
                     // Assuming you have methods to get diagnosis and prescription
@@ -79,11 +78,9 @@ public class DoctorController {
     }
     
     public void remindPendingRequests(){
-		for (AppointmentRequest request: doctor.getRequests()){
-			if (request.getStatus()==Status.PENDING && ChronoUnit.DAYS.between(LocalDate.now(), request.getDate()) < 3){
-				String pendingRequest = "Please be reminded that you have a pending appointment request: \n" + request.toString();
-				doctor.getMessages().add(0, pendingRequest);
-			}
+		String pendingRequest;
+		for (AppointmentRequest request: doctor.checkPendingRequests()){
+			doctor.pushPendingRequestMessage(request);
 		}
 	}
     
@@ -119,20 +116,39 @@ public class DoctorController {
         System.out.println("Enter prescription:");
         return scanner.nextLine();
     }
+
+	public void viewMedicalRecord(){
+		Patient patient = doctor.getPatient(scanner);
+		if (patient==null){
+			return;
+		}
+		if (doctor.getAppointmentCounter().containsKey(patient) && doctor.getAppointmentCounter().get(patient) > 0) {
+			doctorView.viewMedicalRecords(patient, doctor);
+		} else {
+			System.out.println("Cannot view medical record of " + patient.getName() + " as no appointments have been scheduled.");
+		}
+	}
 	
 	public void updateMedicalRecord() {
     	Patient patient = doctor.getPatient(scanner);
 		if (patient==null){
 			return;
 		}
-        System.out.println("Enter -1 to exit.");
-        String diagnosis = getDiagnosis();
-        if (diagnosis.equals("-1")) return;
-        String prescription = getPrescription();
-        if (prescription.equals("-1")) return;
-        MedicalRecord record = patient.getRecord();
-        record.addDiagnosis(diagnosis, doctor);
-        record.addPrescription(prescription);
+
+		if (scanner.hasNextLine()) {
+			scanner.nextLine(); // This ensures any leftover newline is cleared
+		}
+
+		System.out.println("Enter -1 to exit.");
+		String diagnosis = getDiagnosis();
+		if (diagnosis.equals("-1")) return;
+
+		String prescription = getPrescription();
+		if (prescription.equals("-1")) return;
+
+		MedicalRecord record = patient.getRecord();
+		record.addDiagnosis(diagnosis, doctor);
+        record.addPrescription(prescription, doctor);
         System.out.println("Medical record updated for patient: " + patient.getName());
     }
 	
@@ -235,7 +251,10 @@ public class DoctorController {
 			}
 			request.acceptRequest();
 			sendAcceptanceMessage(request,true);
-			doctor.getPatientsUnderCare().add(request.getPatient());
+			doctor.addAppointmentCounter(request.getPatient());
+//			doctor.getPatientsUnderCare().add();
+
+
 		}
 		else if (choice == 2) {
 			request.declineRequest();
@@ -255,15 +274,15 @@ public class DoctorController {
 		}
 		if (choice == -1) return;
 		if (choice == 1) {
-			System.out.println("Which AppoitnmentID would would like to cancel? Enter ID or -1 to exit.");
+			System.out.println("Which AppointmentID would would like to cancel? Enter ID or -1 to exit.");
 			Appointment apt = AppointmentView.promptForAppointment(doctor.getSchedule().getAppointments(), true, scanner);
 			if (apt == null) return;
 			apt.setStatus(Status.CANCELLED);
+			doctor.subtractAppointmentCounter(apt.getPatient());
 			sendCancellationMessage(apt);
 			System.out.println("Successfully cancelled!");
 		}
     }
-	
 	
 	public void recordAppointmentOutcomes() {
 		DoctorView.viewAppointmentOutcomes(doctor);
@@ -332,6 +351,5 @@ public class DoctorController {
 			
 		}
 	}
-	
-	
+
 }
