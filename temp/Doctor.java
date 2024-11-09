@@ -256,12 +256,12 @@ public class Doctor extends User {
 
     private String getDiagnosis() {
         System.out.println("Enter diagnosis:");
-        return scanner.nextLine();
+        return scanner.next();
     }
 
     private String getPrescription() {
         System.out.println("Enter prescription:");
-        return scanner.nextLine();
+        return scanner.next();
     }
 
 	public String getId() {
