@@ -25,18 +25,40 @@ public class User {
     }
 
     // Method to simulate user login
-    public boolean login(String inputPassword) {
-        if (this.password.equals(inputPassword)) {
-            System.out.println("Login successful!");
-            if (isFirstLogin) {
-                System.out.println("You are logging in for the first time. Please change your password.");
-                changePassword();
+    public boolean login(String inputID, String inputPassword) {
+        int attempts = 0;
+        final int maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+            // Validate user ID and password
+            if (this.id.equals(inputID) && this.password.equals(inputPassword)) {
+                System.out.println("Login successful!");
+                if (isFirstLogin) {
+                    System.out.println("You are logging in for the first time. Please change your password.");
+                    changePassword();
+                }
+                return true;
+            } else {
+                attempts++;
+                System.out.println("Invalid credentials. Please try again.");
+                System.out.println("Attempt " + attempts + " of " + maxAttempts);
+
+                // If the maximum attempts are reached, lock the account
+                if (attempts == maxAttempts) {
+                    System.out.println("Maximum login attempts reached. Account is locked.");
+                    this.lockAccount();
+                    return false;
+                }
+
+                // Prompt user to re-enter credentials
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter User ID: ");
+                inputID = scanner.nextLine();
+                System.out.print("Enter Password: ");
+                inputPassword = scanner.nextLine();
             }
-            return true;
-        } else {
-            System.out.println("Invalid credentials. Please try again.");
-            return false;
         }
+        return false;
     }
 
     // Method to change the user's password
@@ -82,26 +104,29 @@ public class User {
 
     // Method to handle role-specific actions (to be overridden by subclasses if needed)
     public void accessSystem() {
-        if (this.getRole().equalsIgnoreCase("patient") && this instanceof Patient) {
+        String role = this.getRole();
+        if (role == null) {
+            System.out.println("User role is not set. Access denied.");
+            return;
+        }
+
+        if (role.equalsIgnoreCase("patient") && this instanceof Patient) {
             System.out.println("Accessing Patient Dashboard...");
-            Patient patient = (Patient) this;
-            patient.showMenu();
-        } else if (this.getRole().equalsIgnoreCase("doctor") && this instanceof Doctor) {
+            ((Patient) this).showMenu();
+        } else if (role.equalsIgnoreCase("doctor") && this instanceof Doctor) {
             System.out.println("Accessing Doctor Dashboard...");
-            Doctor doctor = (Doctor) this;
-            doctor.showMenu();
-        } else if (this.getRole().equalsIgnoreCase("pharmacist") && this instanceof Pharmacist) {
+            ((Doctor) this).showMenu();
+        } else if (role.equalsIgnoreCase("pharmacist") && this instanceof Pharmacist) {
             System.out.println("Accessing Pharmacist Dashboard...");
-            Pharmacist pharmacist = (Pharmacist) this;
-            pharmacist.showMenu();
-        } else if (this.getRole().equalsIgnoreCase("administrator") && this instanceof Administrator) {
+            ((Pharmacist) this).showMenu();
+        } else if (role.equalsIgnoreCase("administrator") && this instanceof Administrator) {
             System.out.println("Accessing Administrator Dashboard...");
-            Administrator admin = (Administrator) this;
-            admin.showMenu();
+            ((Administrator) this).showMenu();
         } else {
             System.out.println("Unknown role. Access denied.");
         }
     }
+
 
     /**
      * Getter method for the user's name.
@@ -174,10 +199,12 @@ public class User {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter password to login: ");
-                    String inputPassword = scanner.nextLine();
-                    this.login(inputPassword);
-                    break;
+                     System.out.print("Enter User ID: ");
+                     String userID = scanner.nextLine();
+                     System.out.print("Enter Password: ");
+                     String inputPassword = scanner.nextLine();
+                     this.login(userID, inputPassword);
+                     break;
 
                 case 2:
                     System.out.println("Changing password...");
@@ -230,10 +257,8 @@ public class User {
         return choice;
     }
 
-	public String getRole() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getRole() {
+        return this.role;
+    }
     
 }
-    
