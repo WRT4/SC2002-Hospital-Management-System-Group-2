@@ -15,14 +15,21 @@ public class Doctor extends User {
 
     Scanner scanner = new Scanner(System.in);
 
-    public Doctor(String id, String password, String name) {
-        super(id, password, name, "Doctor");
+    public Doctor(String id, String name) {
+        super(id, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
 		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
-		this.appointmentCounter = new HashMap<>();
     }
+    
+    public Doctor(String id, String name, String Password, String Role) {
+    	super(id,name,Password,"Doctor");
+    	this.schedule = new Schedule (id);
+    	this.requests = new ArrayList<>();
+    	this.patientsUnderCare = new ArrayList<>();
+    	this.messages = new ArrayList<>();
+    	}
     
     @Override
     public void showMenu() {
@@ -312,12 +319,15 @@ public class Doctor extends User {
 				System.out.println("Wrong input type! Try Again!");
 				scanner.nextLine();
 				continue;
+				//Shane code no continue;
 			}
 			catch (RuntimeException e) {
 				System.out.println(e.getMessage());
 				scanner.nextLine();
 				continue;
+				//Shane code no continue;
 			}
+			//Shane code no catching of exception e
 			catch (Exception e) {
 				System.out.println("Error! Try Again!");
 				scanner.nextLine();
@@ -446,10 +456,10 @@ public class Doctor extends User {
 			}
 			else if (choice == 2) {
 				System.out.println("Setting prescription...");
-				System.out.println("Enter prescription: ");
-				String pres = scanner.next();
-				apt.setPrescription(pres);
-				apt.getPatient().getRecord().addPrescription(pres);
+				//System.out.println("Enter prescription: ");
+				//String pres = scanner.next();
+				apt.setPrescription();
+				//apt.getPatient().getRecord().addPrescription(pres);
 				apt.setPrescriptionStatus(Status.PENDING);
 				// send prescription request
 				System.out.println("Prescription added!");
@@ -496,3 +506,4 @@ public class Doctor extends User {
 		}
 	}
 }
+

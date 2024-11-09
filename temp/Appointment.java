@@ -105,7 +105,6 @@ public class Appointment {
 	}
 	
 	public void setPrescription() {
-		//error handling not done
 		Scanner sc = new Scanner(System.in);
 		System.out.println("What medicine do you want to prescribe?");
 		String name = sc.next();
@@ -151,5 +150,3 @@ public class Appointment {
 	           ", Patient: " + this.patient.getName() + ", Status: " + this.status;
 	    }
 }
-
-
