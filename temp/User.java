@@ -20,7 +20,7 @@ public class User {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.password = "password"; // Default password
+        this.password = "Password123"; // Default password
         //this.failedLoginAttempts = 0;
         this.isLocked = false;
         //this.passwordLastChanged = LocalDate.now(); // Password set to current date
