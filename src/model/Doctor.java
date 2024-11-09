@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Doctor extends User {
     private Schedule schedule;
@@ -14,15 +13,15 @@ public class Doctor extends User {
 	private ArrayList<String> messages;
 	private HashMap<Patient, Integer> appointmentCounter;
 
-    public Doctor(String id, String name) {
-        super(id, name, "Doctor");
+    public Doctor(String id, String password, String name) {
+        super(id, password, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
 		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
 		this.appointmentCounter = new HashMap<>();
     }
-
+    
 	@Override
 	public void showMenu() {
 		// TODO Auto-generated method stub
@@ -83,28 +82,6 @@ public class Doctor extends User {
 		return requests;
 	}
 	
-	// Placeholder methods for getting patient, diagnosis, and prescription
-    public Patient getPatient(Scanner scanner) {
-		if (patientsUnderCare==null || patientsUnderCare.size()==0){
-			System.out.println("No patients under care.");
-			return null;
-		}
-        // Implement method to get a patient object
-    	for (Patient patient : patientsUnderCare) {
-    		System.out.println(patient);
-    	}
-        System.out.println("Enter Patient ID or -1 to exit: ");
-        String choice = scanner.next();
-        if (choice.equals("-1")) return null;
-        for (Patient patient : patientsUnderCare) {
-        	if (choice.equals(patient.getPatientId())) {
-        		return patient;
-        	}
-        }
-		System.out.println("Patient not found. ");
-        return null;
-    }
-
 	public ArrayList<Patient> getPatientsUnderCare() {
 		return this.patientsUnderCare;
 	}
