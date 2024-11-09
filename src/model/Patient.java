@@ -12,9 +12,9 @@ public class Patient extends User {
 	
 	public void showMenu() {}
 	
-	public Patient(String id, String name, MedicalRecord record) {
-		super(id,name,"Patient");
-		this.record = record;
+	public Patient(String id, String password, String name) {
+		super(id, password, name, "Patient");
+		this.record = new MedicalRecord(id, name);
 		this.appointments = new ArrayList<Appointment>();
 		this.requests = new ArrayList<AppointmentRequest>();
 		this.messages = new ArrayList<String>();

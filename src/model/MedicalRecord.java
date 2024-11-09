@@ -25,8 +25,8 @@ public class MedicalRecord {
         this.diagnoses = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
     }
-    public MedicalRecord(String patientID) {
-        this.patientID = patientID;
+    public MedicalRecord(String patientID, String name) {
+        this(patientID, name, "", "", "", "", "");
     }
 
     public MedicalRecord() {

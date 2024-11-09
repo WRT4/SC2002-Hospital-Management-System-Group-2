@@ -70,7 +70,6 @@ public class Appointment {
     }
 
 	public int getAppointmentID() {
-		// TODO Auto-generated method stub
 		return this.appointmentID;
 	}
 

@@ -15,12 +15,13 @@ public class Doctor extends User {
 
     Scanner scanner = new Scanner(System.in);
 
-    public Doctor(String id, String name) {
-        super(id, name, "Doctor");
+    public Doctor(String id, String password, String name) {
+        super(id, password, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
 		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
+		this.appointmentCounter = new HashMap<>();
     }
     
     @Override

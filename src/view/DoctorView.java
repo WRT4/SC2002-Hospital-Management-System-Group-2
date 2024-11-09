@@ -102,6 +102,29 @@ public class DoctorView {
 		System.out.println();
 	}
 	
+	public Patient getPatient(Doctor doctor) {
+		ArrayList<Patient> patientsUnderCare = doctor.getPatientsUnderCare();
+		if (patientsUnderCare==null || patientsUnderCare.size()==0){
+			System.out.println("No patients under care.");
+			return null;
+		}
+        // Implement method to get a patient object
+    	for (Patient patient : patientsUnderCare) {
+    		System.out.println(patient);
+    	}
+        System.out.println("Enter Patient ID or -1 to exit: ");
+        String choice = scanner.next();
+        if (choice.equals("-1")) return null;
+        for (Patient patient : patientsUnderCare) {
+        	if (choice.equals(patient.getPatientId())) {
+        		return patient;
+        	}
+        }
+		System.out.println("Patient not found. ");
+        return null;
+    }
+
+	
 	// @Override
     public void showMenu() {
     	System.out.println("Doctor Menu: ");

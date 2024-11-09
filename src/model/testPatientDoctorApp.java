@@ -7,10 +7,10 @@ public class testPatientDoctorApp {
 
     public static void main(String[] args) {
         // Initialize database with sample data
-        Database.doctors.add(new Doctor("1", "Wen Rong"));
-        Database.doctors.add(new Doctor("2", "Kai Wen"));
-        Database.patients.add(new Patient("1", "Jing Huan", new MedicalRecord()));
-        Database.patients.add(new Patient("2", "Shane", new MedicalRecord()));
+        Database.doctors.add(new Doctor("1", "1", "Wen Rong"));
+        Database.doctors.add(new Doctor("2", "1", "Kai Wen"));
+        Database.patients.add(new Patient("1", "1", "Jing Huan"));
+        Database.patients.add(new Patient("2", "1", "Shane"));
 
         Scanner scanner = new Scanner(System.in);
 

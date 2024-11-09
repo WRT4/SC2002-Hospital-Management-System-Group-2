@@ -5,6 +5,7 @@ import java.util.Scanner;
 import model.Appointment;
 // import model.Medication;
 import model.Status;
+import view.AppointmentView;
 
 
 public class AppointmentController {
@@ -33,9 +34,7 @@ public class AppointmentController {
 	
 	public static void setPrescription(Appointment apt, Scanner scanner) {
 		//change this 
-		System.out.println("Setting prescription...");
-		System.out.println("Enter prescription: ");
-		String pres = scanner.next();
+		String pres = AppointmentView.inputPrescription(scanner);
 		apt.setPrescription(pres);
 		apt.getPatient().getRecord().addPrescription(pres);
 		apt.setPrescriptionStatus(Status.PENDING);
@@ -44,18 +43,13 @@ public class AppointmentController {
 	}
 	
 	public static void setServiceType(Appointment apt, Scanner scanner) {
-		System.out.println("Setting Service Type...");
-		System.out.println("Enter Service Type: ");
-		String ser = scanner.next();
+		String ser = AppointmentView.inputServiceType(scanner);
 		apt.setServiceType(ser);
 		System.out.println("Service Type added!");
 	}
 	
 	public static void setNotes(Appointment apt, Scanner scanner) {
-		System.out.println("Setting Consultation notes...");
-		System.out.println("Enter Consultation notes: ");
-		scanner.nextLine();
-		String note = scanner.nextLine();
+		String note = AppointmentView.inputNotes(scanner);
 		apt.setNotes(note);
 		System.out.println("Consultation notes added!");
 	}
