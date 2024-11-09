@@ -235,7 +235,7 @@ public class DoctorController {
 		}
 		if (choice == 1) {
 			// check overlap of requests or busy
-			if (doctor.getSchedule().checkOverlapping(request.getTimeSlot()) || request.getTimeSlot().getOccupied()) {
+			if (doctor.getSchedule().checkOverlapping(request.getTimeSlot())) {
 				System.out.println("Timeslot is not available! Would you like to reject request instead? 1. Yes -1. Exit");
 				int choice2 = doctorView.getChoice();
 				while (choice2 != 1 && choice2 != -1) {

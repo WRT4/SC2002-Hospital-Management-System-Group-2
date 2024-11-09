@@ -50,13 +50,13 @@ public class TimeSlot {
         this.endTime = time.plusMinutes(15);
     }
 
-    //check if this timeslot overlaps with another timeslot (other)
-    public boolean isOverlap (TimeSlot other){
-        //if not on the same day, not overlapping
-        if (startTime.isBefore(other.endTime) && other.startTime.isBefore(endTime))
-            return true;
-        return false;
-    }
+//    //check if this timeslot overlaps with another timeslot (other)
+//    public boolean isOverlap (TimeSlot other){
+//        //if not on the same day, not overlapping
+//        if (startTime.isBefore(other.endTime) && other.startTime.isBefore(endTime))
+//            return true;
+//        return false;
+//    }
 
     public void setOccupied() {
         this.isOccupied = true;

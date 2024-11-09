@@ -9,7 +9,6 @@ import java.util.HashMap;
 public class Doctor extends User {
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
-	private ArrayList<Patient> patientsUnderCare;
 	private ArrayList<String> messages;
 	private HashMap<Patient, Integer> appointmentCounter;
 
@@ -17,7 +16,6 @@ public class Doctor extends User {
         super(id, password, name, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
-		this.patientsUnderCare = new ArrayList<Patient>();
 		this.messages = new ArrayList<String>();
 		this.appointmentCounter = new HashMap<>();
     }
@@ -81,13 +79,8 @@ public class Doctor extends User {
 	public ArrayList<AppointmentRequest> getRequests() {
 		return requests;
 	}
-	
-	public ArrayList<Patient> getPatientsUnderCare() {
-		return this.patientsUnderCare;
-	}
 
 	public void addAppointmentCounter (Patient patient) {
-		getPatientsUnderCare().add(patient);
 		appointmentCounter.put(patient, appointmentCounter.getOrDefault(patient, 0) + 1);
 	}
 

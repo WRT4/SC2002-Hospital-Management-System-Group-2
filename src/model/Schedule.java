@@ -90,12 +90,7 @@ public class Schedule {
     }
 
 	public boolean checkOverlapping (TimeSlot requestSlot){
-		for (TimeSlot slot: workingSlots){
-			if(slot.getOccupied()){
-				return requestSlot.isOverlap(slot);
-			}
-		}
-		return false;
+		return requestSlot.getOccupied();
 	}
 
    /* public static void main(String[] args) {

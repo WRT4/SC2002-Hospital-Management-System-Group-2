@@ -241,6 +241,8 @@ public class PatientController {
 			return;
 		}
 		temp.setStatus(Status.CANCELLED);
+		temp.getDoctor().subtractAppointmentCounter(patient);
+		//new appointment - in the form of a request
 		AppointmentRequest request = new AppointmentRequest(date, requestTime ,temp.getDoctor(), temp.getPatient());
 		temp.getDoctor().addRequest(request);
 		patient.getRequests().add(request);

@@ -103,7 +103,7 @@ public class DoctorView {
 	}
 	
 	public Patient getPatient(Doctor doctor) {
-		ArrayList<Patient> patientsUnderCare = doctor.getPatientsUnderCare();
+		ArrayList<Patient> patientsUnderCare = new ArrayList<>(doctor.getAppointmentCounter().keySet());
 		if (patientsUnderCare==null || patientsUnderCare.size()==0){
 			System.out.println("No patients under care.");
 			return null;
