@@ -2,7 +2,6 @@ package controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -118,7 +117,7 @@ public class DoctorController {
     }
 
 	public void viewMedicalRecord(){
-		Patient patient = doctor.getPatient(scanner);
+		Patient patient = doctorView.getPatient(doctor);
 		if (patient==null){
 			return;
 		}
@@ -130,7 +129,7 @@ public class DoctorController {
 	}
 	
 	public void updateMedicalRecord() {
-    	Patient patient = doctor.getPatient(scanner);
+    	Patient patient = doctorView.getPatient(doctor);
 		if (patient==null){
 			return;
 		}
