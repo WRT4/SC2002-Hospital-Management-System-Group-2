@@ -25,10 +25,7 @@ public class MedicalRecord {
         this.diagnoses = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
     }
-    public MedicalRecord(String patientID, String name) {
-        this(patientID, name, "", "", "", "", "");
-    }
-
+    
     public MedicalRecord() {
     	this("","","","","","","");
     }
@@ -43,9 +40,13 @@ public class MedicalRecord {
         }
     }
     
+    public void addDiagnosis(String diagnosis) {
+    	diagnoses.add(diagnosis);
+    }
+    
     public void addPrescription(String prescription, Doctor doctor) {
         if (doctor != null){
-            prescriptions.add(prescription);
+            diagnoses.add(prescription);
             System.out.println("Prescription added by Dr. " + doctor.getName());
         }
         else{
@@ -74,7 +75,7 @@ public class MedicalRecord {
     }
 
     public void printMedicalRecord() {
-        System.out.println("Name: " + name + " | ID: " + patientID + " | Phone number: " + phoneNumber + " | Email Address: " + email +
+        System.out.println("Patient: " + name + " | Phone number: " + phoneNumber + " | Email Address: " + email +
         "\nDate Of Birth: " + dateOfBirth + " | Gender: " + gender + " | Blood Type: " + bloodType +
         "\nDiagnoses: " + diagnoses +
         "\nPrescriptions: " + prescriptions);
@@ -107,13 +108,6 @@ public class MedicalRecord {
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
     }
-    
-    public void viewContactInfo() {
-		System.out.println("Current contact info: ");
-		System.out.println("Name: " + getName());
-		System.out.println("Email: " + getEmail());
-		System.out.println("Date of Birth: " + getDateOfBirth());
-		System.out.println("Phone Number: " + getPhoneNumber());
-	}
 }
+
 
