@@ -20,7 +20,7 @@ public class User {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.password = "Password123"; // Default password
+        this.password = "password"; // Default password
         //this.failedLoginAttempts = 0;
         this.isLocked = false;
         //this.passwordLastChanged = LocalDate.now(); // Password set to current date
@@ -28,7 +28,7 @@ public class User {
         //this.userRequests = new ArrayList<>();
     }
     
-    public User(String id, String password, String name, String role) {
+    public User(String id, String name, String password, String role) {
         this.id = id;
         this.password = password;
         this.name = name;
