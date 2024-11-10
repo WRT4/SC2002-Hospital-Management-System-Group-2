@@ -303,9 +303,6 @@ public class DoctorController {
 		return 1;
 	}
 	
-	
-	
-	
 	public void recordAppointmentOutcomes() {
 		doctorView.viewAppointmentOutcomes(doctor);
 		ArrayList<Appointment> appointments = doctor.getSchedule().getAppointments();

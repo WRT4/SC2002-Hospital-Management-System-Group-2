@@ -68,7 +68,7 @@ public class AppointmentView {
     public static String inputPrescription(Scanner scanner) {
     	//change this
     	System.out.println("Setting prescription...");
-		System.out.println("Enter prescription: ");
+		System.out.println("Enter prescription to put in record [Medication/Dosage]: ");
 		String pres = scanner.next();
 		return pres;
     }
@@ -83,7 +83,6 @@ public class AppointmentView {
     public static String inputNotes(Scanner scanner) {
     	System.out.println("Setting Consultation notes...");
 		System.out.println("Enter Consultation notes: ");
-		scanner.nextLine();
 		String note = scanner.nextLine();
 		return note;
     }

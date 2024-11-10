@@ -2,6 +2,8 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Appointment {
 	private Patient patient;
@@ -14,6 +16,7 @@ public class Appointment {
     private static int count;
     // private ArrayList<Medication> prescriptions = new ArrayList<>();
     private String prescription;
+    private ArrayList<Medication> prescriptions = new ArrayList<>();
     private String diagnosis;
     private String serviceType;
     private String note;
@@ -73,12 +76,23 @@ public class Appointment {
 		return this.appointmentID;
 	}
 
-	public String getPrescription() {
-		return this.prescription;
-	}
+    public ArrayList<Medication> getPrescription() {
+        if(this.prescriptions == null) {
+            System.out.println("No prescriptions yet.");
+            return null;
+        }
+        else
+            return this.prescriptions;
+    }
 	
-	public void setPrescription(String prescription) {
-		this.prescription = prescription;
+	public void setPrescription() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("What medicine do you want to prescribe?");
+        String name = sc.next();
+        System.out.println("What is the dosage?");
+        int dosage = sc.nextInt();
+        Medication prescribedMed = new Medication(name,dosage);
+        prescriptions.add(prescribedMed);
 	}
 
 	public Doctor getDoctor() {

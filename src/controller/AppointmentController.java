@@ -35,8 +35,8 @@ public class AppointmentController {
 	public static void setPrescription(Appointment apt, Scanner scanner) {
 		//change this 
 		String pres = AppointmentView.inputPrescription(scanner);
-		apt.setPrescription(pres);
 		apt.getPatient().getRecord().addPrescription(pres);
+		apt.setPrescription();
 		apt.setPrescriptionStatus(Status.PENDING);
 		// send prescription request
 		System.out.println("Prescription added!");
