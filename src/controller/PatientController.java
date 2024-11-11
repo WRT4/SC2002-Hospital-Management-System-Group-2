@@ -7,42 +7,39 @@ import java.util.Scanner;
 
 import model.Appointment;
 import model.AppointmentRequest;
-import model.Database;
+import application.Database;
 import model.Doctor;
 import model.Patient;
-import model.Status;
+import enums.Status;
 import model.TimeSlot;
 import view.AppointmentView;
 import view.PatientView;
 import view.ScheduleView;
 
-public class PatientController {
-
-	private Scanner scanner;
+public class PatientController extends SessionController{
+	
 	private Patient patient;
 	private PatientView patientView;
-	private int unreadIndex;
 	
 	public PatientController(Patient patient, Scanner scanner) {
 		this.patient = patient;
 		this.scanner = scanner;
 		patientView = new PatientView(scanner);
 		unreadIndex = patient.getUnreadIndex();
+		startTime = LocalTime.now();
+		startDate = LocalDate.now();
 	}
 	
 	public void showMenu() {
 		int choice = -1;
 		do {
-			patientView.showMessageBox(patient, unreadIndex);
+			patientView.showMessageBox(patient.getMessages(), unreadIndex);
 			patientView.showMenu();
 			choice = patientView.getChoice();
-			while (choice < 1 || choice > 11) {
-				System.out.println("No such option! ");
-				choice = patientView.getChoice();
-			}
+			scanner.nextLine(); 
 			switch (choice) {
 				case 1:
-					unreadIndex = patientView.viewInbox(patient, unreadIndex);
+					unreadIndex = patientView.viewInbox(patient.getMessages(), unreadIndex);
 					patient.setUnreadIndex(unreadIndex);
             		break;
 				case 2:
@@ -70,16 +67,19 @@ public class PatientController {
 					patientView.viewScheduledAppointments(patient);
 					break;
 				case 10:
-					patientView.viewAppointmentOutcomes(patient);
+					PatientView.viewAppointmentOutcomes(patient);
 					break;
 				case 11:
 					System.out.println("Logging out...");
+					String log = "Patient " + patient.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
+                    Database.systemLogs.add(log);
 			}
 		}
 		while (choice != 11);
 	}
 	
 	public void updatePersonalInfo() {
+		System.out.println("\nUpdating Personal Information...\n!");
 		System.out.println("1. Enter basic info");
 		System.out.println("2. Update contact info");
 		System.out.println("-1. Go back");
@@ -95,6 +95,7 @@ public class PatientController {
 	}
 	
 	public void updateContactInfo() {
+		System.out.println("\nUpdating Contact Information...\n!");
 		patient.getRecord().viewContactInfo();
 		System.out.println("1. Update Contact info");
 		System.out.println("-1. Exit");
@@ -148,6 +149,7 @@ public class PatientController {
 	}
 	
 	public void enterBasicInfo(){
+		System.out.println("\nEntering Basic Information...\n!");
 		System.out.println("Enter your full name: ");
 		String name = scanner.nextLine();
 		patient.setName(name);
@@ -162,6 +164,7 @@ public class PatientController {
 	}
 	
 	public void scheduleAppointment() {
+		System.out.println("\nScheduling Appointment...\n!");
 		for (Doctor doctor : Database.doctors) {
 			System.out.println(doctor);
 		}
@@ -170,7 +173,7 @@ public class PatientController {
 		if (id.equals("-1")) return;
 		Doctor doctor = null;
 		for (Doctor doctor1 : Database.doctors) {
-			if (doctor1.getId().equals(id)) doctor = doctor1;
+			if (doctor1.getID().equals(id)) doctor = doctor1;
 		}
 		if (doctor == null) {
 			System.out.println("Doctor not found!");
@@ -207,6 +210,7 @@ public class PatientController {
 	}
 	
 	public void rescheduleAppointments() {
+		System.out.println("\nRescheduling Appointment...\n!");
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		patientView.viewScheduledAppointments(patient);
 		System.out.println("Which appointment ID would you like to cancel? Enter Appointment ID or -1 to exit. ");
@@ -250,6 +254,7 @@ public class PatientController {
 	}
 	
 	public void cancelAppointment () {
+		System.out.println("\nCancelling Appointment...\n!");
 		int num = 0;
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		for (Appointment appointment : appointments) {
@@ -275,7 +280,6 @@ public class PatientController {
 	}
 	
 	public void viewRequests() {
-		// view status
 		ArrayList<AppointmentRequest> requests = patient.getRequests();
 		patientView.viewRequests(patient);
 		System.out.println("Would you like to cancel a request? 1. Yes -1. Exit ");

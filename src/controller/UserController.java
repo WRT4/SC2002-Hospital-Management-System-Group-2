@@ -1,66 +1,203 @@
-// UserController.java
 package controller;
 
+import java.util.Scanner;
+
+import model.Administrator;
+import model.Doctor;
+import model.Patient;
+import model.Pharmacist;
 import model.User;
-import java.time.LocalDate;
+import view.UserView;
 
 public class UserController {
-    private static final int MAX_LOGIN_ATTEMPTS = 3;
-    private static final int PASSWORD_EXPIRY_DAYS = 90;
+	
+	private UserView userView;
+	private User user;
+	private Scanner scanner;
+	
+	public UserController(User user, Scanner scanner) {
+		this.user = user;
+		this.userView = new UserView (scanner);
+		this.scanner = scanner;
+	}
+	
+	 // Method to simulate user login
+    public boolean login(String inputID, String inputPassword) {
+        int attempts = 0;
+        final int maxAttempts = 3;
 
-    public boolean login(User user, String enteredId, String enteredPassword) {
-        if (user.isLocked()) {
-            user.logActivity("Login attempt failed - account is locked.");
-            System.out.println("Account is locked. Please contact the administrator.");
-            return false;
-        }
+        while (attempts < maxAttempts) {
+            // Validate user ID and password
+            if (user.getID().equals(inputID) && user.getPassword().equals(inputPassword)) {
+                System.out.println("Login successful!");
+                if (user.isFirstLogin()) {
+                    System.out.println("You are logging in for the first time. Please change your password.");
+                    changePassword();
+                }
+                return true;
+            } else {
+                attempts++;
+                System.out.println("Invalid credentials. Please try again.");
+                System.out.println("Attempt " + attempts + " of " + maxAttempts);
 
-        if (user.getId().equals(enteredId) && user.getPassword().equals(enteredPassword)) {
-            if (isPasswordExpired(user)) {
-                user.logActivity("Login successful but password expired.");
-                System.out.println("Password expired. Please change your password.");
-                return false;
+                // If the maximum attempts are reached, lock the account
+                if (attempts == maxAttempts) {
+                    System.out.println("Maximum login attempts reached. Account is locked.");
+                    lockAccount();
+                    return false;
+                }
+
+                // Prompt user to re-enter credentials
+                inputID = userView.enterID();
+                inputPassword = userView.enterPassword();
             }
-            resetFailedAttempts(user);
-            user.logActivity("Login successful.");
-            return true;
+        }
+        return false;
+    }
+    
+    // Method to change the user's password
+    public void changePassword() {
+        System.out.print("Enter your new password: ");
+        String newPassword = scanner.nextLine();
+        System.out.print("Confirm your new password: ");
+        String confirmPassword = scanner.nextLine();
+
+        if (newPassword.equals(confirmPassword)) {
+        	if (newPassword.equals("password")) {
+        		System.out.println("Please set a different password!");
+        		changePassword();
+        	}
+            user.setPassword(newPassword);
+            
+            user.setFirstLogin(false);
+            System.out.println("Password changed successfully!");
+
+            // Prompt user to log in again with the updated password
+            System.out.print("Please log in again with your new password!\n");
+            String userID = userView.enterID();
+            String newPassword1 = userView.enterPassword();
+
+            // Validate login with the updated password
+            if (user.getID().equals(userID) && user.getPassword().equals(newPassword1)) {
+                System.out.println("Login successful with updated password!");
+                accessSystem(); // Directly redirect to the role-specific dashboard
+            } else {
+                System.out.println("Login failed with the updated password. Exiting.");
+            }
+    
         } else {
-            incrementFailedAttempts(user);
-            user.logActivity("Login attempt failed.");
-            return false;
+            System.out.println("Passwords do not match. Please try again.");
+            changePassword(); // Retry if passwords do not match
         }
     }
+    
+ // Method to handle role-specific actions (to be overridden by subclasses if needed)
+    public void accessSystem() {
+        String role = user.getRole();
+        if (role == null) {
+            System.out.println("User role is not set. Access denied.");
+            return;
+        }
 
-    public void changePassword(User user, String newPassword) {
-        user.setPassword(newPassword);
-        user.logActivity("Password changed.");
-        System.out.println("Password changed successfully.");
+        if (role.equalsIgnoreCase("patient") && user instanceof Patient) {
+            System.out.println("Accessing Patient Dashboard...");
+            PatientController pC = new PatientController(((Patient) user), scanner);
+            pC.showMenu();
+        } else if (role.equalsIgnoreCase("doctor") && user instanceof Doctor) {
+            System.out.println("Accessing Doctor Dashboard...");
+            DoctorController dC = new DoctorController(((Doctor) user), scanner);
+            dC.showMenu();
+        } else if (role.equalsIgnoreCase("pharmacist") && user instanceof Pharmacist) {
+            System.out.println("Accessing Pharmacist Dashboard...");
+            PharmacistController pC = new PharmacistController(((Pharmacist) user), scanner);
+            pC.showMenu();
+        } else if (role.equalsIgnoreCase("administrator") && user instanceof Administrator) {
+            System.out.println("Accessing Administrator Dashboard...");
+            AdministratorController aC = new AdministratorController(((Administrator) user), scanner);
+            aC.showMenu();
+        } else {
+            System.out.println("Unknown role. Access denied.");
+        }
     }
-
-    private boolean isPasswordExpired(User user) {
-        return LocalDate.now().isAfter(user.getPasswordLastChanged().plusDays(PASSWORD_EXPIRY_DAYS));
-    }
-
-    public void lockAccount(User user) {
+    
+    
+    /**
+     * Locks the user account.
+     */
+    public void lockAccount() {
         user.setLocked(true);
-        user.logActivity("Account locked due to multiple failed login attempts.");
-        System.out.println("Account locked. Please contact the administrator.");
+        System.out.println("Account has been locked.");
     }
 
-    public void unlockAccount(User user) {
+    /**
+     * Unlocks the user account.
+     */
+    public void unlockAccount() {
         user.setLocked(false);
-        resetFailedAttempts(user);
-        user.logActivity("Account unlocked.");
+        System.out.println("Account has been unlocked.");
+    }
+    
+    /**
+     * Changes the user's password.
+     * @param newPassword The new password to set.
+     */
+    public void changePassword(String newPassword) {
+        user.setPassword(newPassword);
+        System.out.println("Password has been changed successfully.");
     }
 
-    private void resetFailedAttempts(User user) {
-        user.setFailedLoginAttempts(0);
-    }
+    
+    /**
+     * Displays the menu and handles user input for various actions.
+     */
+    public void showMenu() {
+        int choice;
 
-    private void incrementFailedAttempts(User user) {
-        user.incrementFailedLoginAttempts();
-        if (user.getFailedLoginAttempts() >= MAX_LOGIN_ATTEMPTS) {
-            lockAccount(user);
-        }
+        do {
+            userView.showMenu();
+            // Input validation
+            choice = userView.getChoice();
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                     this.user = UserView.getUser(scanner);
+                     String inputPassword = userView.enterPassword();
+                     this.login(user.getID(), inputPassword);
+                     break;
+
+                case 2:
+                    System.out.println("Changing password...");
+                    changePassword();
+                    break;
+
+                case 3:
+                    System.out.println("Locking account...");
+                    lockAccount();
+                    break;
+
+                case 4:
+                    System.out.println("Unlocking account...");
+                    unlockAccount();
+                    break;
+
+                case 5:
+                    System.out.println("Displaying activity log...");
+                    userView.displayActivityLog(user);
+                    break;
+
+                case 6:
+                    System.out.println("Accessing role-specific dashboard...");
+                    accessSystem();
+                    break;
+
+                case 7:
+                    System.out.println("Logging out...");
+                    break;
+
+                default:
+                	System.out.println("Invalid option! Please try again.");
+            }
+        } while (choice != 7);
     }
+	
 }

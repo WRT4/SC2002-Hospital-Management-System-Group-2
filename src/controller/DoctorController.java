@@ -6,39 +6,38 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import application.Database;
 import model.*;
 import view.AppointmentView;
 import view.DoctorView;
 import view.ScheduleView;
+import enums.Status;
 
-public class DoctorController {
-    private Scanner scanner;
+public class DoctorController extends SessionController {
+	
     private Doctor doctor;
     private DoctorView doctorView;
-    private int unreadIndex;
     
     public DoctorController(Doctor d, Scanner s) {
     	doctor = d;
     	scanner = s;
     	doctorView = new DoctorView(s);
     	unreadIndex = d.getUnreadIndex();
+    	startTime = LocalTime.now();
+		startDate = LocalDate.now();
     }
     
     public void showMenu() {
 		remindPendingRequests();
 		int choice;
         do {
-        	doctorView.showMessageBox(doctor, unreadIndex);
+        	doctorView.showMessageBox(doctor.getMessages(), unreadIndex);
         	doctorView.showMenu();
             choice = doctorView.getChoice();
-            while (choice < 1 || choice > 9) {
-            	System.out.println("Invalid option! Try again!");
-				choice = doctorView.getChoice();
-            }
-
+            scanner.nextLine(); 
             switch (choice) {
             	case 1:
-            		unreadIndex = doctorView.viewInbox(doctor, unreadIndex);
+            		unreadIndex = doctorView.viewInbox(doctor.getMessages(), unreadIndex);
             		doctor.setUnreadIndex(unreadIndex);
             		break;
                 case 2:
@@ -67,6 +66,8 @@ public class DoctorController {
                     break;
                 case 9:
                     System.out.println("Logging out...");
+                    String log = "Doctor " + doctor.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
+                    Database.systemLogs.add(log);
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");

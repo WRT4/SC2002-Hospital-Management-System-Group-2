@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.AppointmentRequest;
-import model.Status;
+import enums.Status;
 
 public class RequestController {
 	public static AppointmentRequest findRequest(ArrayList<AppointmentRequest> requests, boolean isPatient, Scanner scanner) {

@@ -3,8 +3,9 @@ package controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 import model.Appointment;
+import model.Medication;
 // import model.Medication;
-import model.Status;
+import enums.Status;
 import view.AppointmentView;
 
 
@@ -33,13 +34,10 @@ public class AppointmentController {
 
 	
 	public static void setPrescription(Appointment apt, Scanner scanner) {
-		//change this 
-		String pres = AppointmentView.inputPrescription(scanner);
-		apt.getPatient().getRecord().addPrescription(pres);
-		apt.setPrescription();
-		apt.setPrescriptionStatus(Status.PENDING);
-		// send prescription request
-		System.out.println("Prescription added!");
+		String name = AppointmentView.inputPrescription(scanner);
+		int dosage = AppointmentView.inputDosage(scanner);
+        Medication prescribedMed = new Medication(name,dosage);
+        apt.getPrescriptions().add(prescribedMed);
 	}
 	
 	public static void setServiceType(Appointment apt, Scanner scanner) {
