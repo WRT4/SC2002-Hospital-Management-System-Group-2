@@ -3,7 +3,6 @@ package view;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import controller.AppointmentController;
 import model.Appointment;
 
@@ -17,9 +16,10 @@ public class AppointmentView {
 
     //print Appointment Outcome Record (for COMPLETED appointments)
     public static void printAppointmentOutcome(Appointment apt){
+    	// might need to change
         System.out.println("Appointment " + apt.getAppointmentID() + ": " + apt.getDate() + " at " + apt.getTimeSlot().getStartTime() + " with Doctor " + apt.getDoctor().getName());//add outcomes
         System.out.println("Service Type: " + apt.getServiceType());
-        System.out.println("Prescription: " + apt.getPrescription() + " Status :" + apt.getPrescriptionStatus());
+        System.out.println("Prescription: " + apt.getPrescriptions() + " Status :" + apt.getPrescriptionStatus());
         System.out.println("Consultation notes: " + apt.getNotes());
         System.out.println();
     }
@@ -67,10 +67,16 @@ public class AppointmentView {
     
     public static String inputPrescription(Scanner scanner) {
     	//change this
-    	System.out.println("Setting prescription...");
-		System.out.println("Enter prescription to put in record [Medication/Dosage]: ");
-		String pres = scanner.next();
-		return pres;
+    	System.out.println("What medicine do you want to prescribe?");
+        String name = scanner.next();
+        return name;
+    }
+    
+    public static int inputDosage(Scanner scanner) {
+    	//change this
+        System.out.println("What is the dosage?");
+        int dosage = scanner.nextInt();
+        return dosage;
     }
     
     public static String inputServiceType(Scanner scanner) {

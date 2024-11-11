@@ -5,31 +5,22 @@ import model.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import enums.Status;
+import application.Database;
 
-public class PatientView {
-	private Scanner scanner;
-	private final String RED = "\u001B[31m";
-    private final String RESET = "\u001B[0m";
+public class PatientView extends UserView{
 	
 	public PatientView(Scanner scanner){
-		this.scanner = scanner;
+		super(scanner);
 	}
 	
-	public int getChoice() {
-        System.out.print("Enter choice: ");
-        while (!scanner.hasNextInt()) {
-            System.out.println("Invalid input. Enter a number.");
-            scanner.next();
-        }
-        return scanner.nextInt();
-    }
-	
 	public void viewRecord(Patient patient) {
+		System.out.println("\nViewing Record...\n!");
 		patient.getRecord().printMedicalRecord();
 	}
 	
 	public void viewRequests(Patient patient) {
-		// view status
+		System.out.println("\nViewing Requests...\n!");
 		ArrayList<AppointmentRequest> requests = patient.getRequests();
 		if (requests.size() == 0) {
 			System.out.println("No requests made!");
@@ -41,7 +32,7 @@ public class PatientView {
 	}
 	
 	public void viewScheduledAppointments(Patient patient) {
-		// view status
+		System.out.println("\nViewing scheduled Appointment...\n!");
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		if (appointments.size() == 0) {
 			System.out.println("No scheduled appointments!");
@@ -61,7 +52,9 @@ public class PatientView {
 		System.out.println("Note: Appointment request that hasn't been accepted by doctor could be found in Menu Option 7");
 	}
 	
-	public void viewAppointmentOutcomes(Patient patient) {
+	// static as its accessed by pharmacist also
+	public static void viewAppointmentOutcomes(Patient patient) {
+		System.out.println("\nViewing Appointment Outcomes...\n!");
 		int num = 0;
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		for (Appointment apt : appointments) {
@@ -80,7 +73,7 @@ public class PatientView {
 	}
 	
 	public void viewAvailableSlots() {
-		System.out.println("Viewing available slots: ");
+		System.out.println("\nViewing available slots: \n");
 		System.out.println("Enter date: ");
 		LocalDate date = ScheduleView.inputDate(true);
 		if(date == null) return;
@@ -88,65 +81,30 @@ public class PatientView {
 		String docInputID;
 		System.out.println("List of doctors: ");
 		for (Doctor doctor : Database.doctors) {
-			System.out.println(doctor.getId() + "- " + doctor.getName());
+			System.out.println(doctor.getID() + "- " + doctor.getName());
 		}
 		System.out.println("Enter the ID of doctor to check available slots:");
 		docInputID = scanner.next();
 		for (Doctor doctor : Database.doctors) {
-			if (docInputID.compareTo(doctor.getId())==0){
+			if (docInputID.compareTo(doctor.getID())==0){
 				ScheduleView.viewAvailableSlots(date, doctor.getSchedule());
 				break;
 			}
 		}
 	}
 	
-	public int viewInbox(Patient patient, int unreadIndex) {
-		ArrayList<String> messages = patient.getMessages();
-		System.out.println("Inbox:\n");
-		int counter = 0;
-		System.out.println("Unread Messages:");
-		for (int i = messages.size()-1; i >= unreadIndex; i--) {
-			System.out.println(RED + (i+1) + ". " +  "UNREAD - " + messages.get(i) + RESET);
-			System.out.println();
-			counter++;
-		}
-		if (counter == 0) System.out.println("No unread messages!\n");
-		int counter2 = 0;
-		System.out.println("Message history:");
-		for (int i = unreadIndex - 1; i >= 0; i--) {
-			System.out.println((i+1) + ". " + messages.get(i));
-			System.out.println();
-			counter++;
-		}
-		if (counter2 == 0) System.out.println("No message history!\n");
-		return messages.size();
-	}
-	
-	public void showMessageBox(Patient patient, int index) {
-		ArrayList<String> messages = patient.getMessages();
-		System.out.println("Message Box: ");
-		int counter = 0;;
-		for (int i = messages.size() - 1; i >= index; i--){
-			System.out.println(RED + "UNREAD - " + messages.get(i) + RESET);
-			System.out.println();
-			counter++;
-		}
-		if (counter ==0)
-			System.out.println("No unread messages!");
-	}
-	
 	public void showMenu() {
-		System.out.println("Patient Menu: ");
-		System.out.println("1. View inbox");
-		System.out.println("2. View medical record");
-		System.out.println("3. Enter and update personal information");
-		System.out.println("4. View available appointment slots");
-		System.out.println("5. Schedule an appointment");
-		System.out.println("6. Reschedule an appointment");
-		System.out.println("7. Cancel a scheduled appointment");
-		System.out.println("8. View/Cancel appointment requests");
-		System.out.println("9. View scheduled appointments");
-		System.out.println("10. View past appointment outcome records");
+		System.out.println("\nPatient Menu: ");
+		System.out.println("1. View Inbox");
+		System.out.println("2. View Medical Record");
+		System.out.println("3. Enter and Update Personal Information");
+		System.out.println("4. View Available Appointment Slots");
+		System.out.println("5. Schedule an Appointment");
+		System.out.println("6. Reschedule an Appointment");
+		System.out.println("7. Cancel a Scheduled Appointment");
+		System.out.println("8. View/Cancel Appointment Requests");
+		System.out.println("9. View Scheduled Appointments");
+		System.out.println("10. View Past Appointment Outcome Records");
 		System.out.println("11. Logout");
 		System.out.println("Choose an action:");
 	}

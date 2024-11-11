@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import model.Appointment;
 import model.Schedule;
-import model.Status;
+import enums.Status;
 import model.TimeSlot;
 
 public class ScheduleView {
