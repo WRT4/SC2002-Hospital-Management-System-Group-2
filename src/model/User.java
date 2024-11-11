@@ -1,61 +1,95 @@
-// User.java
 package model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
-public abstract class User {
+/**
+ * User.java
+ * Represents a user in the Hospital Management System (HMS).
+ * This class provides login functionality, password management, and role-based access.
+ */
+public class User {
     protected String id;
-    protected String password;
-    protected String name;
+    private String password;
     protected String role;
-    private LocalDate passwordLastChanged;
-    private List<String> activityLog;
+    private boolean isFirstLogin;
+    protected String name;
+    protected ArrayList<String> messages;
+    protected int unreadIndex;
+    private boolean isLocked = false;
 
     public User(String id, String name, String role) {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.password = "password"; // Default password
-        this.passwordLastChanged = LocalDate.now(); // Password set to current date
-        this.activityLog = new ArrayList<>();
+        this.setPassword("password"); // Default password
+        //this.failedLoginAttempts = 0;
+        this.isLocked = false;
+        this.setFirstLogin(true); // Default to true for new users
+        this.messages = new ArrayList<String>();
+        this.unreadIndex = 0;
+        //this.passwordLastChanged = LocalDate.now(); // Password set to current date
+        //this.activityLog = new ArrayList<>();
+        //this.userRequests = new ArrayList<>();
+    }
+    
+    public User(String id, String name, String password, String role) {
+        this(id, name, role);
+        this.setPassword(password);
     }
 
-    public String getId() {
-        return id;
+    // Method to display user information
+    public void displayUserInfo() {
+        System.out.println("User ID: " + id);
+        System.out.println("Role: " + role);
     }
 
-    public String getPassword() {
-        return password;
-    }
-
+    /**
+     * Getter method for the user's name.
+     * @return The name of the user.
+     */
     public String getName() {
-        return name;
+        return this.name;
     }
+    
+    public void setLocked(boolean locked) {
+    	this.isLocked = locked;
+    }
+
+    public int getUnreadIndex() {
+    	return this.unreadIndex;
+    }
+    
+    public void setUnreadIndex(int i) {
+    	this.unreadIndex = i;
+    }
+
 
     public String getRole() {
-        return role;
+        return this.role;
+    }
+    
+    public String getID() {
+        return this.id;
     }
 
-    public LocalDate getPasswordLastChanged() {
-        return passwordLastChanged;
-    }
+	public void setPassword(String newPassword) {
+		this.password = newPassword;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-        this.passwordLastChanged = LocalDate.now();
-    }
+	public boolean isFirstLogin() {
+		return isFirstLogin;
+	}
 
-    public List<String> getActivityLog() {
-        return activityLog;
-    }
+	public void setFirstLogin(boolean isFirstLogin) {
+		this.isFirstLogin = isFirstLogin;
+	}
 
-    // Log user activities
-    public void logActivity(String message) {
-        activityLog.add(LocalDate.now() + ": " + message);
-    }
-
-    // Abstract method for role-specific functionality
-    public abstract void showMenu();
+	public String getPassword() {
+		return password;
+	}
+    
+	public ArrayList<String> getMessages(){
+		return messages;
+	}
+	
 }

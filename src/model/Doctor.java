@@ -8,43 +8,26 @@ import java.util.HashMap;
 public class Doctor extends User {
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
-	private ArrayList<String> messages;
 	private HashMap<Patient, Integer> appointmentCounter;
-	private int unreadIndex;
 
-    public Doctor(String id, String password, String name) {
-        super(id, password, name, "Doctor");
+    public Doctor(String id, String name, String password) {
+        super(id, name, password, "Doctor");
         this.schedule = new Schedule(id);
         this.requests = new ArrayList<AppointmentRequest>();
-		this.messages = new ArrayList<String>();
 		this.appointmentCounter = new HashMap<>();
-		this.unreadIndex = 0;
     }
     
-	@Override
-	public void showMenu() {
-		// TODO Auto-generated method stub
-
-	}
+    public Doctor(String id,String name) {
+        this(id, name, "password");
+    }
+   
 
     public String toString() {
-    	return "Doctor ID: " + getId() + " Name: " + getName();
+    	return "Doctor ID: " + getID() + " Name: " + getName();
     }
-
-	public String getId() {
-		return this.id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
 
 	public Schedule getSchedule() {
 		return schedule;
-	}
-
-	public ArrayList<String> getMessages(){
-		return messages;
 	}
 
 	public HashMap<Patient, Integer> getAppointmentCounter(){
@@ -93,13 +76,5 @@ public class Doctor extends User {
 			// Remove the patient from the map if counter becomes 0
 			appointmentCounter.remove(patient);
 		}
-	}
-
-	public int getUnreadIndex() {
-		return unreadIndex;
-	}
-	
-	public void setUnreadIndex(int i) {
-		this.unreadIndex = i;
 	}
 }

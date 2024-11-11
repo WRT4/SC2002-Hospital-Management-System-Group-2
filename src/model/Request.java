@@ -1,6 +1,6 @@
 package model;
 
 public interface Request {
-    public void acceptRequest();
-    public void declineRequest();
+	public void acceptRequest();
+	public void declineRequest();
 }

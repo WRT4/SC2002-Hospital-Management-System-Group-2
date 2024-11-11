@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Scanner;
+import enums.Status;
 
 public class Appointment {
 	private Patient patient;
@@ -14,8 +14,6 @@ public class Appointment {
     private Status prescriptionStatus;
     private int appointmentID;
     private static int count;
-    // private ArrayList<Medication> prescriptions = new ArrayList<>();
-    private String prescription;
     private ArrayList<Medication> prescriptions = new ArrayList<>();
     private String diagnosis;
     private String serviceType;
@@ -76,7 +74,7 @@ public class Appointment {
 		return this.appointmentID;
 	}
 
-    public ArrayList<Medication> getPrescription() {
+    public ArrayList<Medication> getPrescriptions() {
         if(this.prescriptions == null) {
             System.out.println("No prescriptions yet.");
             return null;
@@ -84,16 +82,6 @@ public class Appointment {
         else
             return this.prescriptions;
     }
-	
-	public void setPrescription() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("What medicine do you want to prescribe?");
-        String name = sc.next();
-        System.out.println("What is the dosage?");
-        int dosage = sc.nextInt();
-        Medication prescribedMed = new Medication(name,dosage);
-        prescriptions.add(prescribedMed);
-	}
 
 	public Doctor getDoctor() {
 		return doctor;	
@@ -123,5 +111,11 @@ public class Appointment {
 	public String getNotes() {
 		return note;
 	}
+	
+	public String getDetails() {
+	    return "Appointment ID: " + this.appointmentID + ", Date: " + this.date + 
+	           ", Time: " + this.timeslot.getStartTime() + ", Doctor: " + this.doctor.getName() + 
+	           ", Patient: " + this.patient.getName() + ", Status: " + this.status;
+	    }
 
 }

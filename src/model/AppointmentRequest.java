@@ -1,7 +1,7 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import enums.Status;
 
 public class AppointmentRequest implements Request {
 	private Doctor doctor;
