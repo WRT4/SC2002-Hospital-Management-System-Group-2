@@ -7,6 +7,14 @@ public class Administrator extends User {
     private List<User> staff; // List to manage staff members
     private List<RefillRequest> refillRequests; // List to store refill requests for review
     private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
+    private String gender;
+    private int age;
+    
+    public Administrator(String id, String name, String gender, int age) {
+        super(id, name, "password", "Administrator");
+        this.gender = gender;
+        this.age = age;
+    }
 
     public Administrator(String id, String name) {
         this(id, name, "password");
@@ -37,8 +45,16 @@ public class Administrator extends User {
 	}
 
 	public String toString() {
-    	return "Admin ID: " + getID() + " Name: " + getName();
-	}
+        return "Administrator ID: " + getID() + ", Name: " + getName() + ", Gender: " + gender + ", Age: " + age;
+    }
+	
+	public String getGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
 
 
 
@@ -142,3 +158,4 @@ public class Administrator extends User {
 
     
 }
+
