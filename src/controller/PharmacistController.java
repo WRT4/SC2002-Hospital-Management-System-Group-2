@@ -1,4 +1,5 @@
 package controller;
+ 
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -83,15 +84,23 @@ public class PharmacistController extends SessionController {
 
         Medication medication = Database.medicationBank.inventory.get(medicationName);
         if (medication.isStockLow()) {
-            RefillRequest request = new RefillRequest(medicationName, requestedAmount);
+            RefillRequest request = new RefillRequest(medicationName, requestedAmount, this.pharmacist, admin);
             pharmacist.getRequests().add(request);
             admin.receiveRefillRequest(request); // Use the Administrator instance
             System.out.println("Replenishment request submitted for " + medicationName);
+            sendMessage(request);
         } else {
             System.out.println("Stock is sufficient for " + medicationName);
         }        
     }
-
+	
+    //Function to send message to admin to inform about replenishment request 
+    public void sendMessage(RefillRequest r) {
+    	String message;
+    	message = "Request at " + r.getRequestDate() + ": Refill Request for " + r.getMedication() + " of amount: " +
+    	r.getRequestedAmount();
+    	r.getAdmin().getMessages().add(message);
+    }
     
     public void updatePrescriptionStatus () {        
         Patient patient1 = pharmacistView.getPatient();
