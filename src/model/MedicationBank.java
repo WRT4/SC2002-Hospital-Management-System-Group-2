@@ -1,6 +1,8 @@
-
 package model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -9,18 +11,58 @@ public class MedicationBank {
 
     public MedicationBank() {
         this.inventory = new HashMap<>();
-        initializeMedications();  // Initialize with predefined medications
+        try {
+            loadMedicationsFromCSV("src/application/Medicine_List.csv");
+            System.out.println("Medications successfully loaded from CSV.");
+        } catch (IOException e) {
+            System.err.println("Error loading medications from CSV: " + e.getMessage());
+        }
     }
 
-    // Initialize predefined medications
-    private void initializeMedications() {
-        Medication paracetamol = new Medication("Paracetamol", 0, LocalDate.of(2025, 12, 31), 20);
-        Medication ibuprofen = new Medication("Ibuprofen",  200, LocalDate.of(2024, 6, 30), 10);
-        Medication amoxicillin = new Medication("Amoxicillin",  250, LocalDate.of(2026, 5, 15), 15);
+    // Method to load medications from a CSV file
+    private void loadMedicationsFromCSV(String filePath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            boolean isFirstLine = true;
 
-        addMedication(paracetamol);
-        addMedication(ibuprofen);
-        addMedication(amoxicillin);
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false; // Skip header row
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                if (data.length < 3) {
+                    System.out.println("Invalid data format: " + line);
+                    continue;
+                }
+
+                String name = data[0].trim();
+                int stockLevel = Integer.parseInt(data[1].trim());
+                int lowStockThreshold = Integer.parseInt(data[2].trim());
+                LocalDate expirationDate = null;
+
+                // Set expiration dates based on predefined medications
+                switch (name.toLowerCase()) {
+                    case "paracetamol":
+                        expirationDate = LocalDate.of(2025, 12, 31);
+                        break;
+                    case "ibuprofen":
+                        expirationDate = LocalDate.of(2024, 6, 30);
+                        break;
+                    case "amoxicillin":
+                        expirationDate = LocalDate.of(2026, 5, 15);
+                        break;
+                    default:                       
+                        System.out.println("Unknown medication: " + name + ". No expiration date set.");
+                        break;
+                }
+
+                // Create the Medication object
+                Medication medication = new Medication(name, stockLevel, expirationDate, lowStockThreshold);
+                addMedication(medication);
+            }
+        }
     }
 
     // Add a medication to the inventory
@@ -42,18 +84,19 @@ public class MedicationBank {
         }
         medication.addStock(amount);
         System.out.println(medicationName + " stock updated. New stock level: " + medication.getStockLevel());
-        checkAndAlertForLowStock(medication);  // Check for low stock after update
+        checkAndAlertForLowStock(medication);
     }
-    
+
+    // Decrease stock for a medication
     public void decreaseStock(String medicationName, int amount) {
         Medication medication = inventory.get(medicationName);
         if (medication == null) {
             System.out.println("Medication not found in the inventory.");
             return;
         }
-        	medication.minusStock(amount);
+        medication.minusStock(amount);
         System.out.println(medicationName + " stock updated. New stock level: " + medication.getStockLevel());
-        checkAndAlertForLowStock(medication);  // Check for low stock after update
+        checkAndAlertForLowStock(medication);
     }
 
     // Check stock level for a specific medication
@@ -74,16 +117,15 @@ public class MedicationBank {
         }
         System.out.println("Current Medication Inventory:");
         for (Medication medication : inventory.values()) {
-            System.out.println(medication);  // Calls toString() method of Medication
+            System.out.println(medication);
         }
     }
 
     // Check if any medication stock is below the threshold and send an alert
     private void checkAndAlertForLowStock(Medication medication) {
         if (medication.isStockLow()) {
-            System.out.println("ALERT: Low stock for " + medication.getName() + ". Current stock: " 
-                                + medication.getStockLevel() + ", Threshold: " + medication.getLowStockThreshold());
-            // Here you can notify the administrator or send an alert.
+            System.out.println("ALERT: Low stock for " + medication.getName() + ". Current stock: "
+                    + medication.getStockLevel() + ", Threshold: " + medication.getLowStockThreshold());
         }
     }
 }
