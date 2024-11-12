@@ -102,10 +102,20 @@ public class AdministratorController extends SessionController{
             }
             request.acceptRequest();
             Database.medicationBank.increaseStock(request.getMedication(), request.getRequestedAmount()); 
+            sendMessage(request);
         } else {
             System.out.println("Invalid request index.");
         }
     }
+    
+    //Function to update pharmacist to inform about success of replenishment request 
+    public void sendMessage(RefillRequest r) {
+    	String message;
+    	message = "Request at " + r.getRequestDate() + ": Refill Request for " + r.getMedication() + " of amount: " +
+    	r.getRequestedAmount() + " successfully fulfillled!";
+    	r.getPharmacist().getMessages().add(message);
+    }
+    
     
     public void viewAndManageMedInventory() {
     	int c; 
