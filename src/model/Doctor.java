@@ -9,6 +9,17 @@ public class Doctor extends User {
     private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
 	private HashMap<Patient, Integer> appointmentCounter;
+	private String gender;
+    private int age;
+    
+    public Doctor(String id, String name, String gender, int age) {
+        super(id, name, "password", "Doctor");
+        this.gender = gender;
+        this.age = age;
+        this.requests = new ArrayList<AppointmentRequest>();
+        this.appointmentCounter = new HashMap<>();
+        this.schedule = new Schedule(id);
+    }
 
     public Doctor(String id, String name, String password) {
         super(id, name, password, "Doctor");
@@ -29,6 +40,14 @@ public class Doctor extends User {
 	public Schedule getSchedule() {
 		return schedule;
 	}
+	
+	public String getGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
 
 	public HashMap<Patient, Integer> getAppointmentCounter(){
 		return appointmentCounter;
