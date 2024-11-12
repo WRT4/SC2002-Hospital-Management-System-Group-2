@@ -5,6 +5,14 @@ import java.util.ArrayList;
 public class Pharmacist extends User {
     //private MedicationBank medicationBank;
     private ArrayList<RefillRequest> requests;
+    private String gender;
+    private int age;
+    
+    public Pharmacist(String id, String name, String gender, int age) {
+        super(id, name, "password", "Pharmacist");
+        this.gender = gender;
+        this.age = age;
+    }
 
     public Pharmacist(String id, String name) {
         super(id, name, "Pharmacist");
@@ -27,6 +35,15 @@ public class Pharmacist extends User {
 	public void setRequests(ArrayList<RefillRequest> requests) {
 		this.requests = requests;
 	}
+	
+	public String getGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
 }
+
 
 
