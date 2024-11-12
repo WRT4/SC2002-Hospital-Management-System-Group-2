@@ -36,6 +36,11 @@ public class Administrator extends User {
 		this.refillRequests = refillRequests;
 	}
 
+	public String toString() {
+    	return "Admin ID: " + getID() + " Name: " + getName();
+	}
+
+
 
 //    //********************************* This part onwards is mainly extras, not for test cases ******************************************8**
 //
