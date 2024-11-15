@@ -105,7 +105,7 @@ public class PatientView extends UserView{
 		System.out.println("8. View/Cancel Appointment Requests");
 		System.out.println("9. View Scheduled Appointments");
 		System.out.println("10. View Past Appointment Outcome Records");
-		System.out.println("11. Logout");
+		System.out.println("11. Exit to Main Menu");
 		System.out.println("Choose an action:");
 	}
 }

@@ -1,6 +1,7 @@
 package view;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import application.Database;
@@ -12,6 +13,7 @@ import model.Medication;
 import model.Patient;
 import model.Pharmacist;
 import model.RefillRequest;
+import model.User;
 
 public class AdministratorView extends UserView {
 	public AdministratorView(Scanner scanner) {
@@ -25,7 +27,8 @@ public class AdministratorView extends UserView {
         System.out.println("4. View and Manage Medication Inventory");
         System.out.println("5. View and Approve Replenishment Requests");
         System.out.println("6. View Logs");
-        System.out.println("7. Logout");
+        System.out.println("7. Unlock Accounts");
+        System.out.println("8. Exit to Main Menu");
 	}
 	
     public void viewPendingRefillRequests(Administrator admin) {
@@ -145,7 +148,7 @@ public class AdministratorView extends UserView {
         return role;
     }
     
-    public String enterID() {
+    public String enterStaffID() {
     	System.out.print("Enter Staff ID: ");
         String id = scanner.nextLine();
         return id;
@@ -162,5 +165,39 @@ public class AdministratorView extends UserView {
 			System.out.println(log);
 			System.out.println();
 		}
+	}
+	public ArrayList<User> viewLockedAccounts() {
+		ArrayList<User> lockedAccounts = new ArrayList<User>();
+		System.out.println("\nViewing locked accounts...");
+		System.out.println("\nLocked Patient Accounts");
+		for (Patient patient : Database.patients) {
+			if (patient.isLocked()) {
+				System.out.println(patient.getID());
+				lockedAccounts.add(patient);
+			}
+		}
+		System.out.println("\nLocked Doctor Accounts");
+		for (Doctor doctor : Database.doctors) {
+			if (doctor.isLocked()) {
+				System.out.println(doctor.getID());
+				lockedAccounts.add(doctor);
+			}
+		}
+		System.out.println("\nLocked Pharmacist Accounts");
+		for (Pharmacist pharmacist : Database.pharmacists) {
+			if (pharmacist.isLocked()) {
+				System.out.println(pharmacist.getID());
+				lockedAccounts.add(pharmacist);
+			}
+		}
+		System.out.println("\nLocked administrator Accounts");
+		for (Administrator administrator : Database.administrators) {
+			if (administrator.isLocked()) {
+				System.out.println(administrator.getID());
+				lockedAccounts.add(administrator);
+			}
+		}
+		System.out.println("\nWhich account would you like to unlock?");
+		return lockedAccounts;
 	}
 }

@@ -78,14 +78,11 @@ public class UserView {
 	}
 
 	public void showMenu() {
-    	System.out.println("\nUser Menu: ");
-        System.out.println("1. Login");
+    	System.out.println("\nMain Menu: ");
+        System.out.println("1. Access Role-Specific Dashboard");
         System.out.println("2. Change Password");
-        System.out.println("3. Lock Account");
-        System.out.println("4. Unlock Account");
-        System.out.println("5. Display Activity Log");
-        System.out.println("6. Access Role-Specific Dashboard");
-        System.out.println("7. Logout");
+        System.out.println("3. Display Activity Log");
+        System.out.println("4. Logout");
         System.out.println("Choose an action:");
     }
 	

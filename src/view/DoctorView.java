@@ -126,7 +126,7 @@ public class DoctorView extends UserView{
         System.out.println("6. Accept or Decline Appointment Requests");
         System.out.println("7. View Upcoming Appointments / Cancel Appointment");
         System.out.println("8. Record Appointment Outcome");
-        System.out.println("9. Logout");
+        System.out.println("9. Exit to Main Menu");
         System.out.println("Choose an action:");
     }
 }

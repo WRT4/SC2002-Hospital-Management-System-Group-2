@@ -72,7 +72,7 @@ public class PharmacistView extends UserView{
 		System.out.println("3. Update Prescription Status");
 		System.out.println("4. View Medication Inventory");
 		System.out.println("5. Submit Replenishment Request");
-		System.out.println("6. Logout");
+		System.out.println("6. Exit to Main Menu");
 		System.out.println("Choose an action: ");
 	}
 }
