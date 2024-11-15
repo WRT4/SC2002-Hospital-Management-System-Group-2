@@ -35,6 +35,10 @@ public abstract class User {
         //this.userRequests = new ArrayList<>();
     }
     
+    public boolean isLocked() {
+    	return isLocked;
+    }
+    
     public User(String id, String name, String password, String role) {
         this(id, name, role);
         this.setPassword(password);
@@ -96,5 +100,9 @@ public abstract class User {
 	}
 	
 	public abstract SessionController createController(Scanner scanner);
+
+	public void unLock() {
+		this.isLocked = false;
+	}
 	
 }
