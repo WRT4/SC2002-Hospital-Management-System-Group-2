@@ -55,7 +55,7 @@ public class PharmacistController extends SessionController {
     		    submitReplenishmentRequest(); 
     		    break;
     		case 6:
-    			System.out.println("Logging out...");
+    			System.out.println("Exiting Pharmacist menu...");
     			String log = "Pharmacist " + pharmacist.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
                 Database.systemLogs.add(log);
     			break;

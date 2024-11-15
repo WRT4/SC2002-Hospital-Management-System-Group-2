@@ -25,6 +25,7 @@ public class UserController {
         while (attempts < maxAttempts) {
             // Validate user ID and password
             if (user.getID().equals(inputID) && user.getPassword().equals(inputPassword)) {
+            	if (user.isLocked()) return false;
                 System.out.println("Login successful!");
                 if (user.isFirstLogin()) {
                     System.out.println("You are logging in for the first time. Please change your password.");
@@ -44,7 +45,6 @@ public class UserController {
                 }
 
                 // Prompt user to re-enter credentials
-                inputID = userView.enterID();
                 inputPassword = userView.enterPassword();
             }
         }
@@ -76,7 +76,7 @@ public class UserController {
             // Validate login with the updated password
             if (user.getID().equals(userID) && user.getPassword().equals(newPassword1)) {
                 System.out.println("Login successful with updated password!");
-                accessSystem(); // Directly redirect to the role-specific dashboard
+                // accessSystem(); // Directly redirect to the role-specific dashboard
             } else {
                 System.out.println("Login failed with the updated password. Exiting.");
             }
@@ -158,45 +158,24 @@ public class UserController {
             choice = userView.getChoice();
             scanner.nextLine();
             switch (choice) {
-                case 1:
-                     this.user = UserView.getUser(scanner);
-                     String inputPassword = userView.enterPassword();
-                     this.login(user.getID(), inputPassword);
-                     break;
-
+            	case 1:
+	                accessSystem();
+	                break;
                 case 2:
                     System.out.println("Changing password...");
                     changePassword();
                     break;
-
                 case 3:
-                    System.out.println("Locking account...");
-                    lockAccount();
-                    break;
-
-                case 4:
-                    System.out.println("Unlocking account...");
-                    unlockAccount();
-                    break;
-
-                case 5:
                     System.out.println("Displaying activity log...");
                     userView.displayActivityLog(user);
                     break;
-
-                case 6:
-                    System.out.println("Accessing role-specific dashboard...");
-                    accessSystem();
-                    break;
-
-                case 7:
+                case 4:
                     System.out.println("Logging out...");
                     break;
-
                 default:
                 	System.out.println("Invalid option! Please try again.");
             }
-        } while (choice != 7);
+        } while (choice != 4);
     }
 	
 }

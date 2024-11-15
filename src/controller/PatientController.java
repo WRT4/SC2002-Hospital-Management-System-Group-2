@@ -70,7 +70,7 @@ public class PatientController extends SessionController{
 					PatientView.viewAppointmentOutcomes(patient);
 					break;
 				case 11:
-					System.out.println("Logging out...");
+					System.out.println("Exiting Patient menu...");
 					String log = "Patient " + patient.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
                     Database.systemLogs.add(log);
 			}

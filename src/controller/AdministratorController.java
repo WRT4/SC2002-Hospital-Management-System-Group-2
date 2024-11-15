@@ -2,6 +2,7 @@ package controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import application.Database;
@@ -10,6 +11,7 @@ import model.Administrator;
 import model.Doctor;
 import model.Pharmacist;
 import model.RefillRequest;
+import model.User;
 import view.AdministratorView;
 
 public class AdministratorController extends SessionController{
@@ -43,15 +45,38 @@ public class AdministratorController extends SessionController{
                 case 6:
                 	administratorView.viewSystemLogs();
                 case 7:
-                    System.out.println("Logging out of Administrator menu.");
+                	unlockAccounts();
+                case 8:
+                    System.out.println("Exiting Administrator menu...");
                     String log = "Admin " + admin.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
                     Database.systemLogs.add(log);
                     break;
                 default:
                     System.out.println("Invalid choice.");
             }
-        } while (adminChoice != 7);
+        } while (adminChoice != 8);
     }
+	
+	public void unlockAccounts() {
+		ArrayList<User> lockedAccounts = administratorView.viewLockedAccounts();
+		User lockedUser = null;
+		while (lockedUser == null) {
+			String id = administratorView.enterID().trim();
+			for (User user : lockedAccounts) {
+				if (user.getID().equals(id)) {
+					if (user.isLocked()) {
+						lockedUser = user;
+						break;
+					}
+				}
+			}
+			if (lockedUser == null) {
+				System.out.println("Account isn't locked or doesn't exist! Please Try Again!");
+			}
+		}
+		lockedUser.unLock();
+		System.out.println("Account " + lockedUser.getID() + " successfully unlocked!");
+	}
 	
 	public AdministratorController(Administrator admin, Scanner scanner) {
 		this.admin = admin;
@@ -230,7 +255,7 @@ public class AdministratorController extends SessionController{
     
     public void addStaff() {
         String role = administratorView.enterRole();
-        String id = administratorView.enterID();
+        String id = administratorView.enterStaffID();
         String name = administratorView.enterName();
 
         // Check for duplicates based on role and ID
@@ -277,7 +302,7 @@ public class AdministratorController extends SessionController{
     
     public void removeStaff() {
         String role = administratorView.enterRole();
-        String id = administratorView.enterID();
+        String id = administratorView.enterStaffID();
 
         boolean removed = false;
 
