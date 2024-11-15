@@ -2,10 +2,6 @@ package controller;
 
 import java.util.Scanner;
 
-import model.Administrator;
-import model.Doctor;
-import model.Patient;
-import model.Pharmacist;
 import model.User;
 import view.UserView;
 
@@ -99,25 +95,28 @@ public class UserController {
             return;
         }
 
-        if (role.equalsIgnoreCase("patient") && user instanceof Patient) {
-            System.out.println("Accessing Patient Dashboard...");
-            PatientController pC = new PatientController(((Patient) user), scanner);
-            pC.showMenu();
-        } else if (role.equalsIgnoreCase("doctor") && user instanceof Doctor) {
-            System.out.println("Accessing Doctor Dashboard...");
-            DoctorController dC = new DoctorController(((Doctor) user), scanner);
-            dC.showMenu();
-        } else if (role.equalsIgnoreCase("pharmacist") && user instanceof Pharmacist) {
-            System.out.println("Accessing Pharmacist Dashboard...");
-            PharmacistController pC = new PharmacistController(((Pharmacist) user), scanner);
-            pC.showMenu();
-        } else if (role.equalsIgnoreCase("administrator") && user instanceof Administrator) {
-            System.out.println("Accessing Administrator Dashboard...");
-            AdministratorController aC = new AdministratorController(((Administrator) user), scanner);
-            aC.showMenu();
-        } else {
-            System.out.println("Unknown role. Access denied.");
-        }
+//        if (role.equalsIgnoreCase("patient") && user instanceof Patient) {
+//            System.out.println("Accessing Patient Dashboard...");
+//            PatientController pC = new PatientController(((Patient) user), scanner);
+//            pC.showMenu();
+//        } else if (role.equalsIgnoreCase("doctor") && user instanceof Doctor) {
+//            System.out.println("Accessing Doctor Dashboard...");
+//            DoctorController dC = new DoctorController(((Doctor) user), scanner);
+//            dC.showMenu();
+//        } else if (role.equalsIgnoreCase("pharmacist") && user instanceof Pharmacist) {
+//            System.out.println("Accessing Pharmacist Dashboard...");
+//            PharmacistController pC = new PharmacistController(((Pharmacist) user), scanner);
+//            pC.showMenu();
+//        } else if (role.equalsIgnoreCase("administrator") && user instanceof Administrator) {
+//            System.out.println("Accessing Administrator Dashboard...");
+//            AdministratorController aC = new AdministratorController(((Administrator) user), scanner);
+//            aC.showMenu();
+//        } else {
+//            System.out.println("Unknown role. Access denied.");
+//        }
+        
+        SessionController sessionController = user.createController(scanner);
+        sessionController.showMenu();
     }
     
     

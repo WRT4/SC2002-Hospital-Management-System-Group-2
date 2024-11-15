@@ -10,4 +10,5 @@ public abstract class SessionController {
     protected int unreadIndex;
     protected LocalDate startDate;
     protected LocalTime startTime;
+    public abstract void showMenu();
 }
