@@ -12,6 +12,7 @@ public class MedicalRecord {
     private ArrayList<String> prescriptions;
     private String phoneNumber;
     private String email;
+    private int age;
     
     
     public MedicalRecord(String patientID, String name, String dateOfBirth, String gender, String phoneNumber, String email, String bloodType) {
@@ -75,7 +76,7 @@ public class MedicalRecord {
 
     public void printMedicalRecord() {
         System.out.println("Name: " + name + " | ID: " + patientID + " | Phone number: " + phoneNumber + " | Email Address: " + email +
-        "\nDate Of Birth: " + dateOfBirth + " | Gender: " + gender + " | Blood Type: " + bloodType +
+        "\nDate Of Birth: " + dateOfBirth + " | Gender: " + gender + " | Blood Type: " + bloodType + " | Age: " + age +
         "\nDiagnoses: " + diagnoses +
         "\nPrescriptions: " + prescriptions);
     }
@@ -114,6 +115,12 @@ public class MedicalRecord {
 		System.out.println("Email: " + getEmail());
 		System.out.println("Date of Birth: " + getDateOfBirth());
 		System.out.println("Phone Number: " + getPhoneNumber());
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
 	}
 }
 

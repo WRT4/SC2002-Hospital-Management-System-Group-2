@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
+
+import controller.DoctorController;
+import controller.SessionController;
 
 public class Doctor extends User {
     private Schedule schedule;
@@ -96,4 +100,11 @@ public class Doctor extends User {
 			appointmentCounter.remove(patient);
 		}
 	}
+	
+	@Override
+	public SessionController createController(Scanner scanner) {
+		System.out.println("Accessing Doctor Dashboard...");
+		return new DoctorController(this, scanner);
+	}
+
 }

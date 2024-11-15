@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import controller.SessionController;
 
 /**
  * User.java
  * Represents a user in the Hospital Management System (HMS).
  * This class provides login functionality, password management, and role-based access.
  */
-public class User {
+public abstract class User {
     protected String id;
     private String password;
     protected String role;
@@ -91,5 +94,7 @@ public class User {
 	public ArrayList<String> getMessages(){
 		return messages;
 	}
+	
+	public abstract SessionController createController(Scanner scanner);
 	
 }

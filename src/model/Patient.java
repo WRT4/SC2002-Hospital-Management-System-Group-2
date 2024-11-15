@@ -1,25 +1,29 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import controller.PatientController;
+import controller.SessionController;
 
 public class Patient extends User {
 	
     private MedicalRecord record;
     private ArrayList<Appointment> appointments;
     private ArrayList<AppointmentRequest> requests;
-    private String dob;
-    private String gender;
-    private String bloodType;
-    private String contactInfo;
-    private int age;
+//    private String dob;
+//    private String gender;
+//    private String bloodType;
+//    private String contactInfo;
+//    private int age;
     
     public Patient(String id, String name, String dob, String gender, String bloodType, String contactInfo, int age) {
         super(id, name, "password", "Patient");
-        this.dob = dob;
-        this.gender = gender;
-        this.bloodType = bloodType;
-        this.contactInfo = contactInfo;
-        this.age = age;
+//        this.dob = dob;
+//        this.gender = gender;
+//        this.bloodType = bloodType;
+//        this.contactInfo = contactInfo;
+//        this.age = age;
         this.record = new MedicalRecord(id, name);
         this.appointments = new ArrayList<>();
         this.requests = new ArrayList<>();
@@ -29,6 +33,7 @@ public class Patient extends User {
         record.setGender(gender);
         record.setBloodType(bloodType);
         record.setEmail(contactInfo);
+        record.setAge(age);
     }
 	
 	public Patient(String id, String password, String name) {
@@ -81,7 +86,12 @@ public class Patient extends User {
 	public ArrayList<AppointmentRequest> getRequests() {
 		return requests;
 	}
-
+	
+	@Override
+	public SessionController createController(Scanner scanner) {
+		System.out.println("Accessing Patient Dashboard...");
+		return new PatientController(this, scanner);
+	}
 }
 
 

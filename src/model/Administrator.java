@@ -2,6 +2,10 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import controller.AdministratorController;
+import controller.SessionController;
 
 public class Administrator extends User {
     private List<User> staff; // List to manage staff members
@@ -56,6 +60,11 @@ public class Administrator extends User {
         return age;
     }
 
+	@Override
+	public SessionController createController(Scanner scanner) {
+		System.out.println("Accessing Administrator Dashboard...");
+		return new AdministratorController(this, scanner);
+	}
 
 
 //    //********************************* This part onwards is mainly extras, not for test cases ******************************************8**

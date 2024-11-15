@@ -1,6 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import controller.PharmacistController;
+import controller.SessionController;
 
 public class Pharmacist extends User {
     //private MedicationBank medicationBank;
@@ -43,6 +47,12 @@ public class Pharmacist extends User {
     public int getAge() {
         return age;
     }
+    
+    @Override
+	public SessionController createController(Scanner scanner) {
+    	System.out.println("Accessing Pharmacist Dashboard...");
+		return new PharmacistController(this, scanner);
+	}
 }
 
 
