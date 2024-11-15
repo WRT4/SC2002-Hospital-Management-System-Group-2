@@ -11,12 +11,13 @@ import java.time.format.DateTimeFormatter;
 
 public class Database {
 
-    public static final ArrayList<Doctor> doctors = new ArrayList<>();
-    public static final ArrayList<Patient> patients = new ArrayList<>();
-    public static final ArrayList<Pharmacist> pharmacists = new ArrayList<>();
-    public static final ArrayList<Administrator> administrators = new ArrayList<>();
+    public static final ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+    public static final ArrayList<Patient> patients = new ArrayList<Patient>();
+    public static final ArrayList<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
+    public static final ArrayList<Administrator> administrators = new ArrayList<Administrator>();
     public static final MedicationBank medicationBank = new MedicationBank();
     public static final ArrayList<String> systemLogs = new ArrayList<>();
+//    public static final ArrayList<User> allUsers = new ArrayList<User>();
 
     // Constructor to initialize the database from CSV files
     public Database() {
@@ -27,6 +28,10 @@ public class Database {
         } catch (IOException e) {
             System.err.println("Error loading data from CSV files: " + e.getMessage());
         }
+//        allUsers.addAll(doctors);
+//        allUsers.addAll(patients);
+//        allUsers.addAll(pharmacists);
+//        allUsers.addAll(administrators);
     }
     
     public static int getTotalStaffCount() {
