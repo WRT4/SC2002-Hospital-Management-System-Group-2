@@ -37,12 +37,17 @@ public class Administrator extends User {
     
     // Receive a refill request from pharmacists
     public void receiveRefillRequest(RefillRequest request) {
+        if (getRefillRequests() == null) {
+            setRefillRequests(new ArrayList<>()); // Initialize if null
+        }
         getRefillRequests().add(request);
     }
-
-	public List<RefillRequest> getRefillRequests() {
-		return refillRequests;
-	}
+    public List<RefillRequest> getRefillRequests() {
+        if (refillRequests == null) {
+            refillRequests = new ArrayList<>(); // Initialize if null
+        }
+        return refillRequests;
+    }
 
 	public void setRefillRequests(List<RefillRequest> refillRequests) {
 		this.refillRequests = refillRequests;
@@ -167,4 +172,3 @@ public class Administrator extends User {
 
     
 }
-
