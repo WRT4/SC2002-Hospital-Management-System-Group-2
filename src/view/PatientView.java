@@ -54,6 +54,12 @@ public class PatientView extends UserView{
 	
 	// static as its accessed by pharmacist also
 	public static void viewAppointmentOutcomes(Patient patient) {
+		
+		if (patient == null) {
+	        System.out.println("Error: Patient record not found.");
+	        return;
+	    }
+		
 		System.out.println("\nViewing Appointment Outcomes...\n!");
 		int num = 0;
 		ArrayList<Appointment> appointments = patient.getAppointments();
