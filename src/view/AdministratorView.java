@@ -160,10 +160,9 @@ public class AdministratorView extends UserView {
         return name;
     }
 	public void viewSystemLogs() {
-		System.out.println("Viewing system logs...");
+		System.out.println("Viewing system logs...\n");
 		for (String log : Database.systemLogs) {
 			System.out.println(log);
-			System.out.println();
 		}
 	}
 	public ArrayList<User> viewLockedAccounts() {
@@ -197,7 +196,7 @@ public class AdministratorView extends UserView {
 				lockedAccounts.add(administrator);
 			}
 		}
-		System.out.println("\nWhich account would you like to unlock?");
+		System.out.println("\nWhich account would you like to unlock? Enter ID or -1 to exit");
 		return lockedAccounts;
 	}
 }
