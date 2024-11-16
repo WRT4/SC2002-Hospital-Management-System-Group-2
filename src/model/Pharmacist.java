@@ -32,9 +32,12 @@ public class Pharmacist extends User {
     	return "Pharmacist ID: " + getID() + " Name: " + getName();
     }
 
-	public ArrayList<RefillRequest> getRequests() {
-		return requests;
-	}
+    public ArrayList<RefillRequest> getRequests() {
+        if (requests == null) {
+            requests = new ArrayList<>(); // Initialize if null
+        }
+        return requests;
+    }
 
 	public void setRequests(ArrayList<RefillRequest> requests) {
 		this.requests = requests;
@@ -48,12 +51,11 @@ public class Pharmacist extends User {
         return age;
     }
     
+    
     @Override
 	public SessionController createController(Scanner scanner) {
     	System.out.println("Accessing Pharmacist Dashboard...");
 		return new PharmacistController(this, scanner);
 	}
 }
-
-
 
