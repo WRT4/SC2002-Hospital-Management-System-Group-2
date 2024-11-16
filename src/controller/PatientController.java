@@ -71,7 +71,7 @@ public class PatientController extends SessionController{
 					break;
 				case 11:
 					System.out.println("Exiting Patient menu...");
-					String log = "Patient " + patient.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
+					String log = "Patient " + patient.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
                     Database.systemLogs.add(log);
 			}
 		}

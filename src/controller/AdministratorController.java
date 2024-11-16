@@ -44,11 +44,13 @@ public class AdministratorController extends SessionController{
                     break;
                 case 6:
                 	administratorView.viewSystemLogs();
+                	break;
                 case 7:
                 	unlockAccounts();
+                	break;
                 case 8:
                     System.out.println("Exiting Administrator menu...");
-                    String log = "Admin " + admin.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
+                    String log = "Admin " + admin.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
                     Database.systemLogs.add(log);
                     break;
                 default:
@@ -62,6 +64,7 @@ public class AdministratorController extends SessionController{
 		User lockedUser = null;
 		while (lockedUser == null) {
 			String id = administratorView.enterID().trim();
+			if (id.equals("-1")) return;
 			for (User user : lockedAccounts) {
 				if (user.getID().equals(id)) {
 					if (user.isLocked()) {

@@ -1,11 +1,16 @@
 package controller;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 
+import application.Database;
 import model.User;
 import view.UserView;
 
-public class UserController {
+public class UserController extends SessionController{
 	
 	private UserView userView;
 	private User user;
@@ -15,6 +20,10 @@ public class UserController {
 		this.user = user;
 		this.userView = new UserView (scanner);
 		this.scanner = scanner;
+		startTime = LocalTime.now();
+		startDate = LocalDate.now();
+		String log = "User " + user.getID() + " logged in at " + startTime.format(formatter) + " on " + startDate; 
+        Database.systemLogs.add(log);
 	}
 	
 	 // Method to simulate user login
@@ -126,6 +135,8 @@ public class UserController {
     public void lockAccount() {
         user.setLocked(true);
         System.out.println("Account has been locked.");
+        String log = "Account " + user.getID() + " has been locked.";
+        Database.systemLogs.add(log);
     }
 
     /**
@@ -134,6 +145,8 @@ public class UserController {
     public void unlockAccount() {
         user.setLocked(false);
         System.out.println("Account has been unlocked.");
+        String log = "Account " + user.getID() + " has been unlocked.";
+        Database.systemLogs.add(log);
     }
     
     /**
@@ -171,6 +184,18 @@ public class UserController {
                     break;
                 case 4:
                     System.out.println("Logging out...");
+                    LocalDate endDate = LocalDate.now();
+                    LocalTime endTime = LocalTime.now();
+                    LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+                    LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+                    // Calculate the duration
+                    Duration duration = Duration.between(startDateTime, endDateTime);
+                    // Extract hours, minutes, and seconds
+                    long hours = duration.toHours();
+                    long minutes = duration.toMinutes() % 60; // Remaining minutes
+                    long seconds = duration.getSeconds() % 60; // Remaining seconds
+                    String log = "User " + user.getID() + " logged out at " + endTime.format(formatter) + " on " + endDate + ". Session lasted for " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds." ;
+                    Database.systemLogs.add(log);
                     break;
                 default:
                 	System.out.println("Invalid option! Please try again.");

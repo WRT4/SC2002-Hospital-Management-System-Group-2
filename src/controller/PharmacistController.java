@@ -56,7 +56,7 @@ public class PharmacistController extends SessionController {
     		    break;
     		case 6:
     			System.out.println("Exiting Pharmacist menu...");
-    			String log = "Pharmacist " + pharmacist.getID() + " accessed system from " + startTime + " on " + startDate + " to " + LocalTime.now() + " on " + LocalDate.now(); 
+    			String log = "Pharmacist " + pharmacist.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
                 Database.systemLogs.add(log);
     			break;
     		default:
