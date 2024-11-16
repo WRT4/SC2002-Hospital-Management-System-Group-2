@@ -3,6 +3,7 @@ package controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import application.Database;
@@ -84,6 +85,9 @@ public class PharmacistController extends SessionController {
 
         Medication medication = Database.medicationBank.inventory.get(medicationName);
         if (medication.isStockLow()) {
+                if (pharmacist.getRequests() == null) {
+                    pharmacist.setRequests(new ArrayList<>()); // Initialize if null
+                }
             RefillRequest request = new RefillRequest(medicationName, requestedAmount, this.pharmacist, admin);
             pharmacist.getRequests().add(request);
             admin.receiveRefillRequest(request); // Use the Administrator instance
@@ -104,6 +108,11 @@ public class PharmacistController extends SessionController {
     
     public void updatePrescriptionStatus () {        
         Patient patient1 = pharmacistView.getPatient();
+        
+        if (patient1 == null) {
+            System.out.println("No valid patient selected. Returning to menu.");
+            return;
+        }
         pharmacistView.viewAppointmentOutcomeRecords(patient1);
         int apptChoice = 0;
         if (patient1.getAppointments().isEmpty())
