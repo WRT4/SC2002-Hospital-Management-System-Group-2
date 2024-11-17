@@ -39,6 +39,7 @@ public class UserController extends SessionController{
                 if (user.isFirstLogin()) {
                     System.out.println("You are logging in for the first time or your password has been reset. Please change your password.");
                     changePassword();
+                    return false;
                 }
                 return true;
             } else {
@@ -79,16 +80,6 @@ public class UserController extends SessionController{
 
             // Prompt user to log in again with the updated password
             System.out.print("Please log in again with your new password!\n");
-            String userID = userView.enterID();
-            String newPassword1 = userView.enterPassword();
-
-            // Validate login with the updated password
-            if (user.getID().equals(userID) && user.getPassword().equals(newPassword1)) {
-                System.out.println("Login successful with updated password!");
-                // accessSystem(); // Directly redirect to the role-specific dashboard
-            } else {
-                System.out.println("Login failed with the updated password. Exiting.");
-            }
     
         } else {
             System.out.println("Passwords do not match. Please try again.");
