@@ -16,6 +16,7 @@ import model.Pharmacist;
 import model.RefillRequest;
 import view.PatientView;
 import view.PharmacistView;
+import view.AppointmentView;
 
 public class PharmacistController extends SessionController {
 	
@@ -158,24 +159,44 @@ public class PharmacistController extends SessionController {
     }
     
     public void updatePrescriptionStatus () {        
-        Patient patient1 = getPatient();
-        
-        if (patient1 == null) {
-            System.out.println("No valid patient selected. Returning to menu.");
+           // Curate all appointments with prescription status: pending into list
+        ArrayList<Appointment> pendingAppointments = new ArrayList<>();
+        for (Patient patient : Database.PATIENTS) {
+            for (Appointment apt : patient.getAppointments()) {
+                if (apt.getPrescriptionStatus() == Status.PENDING) {
+                    pendingAppointments.add(apt);
+                }
+            }
+        }
+
+        // If no pending appointments are found, exit the method
+        if (pendingAppointments.isEmpty()) {
+            System.out.println("No appointments with pending prescription status found.");
             return;
         }
-        PatientView.viewAppointmentOutcomes(patient1.getAppointments());
-        int apptChoice = 0;
-        if (patient1.getAppointments().isEmpty())
-        	return;
-        System.out.println("Choose Appointment ID to update Prescription Status");
-        apptChoice = pharmacistView.getChoice();
+
+        // Display pending appointments
+        System.out.println("Appointments with Pending Prescription Status:");
+        for (Appointment apt : pendingAppointments) {
+            AppointmentView.printAppointmentOutcome(apt); // Use AppointmentView method
+        }
+
+        // Prompt the user to select an appointment ID
+        System.out.println("Choose Appointment ID to update Prescription Status:");
+        int apptChoice = pharmacistView.getChoice();
+
+        // Find the selected appointment
         Appointment selectedAppointment = null;
-        for (Appointment appointment : patient1.getAppointments()) {
-            if (appointment.getAppointmentID() == apptChoice) {
-                selectedAppointment = appointment;
+        for (Appointment apt : pendingAppointments) {
+            if (apt.getAppointmentID() == apptChoice) {
+                selectedAppointment = apt;
                 break;
             }
+        }
+
+        if (selectedAppointment == null) {
+            System.out.println("Invalid appointment ID selected.");
+            return;
         }
 
         // First, attempt to dispense medication before setting the status
