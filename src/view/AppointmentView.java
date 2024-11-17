@@ -16,6 +16,7 @@ public class AppointmentView {
     //print Appointment Outcome Record (for COMPLETED appointments)
     public static void printAppointmentOutcome(Appointment apt){
     	// might need to change
+	System.out.println(apt.getPatient());
         System.out.println("Appointment " + apt.getAppointmentID() + ": " + apt.getDate() + " at " + apt.getTimeSlot().getStartTime() + " with Doctor " + apt.getDoctor().getName());//add outcomes
         System.out.println("Service Type: " + apt.getServiceType());
         System.out.println("Prescription: " + apt.getPrescriptions() + " Status :" + apt.getPrescriptionStatus());
