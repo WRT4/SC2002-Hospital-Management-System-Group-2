@@ -2,8 +2,6 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import application.Database;
 import model.User;
 
 public class UserView {
@@ -85,20 +83,4 @@ public class UserView {
         System.out.println("4. Logout");
         System.out.println("Choose an action:");
     }
-	
-	public static User getUser(Scanner scanner) {
-		System.out.print("Enter User ID (-1 to exit): ");
-        User user = null;
-        while (user == null) {
-            String userID = scanner.nextLine();
-            if (userID.equals("-1")) {
-                return null; 
-            }
-            user = Database.getUser(userID);
-            if (user == null) {
-                System.out.print("Invalid User ID. Please try again: ");
-            }
-        }
-        return user;
-	}
 }
