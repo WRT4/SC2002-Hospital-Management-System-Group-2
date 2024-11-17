@@ -86,6 +86,7 @@ public class AdministratorController extends SessionController{
 	}
 	public void unlockAccounts() {
 		ArrayList<User> lockedAccounts = getLockedAccounts();
+		administratorView.viewLockedAccounts(lockedAccounts);
 		User lockedUser = null;
 		while (lockedUser == null) {
 			String id = administratorView.enterID().trim();
