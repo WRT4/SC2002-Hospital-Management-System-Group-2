@@ -104,7 +104,9 @@ public class AdministratorController extends SessionController{
 			}
 		}
 		lockedUser.unLock();
-		System.out.println("Account " + lockedUser.getID() + " successfully unlocked!");
+		lockedUser.setFirstLogin(true);
+		lockedUser.setPassword("password");
+		System.out.println("Account " + lockedUser.getID() + " successfully unlocked! Password reset to default password!");
 	}
 	
 	public AdministratorController(Administrator admin, Scanner scanner) {
