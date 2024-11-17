@@ -11,19 +11,10 @@ public class Patient extends User {
     private MedicalRecord record;
     private ArrayList<Appointment> appointments;
     private ArrayList<AppointmentRequest> requests;
-//    private String dob;
-//    private String gender;
-//    private String bloodType;
-//    private String contactInfo;
-//    private int age;
+
     
     public Patient(String id, String name, String dob, String gender, String bloodType, String contactInfo, int age) {
         super(id, name, "password", "Patient");
-//        this.dob = dob;
-//        this.gender = gender;
-//        this.bloodType = bloodType;
-//        this.contactInfo = contactInfo;
-//        this.age = age;
         this.record = new MedicalRecord(id, name);
         this.appointments = new ArrayList<>();
         this.requests = new ArrayList<>();

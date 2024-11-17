@@ -10,7 +10,7 @@ import controller.SessionController;
 public class Administrator extends User {
     private List<User> staff; // List to manage staff members
     private List<RefillRequest> refillRequests; // List to store refill requests for review
-    private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
+    // private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
     private String gender;
     private int age;
     
@@ -28,7 +28,7 @@ public class Administrator extends User {
     	super(id, name, password, "Administrator");
         this.staff = new ArrayList<>();
         this.setRefillRequests(new ArrayList<>());
-        this.userRequests = new ArrayList<>();
+        // this.userRequests = new ArrayList<>();
     }
  
     public List<User> getStaff(){ 
