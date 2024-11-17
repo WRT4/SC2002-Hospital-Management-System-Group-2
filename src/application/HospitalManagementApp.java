@@ -3,7 +3,6 @@ package application;
 import java.util.Scanner;
 import controller.UserController;
 import model.User;
-import view.UserView;
 
 public class HospitalManagementApp {
 
@@ -16,7 +15,7 @@ public class HospitalManagementApp {
         while (true) {
             // Prompt the user for their User ID
         	System.out.println("\nLogging in...");
-            user = UserView.getUser(scanner);
+            user = getUser(scanner);
             if (user == null) {
             	System.out.println("Exiting the application!");
             	return;
@@ -51,4 +50,20 @@ public class HospitalManagementApp {
 //        	System.out.println("You have logged out. Returning to the login page...");
 //        }
     }
+    
+    private static User getUser(Scanner scanner) {
+		System.out.print("Enter User ID (-1 to exit): ");
+        User user = null;
+        while (user == null) {
+            String userID = scanner.nextLine();
+            if (userID.equals("-1")) {
+                return null; 
+            }
+            user = Database.getUser(userID);
+            if (user == null) {
+                System.out.print("Invalid User ID. Please try again: ");
+            }
+        }
+        return user;
+	}
 }
