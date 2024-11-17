@@ -39,7 +39,7 @@ public class RefillRequest implements Request {
 
     @Override
     public void acceptRequest() {
-        this.status = Status.COMPLETED;
+        this.status = Status.APPROVED;
         System.out.println("Refill request approved for " + medication);
     }
 

@@ -11,7 +11,7 @@ public class Appointment {
     private LocalDate date;
     private TimeSlot timeslot;
     private Status status;
-    private Status prescriptionStatus;
+    private Status prescriptionStatus = Status.PENDING;
     private int appointmentID;
     private static int count;
     private ArrayList<Medication> prescriptions = new ArrayList<>();

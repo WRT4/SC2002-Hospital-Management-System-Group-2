@@ -22,6 +22,8 @@ public class AppointmentController {
 	}
 	
 	public static void setNotes(Appointment apt, Scanner scanner) {
+		//clear buffer
+		scanner.nextLine();
 		String note = AppointmentView.inputNotes(scanner);
 		apt.setNotes(note);
 		System.out.println("Consultation notes added!");

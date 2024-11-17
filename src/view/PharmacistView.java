@@ -7,6 +7,11 @@ public class PharmacistView extends UserView{
 	public PharmacistView(Scanner scanner){
 		super(scanner);
 	}
+
+	public String enterID(){
+		String id = scanner.next();
+		return id;
+	}
 	
 	public void viewMedicationInventory() {
         Database.MEDICATION_BANK.viewInventory();

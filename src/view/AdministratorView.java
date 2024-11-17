@@ -49,7 +49,7 @@ public class AdministratorView extends UserView {
     	int num = 0;
         System.out.println("Completed Refill Requests:");
         for (RefillRequest request : refillRequests) {
-            if (request.getStatus() == Status.COMPLETED) {
+            if (request.getStatus() == Status.APPROVED) {
                 System.out.println(request);
                 num++;
             }

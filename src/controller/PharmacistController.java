@@ -182,10 +182,10 @@ public class PharmacistController extends SessionController {
         boolean dispensedSuccessfully = dispenseMedication(selectedAppointment);
         
         if (dispensedSuccessfully) {
-            selectedAppointment.setPrescriptionStatus(Status.COMPLETED);
-            System.out.println("Prescription status updated to COMPLETED for the selected appointment.");
+            selectedAppointment.setPrescriptionStatus(Status.DISPENSED);
+            System.out.println("Prescription status updated to DISPENSED for the selected appointment.");
         } else {
-            System.out.println("Unable to update prescription status to COMPLETED due to dispensing issues.");
+            System.out.println("Unable to update prescription status to DISPENSED due to dispensing issues.");
         }
     }
 
