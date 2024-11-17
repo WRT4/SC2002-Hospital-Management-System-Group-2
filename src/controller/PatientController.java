@@ -149,7 +149,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void enterBasicInfo(){
-		System.out.println("\nEntering Basic Information...\n!");
+		System.out.println("\nEntering Basic Information...\n");
 		System.out.println("Enter your full name: ");
 		String name = scanner.nextLine();
 		patient.setName(name);
@@ -164,7 +164,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void scheduleAppointment() {
-		System.out.println("\nScheduling Appointment...\n!");
+		System.out.println("\nScheduling Appointment...\n");
 		patientView.viewDoctors();
 		String id = patientView.enterID();
 		if (id.equals("-1")) return;
@@ -207,7 +207,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void rescheduleAppointments() {
-		System.out.println("\nRescheduling Appointment...\n!");
+		System.out.println("\nRescheduling Appointment...\n");
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		patientView.viewScheduledAppointments(appointments);
 		System.out.println("Which appointment ID would you like to cancel? Enter Appointment ID or -1 to exit. ");
@@ -251,7 +251,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void cancelAppointment () {
-		System.out.println("\nCancelling Appointment...\n!");
+		System.out.println("\nCancelling Appointment...\n");
 		int num = 0;
 		ArrayList<Appointment> appointments = patient.getAppointments();
 		for (Appointment appointment : appointments) {
