@@ -28,6 +28,7 @@ public class DoctorController extends SessionController {
     }
     
     public void showMenu() {
+		refreshWorkingSchedule(doctor);
 		remindPendingRequests();
 		int choice;
         do {
@@ -78,6 +79,10 @@ public class DoctorController extends SessionController {
     public void setUnreadIndex(int i) {
     	this.unreadIndex = i;
     }
+
+	public void refreshWorkingSchedule(Doctor doctor){
+		doctor.getSchedule().fillAdvancedSchedule();
+	}
     
     public ArrayList<AppointmentRequest> checkPendingRequests(){
 		ArrayList<AppointmentRequest> pendingRequests = new ArrayList<>();
