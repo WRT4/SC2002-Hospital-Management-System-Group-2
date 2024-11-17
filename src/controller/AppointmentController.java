@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.Scanner;
+import enums.Status;
 import model.Appointment;
 import model.Medication;
 import view.AppointmentView;
