@@ -166,38 +166,11 @@ public class AdministratorView extends UserView {
 			System.out.println(log);
 		}
 	}
-	public ArrayList<User> viewLockedAccounts() {
-		ArrayList<User> lockedAccounts = new ArrayList<User>();
+	public void viewLockedAccounts(ArrayList<User> lockedAccounts) {
 		System.out.println("\nViewing locked accounts...");
-		System.out.println("\nLocked Patient Accounts");
-		for (Patient patient : Database.PATIENTS) {
-			if (patient.isLocked()) {
-				System.out.println(patient.getID());
-				lockedAccounts.add(patient);
-			}
-		}
-		System.out.println("\nLocked Doctor Accounts");
-		for (Doctor doctor : Database.DOCTORS) {
-			if (doctor.isLocked()) {
-				System.out.println(doctor.getID());
-				lockedAccounts.add(doctor);
-			}
-		}
-		System.out.println("\nLocked Pharmacist Accounts");
-		for (Pharmacist pharmacist : Database.PHARMACISTS) {
-			if (pharmacist.isLocked()) {
-				System.out.println(pharmacist.getID());
-				lockedAccounts.add(pharmacist);
-			}
-		}
-		System.out.println("\nLocked administrator Accounts");
-		for (Administrator administrator : Database.ADMINISTRATORS) {
-			if (administrator.isLocked()) {
-				System.out.println(administrator.getID());
-				lockedAccounts.add(administrator);
-			}
+		for (User user : lockedAccounts) {
+			System.out.println(user.getID());
 		}
 		System.out.println("\nWhich account would you like to unlock? Enter ID or -1 to exit");
-		return lockedAccounts;
 	}
 }
