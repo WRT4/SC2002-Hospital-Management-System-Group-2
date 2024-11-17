@@ -14,6 +14,7 @@ import model.Medication;
 import model.Patient;
 import model.Pharmacist;
 import model.RefillRequest;
+import view.PatientView;
 import view.PharmacistView;
 
 public class PharmacistController extends SessionController {
@@ -43,8 +44,12 @@ public class PharmacistController extends SessionController {
 				pharmacist.setUnreadIndex(unreadIndex);
         		break;
     		case 2:
-    			Patient patient = pharmacistView.getPatient();
-    			pharmacistView.viewAppointmentOutcomeRecords(patient);
+    			Patient patient = getPatient();
+    			if (patient == null) {
+    	            System.out.println("No valid patient selected. Returning to menu.");
+    	            break;
+    	        }
+    			PatientView.viewAppointmentOutcomes(patient.getAppointments());
     			break;
     		case 3:
     			updatePrescriptionStatus();
@@ -66,6 +71,52 @@ public class PharmacistController extends SessionController {
     	} while (choice !=6);
     }	
 	
+	public Patient getPatient() {
+        // Display available administrators
+        for (Patient pat : Database.PATIENTS) {
+            System.out.println(pat);
+        }
+
+        // Prompt user for Admin ID
+        System.out.println("Enter Patient ID or -1 to go back: ");
+        String id = pharmacistView.enterID().trim(); // Read trimmed input
+        if (id.equals("-1")) return null; // Allow user to go back
+
+        // Find the matching administrator
+        for (Patient pat : Database.PATIENTS) {
+            if (pat.getID().equals(id)) {
+                return pat; // Return the found admin
+            }
+        }
+
+        // If no match is found, notify the user
+        System.out.println("Patient not found!");
+        return null; // Explicitly return null if admin is not found
+    }
+	
+	public Administrator getAdmin() {
+        // Display available administrators
+        for (Administrator admin : Database.ADMINISTRATORS) {
+            System.out.println(admin);
+        }
+
+        // Prompt user for Admin ID
+        System.out.println("Enter Admin ID or -1 to go back: ");
+        String id = pharmacistView.enterID().trim(); // Read trimmed input
+        if (id.equals("-1")) return null; // Allow user to go back
+
+        // Find the matching administrator
+        for (Administrator admin : Database.ADMINISTRATORS) {
+            if (admin.getID().equals(id)) {
+                return admin; // Return the found admin
+            }
+        }
+
+        // If no match is found, notify the user
+        System.out.println("Administrator not found!");
+        return null; // Explicitly return null if admin is not found
+    }
+	
 	public void submitReplenishmentRequest() {
     	System.out.print("Enter Medication Name for replenishment request: ");
 	    String medicationName = scanner.next();
@@ -77,7 +128,7 @@ public class PharmacistController extends SessionController {
 	    System.out.print("Enter quantity to request: ");
 	    int requestedAmount = scanner.nextInt();
 	    
-	    Administrator admin = pharmacistView.getAdmin();
+	    Administrator admin = getAdmin();
 	    if (admin == null) {
             System.out.println("Replenishment request canceled.");
             return; // Stop if no valid admin is selected
@@ -107,13 +158,13 @@ public class PharmacistController extends SessionController {
     }
     
     public void updatePrescriptionStatus () {        
-        Patient patient1 = pharmacistView.getPatient();
+        Patient patient1 = getPatient();
         
         if (patient1 == null) {
             System.out.println("No valid patient selected. Returning to menu.");
             return;
         }
-        pharmacistView.viewAppointmentOutcomeRecords(patient1);
+        PatientView.viewAppointmentOutcomes(patient1.getAppointments());
         int apptChoice = 0;
         if (patient1.getAppointments().isEmpty())
         	return;

@@ -43,7 +43,7 @@ public class PatientController extends SessionController{
 					patient.setUnreadIndex(unreadIndex);
             		break;
 				case 2:
-					patientView.viewRecord(patient);
+					patientView.viewRecord(patient.getRecord());
 					break;
 				case 3:
 					updatePersonalInfo();
@@ -64,10 +64,10 @@ public class PatientController extends SessionController{
 					viewRequests();
 					break;
 				case 9:
-					patientView.viewScheduledAppointments(patient);
+					patientView.viewScheduledAppointments(patient.getAppointments());
 					break;
 				case 10:
-					PatientView.viewAppointmentOutcomes(patient);
+					PatientView.viewAppointmentOutcomes(patient.getAppointments());
 					break;
 				case 11:
 					System.out.println("Exiting Patient menu...");
@@ -79,7 +79,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void updatePersonalInfo() {
-		System.out.println("\nUpdating Personal Information...\n!");
+		System.out.println("\nUpdating Personal Information...\n");
 		System.out.println("1. Enter basic info");
 		System.out.println("2. Update contact info");
 		System.out.println("-1. Go back");
@@ -95,7 +95,7 @@ public class PatientController extends SessionController{
 	}
 	
 	public void updateContactInfo() {
-		System.out.println("\nUpdating Contact Information...\n!");
+		System.out.println("\nUpdating Contact Information...\n");
 		patient.getRecord().viewContactInfo();
 		System.out.println("1. Update Contact info");
 		System.out.println("-1. Exit");
@@ -209,7 +209,7 @@ public class PatientController extends SessionController{
 	public void rescheduleAppointments() {
 		System.out.println("\nRescheduling Appointment...\n!");
 		ArrayList<Appointment> appointments = patient.getAppointments();
-		patientView.viewScheduledAppointments(patient);
+		patientView.viewScheduledAppointments(appointments);
 		System.out.println("Which appointment ID would you like to cancel? Enter Appointment ID or -1 to exit. ");
 		Appointment temp = AppointmentView.promptForAppointment(appointments, true, scanner);
 		if (temp == null) return;
@@ -278,7 +278,7 @@ public class PatientController extends SessionController{
 	
 	public void viewRequests() {
 		ArrayList<AppointmentRequest> requests = patient.getRequests();
-		patientView.viewRequests(patient);
+		patientView.viewRequests(requests);
 		System.out.println("Would you like to cancel a request? 1. Yes -1. Exit ");
 		int choice = patientView.getChoice();
 		while(choice != 1 && choice != -1) {

@@ -98,10 +98,10 @@ public class AdministratorController extends SessionController{
         	scanner.nextLine();
         	switch(c) {
         	case 1:
-        		administratorView.viewPendingRefillRequests(admin);
+        		administratorView.viewPendingRefillRequests(admin.getRefillRequests());
         		break;
         	case 2:
-        		administratorView.viewCompletedRefillRequests(admin);
+        		administratorView.viewCompletedRefillRequests(admin.getRefillRequests());
         		break;
         	case 3:
                 approveRefillRequest();

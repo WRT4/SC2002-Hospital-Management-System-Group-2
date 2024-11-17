@@ -132,21 +132,43 @@ public class DoctorController extends SessionController {
         System.out.println("Enter prescription:");
         return scanner.nextLine();
     }
-
+    
+    public Patient getPatient() {
+		ArrayList<Patient> patientsUnderCare = new ArrayList<>(doctor.getAppointmentCounter().keySet());
+		if (patientsUnderCare==null || patientsUnderCare.size()==0){
+			System.out.println("No patients under care.");
+			return null;
+		}
+        // Implement method to get a patient object
+    	for (Patient patient : patientsUnderCare) {
+    		System.out.println(patient);
+    	}
+        System.out.println("Enter Patient ID or -1 to exit: ");
+        String choice = doctorView.enterID().trim();
+        if (choice.equals("-1")) return null;
+        for (Patient patient : patientsUnderCare) {
+        	if (choice.equals(patient.getID())) {
+        		return patient;
+        	}
+        }
+		System.out.println("Patient not found. ");
+        return null;
+    }
+    
 	public void viewMedicalRecord(){
-		Patient patient = doctorView.getPatient(doctor);
+		Patient patient = getPatient();
 		if (patient==null){
 			return;
 		}
 		if (doctor.getAppointmentCounter().containsKey(patient) && doctor.getAppointmentCounter().get(patient) > 0) {
-			doctorView.viewMedicalRecords(patient, doctor);
+			doctorView.viewMedicalRecords(patient);
 		} else {
 			System.out.println("Cannot view medical record of " + patient.getName() + " as no appointments have been scheduled.");
 		}
 	}
 	
 	public void updateMedicalRecord() {
-    	Patient patient = doctorView.getPatient(doctor);
+    	Patient patient = getPatient();
 		if (patient==null){
 			return;
 		}
@@ -235,8 +257,8 @@ public class DoctorController extends SessionController {
     }
 	
 	public void viewRequests() {
-		doctorView.viewRequests(doctor);
 		ArrayList<AppointmentRequest> requests = doctor.getRequests();
+		doctorView.viewRequests(requests);
 		System.out.println("Which requestID would you like to accept/reject?");
 		AppointmentRequest request = AppointmentRequest.findRequest(requests, false, scanner);
 		if (request == null) return;
@@ -277,7 +299,7 @@ public class DoctorController extends SessionController {
 	}
 	
 	public void viewAppointments() {
-    	int notEmpty = doctorView.viewAppointments(doctor);
+    	int notEmpty = doctorView.viewAppointments(doctor.getSchedule().getAppointments());
     	if (notEmpty == 0) return;
         System.out.println("Would you like to cancel an appointment? 1. Yes -1. Exit");
         int choice = doctorView.getChoice();
@@ -305,8 +327,8 @@ public class DoctorController extends SessionController {
 	}
 	
 	public void recordAppointmentOutcomes() {
-		doctorView.viewAppointmentOutcomes(doctor);
 		ArrayList<Appointment> appointments = doctor.getSchedule().getAppointments();
+		doctorView.viewAppointmentOutcomes(appointments);
 		System.out.println();
 		System.out.println("Which appointment ID would you like to record outcome for? Enter ID or -1 to exit: ");
 		Appointment apt = AppointmentView.promptForAppointment(appointments, false, scanner);
