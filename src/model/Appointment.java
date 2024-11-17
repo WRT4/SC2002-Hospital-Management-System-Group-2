@@ -116,6 +116,28 @@ public class Appointment {
 	    return "Appointment ID: " + this.appointmentID + ", Date: " + this.date + 
 	           ", Time: " + this.timeslot.getStartTime() + ", Doctor: " + this.doctor.getName() + 
 	           ", Patient: " + this.patient.getName() + ", Status: " + this.status;
+	}
+	
+	public static Appointment findAppointment(ArrayList<Appointment> appointments, boolean noConfirmed, int id) throws RuntimeException {
+	    Appointment apt = null;
+	    for (Appointment appointment : appointments) {
+	        if (appointment.getAppointmentID() == id) {
+	            apt = appointment;
+	            break;
+	        }
 	    }
+	    
+	    if (apt == null) {
+	        throw new RuntimeException("Appointment ID does not exist!");
+	    }
+	    if (apt.getStatus() == Status.CANCELLED) {
+	        throw new RuntimeException("Appointment has been cancelled!");
+	    }
+	    if (noConfirmed && apt.getStatus() == Status.COMPLETED) {
+	        throw new RuntimeException("Appointment has been completed!");
+	    }
+	    
+	    return apt;
+	}
 
 }
