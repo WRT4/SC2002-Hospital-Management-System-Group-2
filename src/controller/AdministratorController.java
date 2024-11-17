@@ -9,6 +9,7 @@ import application.Database;
 import enums.Status;
 import model.Administrator;
 import model.Doctor;
+import model.Patient;
 import model.Pharmacist;
 import model.RefillRequest;
 import model.User;
@@ -59,8 +60,32 @@ public class AdministratorController extends SessionController{
         } while (adminChoice != 8);
     }
 	
+	private ArrayList<User> getLockedAccounts() {
+		ArrayList<User> lockedAccounts = new ArrayList<User>();
+		for (Patient patient : Database.PATIENTS) {
+			if (patient.isLocked()) {
+				lockedAccounts.add(patient);
+			}
+		}
+		for (Doctor doctor : Database.DOCTORS) {
+			if (doctor.isLocked()) {
+				lockedAccounts.add(doctor);
+			}
+		}
+		for (Pharmacist pharmacist : Database.PHARMACISTS) {
+			if (pharmacist.isLocked()) {
+				lockedAccounts.add(pharmacist);
+			}
+		}
+		for (Administrator administrator : Database.ADMINISTRATORS) {
+			if (administrator.isLocked()) {
+				lockedAccounts.add(administrator);
+			}
+		}
+		return lockedAccounts;
+	}
 	public void unlockAccounts() {
-		ArrayList<User> lockedAccounts = administratorView.viewLockedAccounts();
+		ArrayList<User> lockedAccounts = getLockedAccounts();
 		User lockedUser = null;
 		while (lockedUser == null) {
 			String id = administratorView.enterID().trim();
