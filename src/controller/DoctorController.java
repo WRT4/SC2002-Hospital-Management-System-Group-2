@@ -373,6 +373,7 @@ public class DoctorController extends SessionController {
 				}
 				if (choice3 == 1) {
 					apt.setStatus(Status.COMPLETED);
+					apt.setPrescriptionStatus(Status.COMPLETED);
 				}
 				else return;
 				
