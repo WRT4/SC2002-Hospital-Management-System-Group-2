@@ -37,7 +37,7 @@ public class UserController extends SessionController{
             	if (user.isLocked()) return false;
                 System.out.println("Login successful!");
                 if (user.isFirstLogin()) {
-                    System.out.println("You are logging in for the first time. Please change your password.");
+                    System.out.println("You are logging in for the first time or your password has been reset. Please change your password.");
                     changePassword();
                 }
                 return true;
