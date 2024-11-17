@@ -14,14 +14,13 @@ public class PatientView extends UserView{
 		super(scanner);
 	}
 	
-	public void viewRecord(Patient patient) {
+	public void viewRecord(MedicalRecord record) {
 		System.out.println("\nViewing Record...\n!");
-		patient.getRecord().printMedicalRecord();
+		record.printMedicalRecord();
 	}
 	
-	public void viewRequests(Patient patient) {
+	public void viewRequests(ArrayList<AppointmentRequest> requests) {
 		System.out.println("\nViewing Requests...\n!");
-		ArrayList<AppointmentRequest> requests = patient.getRequests();
 		if (requests.size() == 0) {
 			System.out.println("No requests made!");
 			return;
@@ -31,9 +30,8 @@ public class PatientView extends UserView{
 		}
 	}
 	
-	public void viewScheduledAppointments(Patient patient) {
+	public void viewScheduledAppointments(ArrayList<Appointment> appointments) {
 		System.out.println("\nViewing scheduled Appointment...\n!");
-		ArrayList<Appointment> appointments = patient.getAppointments();
 		if (appointments.size() == 0) {
 			System.out.println("No scheduled appointments!");
 			return;
@@ -60,16 +58,9 @@ public class PatientView extends UserView{
 	}
 	
 	// static as its accessed by pharmacist also
-	public static void viewAppointmentOutcomes(Patient patient) {
-		
-		if (patient == null) {
-	        System.out.println("Error: Patient record not found.");
-	        return;
-	    }
-		
+	public static void viewAppointmentOutcomes(ArrayList<Appointment> appointments) {
 		System.out.println("\nViewing Appointment Outcomes...\n!");
 		int num = 0;
-		ArrayList<Appointment> appointments = patient.getAppointments();
 		for (Appointment apt : appointments) {
 			if (apt.getStatus() == Status.COMPLETED) {
 				AppointmentView.printAppointmentOutcome(apt);

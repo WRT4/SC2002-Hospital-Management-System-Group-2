@@ -13,7 +13,7 @@ public class DoctorView extends UserView{
 	}
 	
 	
-	public void viewMedicalRecords(Patient patient, Doctor doctor) {
+	public void viewMedicalRecords(Patient patient) {
 		if (patient != null){
 			patient.getRecord().printMedicalRecord();
 		}
@@ -32,9 +32,8 @@ public class DoctorView extends UserView{
 		ScheduleView.viewAllSlots(date, doctor.getSchedule());
     }
 	
-	public void viewRequests(Doctor doctor) {
+	public void viewRequests(ArrayList<AppointmentRequest> requests) {
 		int num = 0;
-		ArrayList<AppointmentRequest> requests = doctor.getRequests();
 		for (AppointmentRequest request: requests) {
 			if (request.getStatus() == Status.PENDING){
 				System.out.println(request);
@@ -47,9 +46,9 @@ public class DoctorView extends UserView{
 		}
 	}
 	
-	public int viewAppointments(Doctor doctor) {
+	public int viewAppointments(ArrayList<Appointment> appointments) {
     	int num = 0;
-        for (Appointment appointment : doctor.getSchedule().getAppointments()) {
+        for (Appointment appointment : appointments) {
             if (appointment.getStatus() == Status.CONFIRMED) {
             	System.out.println(appointment);
             	num++;
@@ -62,9 +61,8 @@ public class DoctorView extends UserView{
         return 1;
     }
 	
-	public void viewAppointmentOutcomes(Doctor doctor) {
+	public void viewAppointmentOutcomes(ArrayList<Appointment> appointments) {
 		int num1 = 0,num2 = 0;
-		ArrayList<Appointment> appointments = doctor.getSchedule().getAppointments();
 		if (appointments.size() == 0) {
 			System.out.println("No scheduled appointments!");
 			return;
@@ -93,27 +91,6 @@ public class DoctorView extends UserView{
 		System.out.println();
 	}
 	
-	public Patient getPatient(Doctor doctor) {
-		ArrayList<Patient> patientsUnderCare = new ArrayList<>(doctor.getAppointmentCounter().keySet());
-		if (patientsUnderCare==null || patientsUnderCare.size()==0){
-			System.out.println("No patients under care.");
-			return null;
-		}
-        // Implement method to get a patient object
-    	for (Patient patient : patientsUnderCare) {
-    		System.out.println(patient);
-    	}
-        System.out.println("Enter Patient ID or -1 to exit: ");
-        String choice = scanner.next().trim();
-        if (choice.equals("-1")) return null;
-        for (Patient patient : patientsUnderCare) {
-        	if (choice.equals(patient.getID())) {
-        		return patient;
-        	}
-        }
-		System.out.println("Patient not found. ");
-        return null;
-    }
 	
 	// @Override
     public void showMenu() {

@@ -2,6 +2,7 @@ package view;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import application.Database;
@@ -31,10 +32,10 @@ public class AdministratorView extends UserView {
         System.out.println("8. Exit to Main Menu");
 	}
 	
-    public void viewPendingRefillRequests(Administrator admin) {
+    public void viewPendingRefillRequests(List<RefillRequest> refillRequests) {
         int num = 0;
         System.out.println("Pending Refill Requests:");
-        for (RefillRequest request : admin.getRefillRequests()) {
+        for (RefillRequest request : refillRequests) {
             if (request.getStatus() == Status.PENDING) {
                 System.out.println(request);
                 num++;
@@ -44,10 +45,10 @@ public class AdministratorView extends UserView {
             System.out.println("No pending refill requests.");
         }
     }
-    public void viewCompletedRefillRequests(Administrator admin) {
+    public void viewCompletedRefillRequests(List<RefillRequest> refillRequests) {
     	int num = 0;
         System.out.println("Completed Refill Requests:");
-        for (RefillRequest request : admin.getRefillRequests()) {
+        for (RefillRequest request : refillRequests) {
             if (request.getStatus() == Status.COMPLETED) {
                 System.out.println(request);
                 num++;
