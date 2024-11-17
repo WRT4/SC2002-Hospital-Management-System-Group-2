@@ -9,6 +9,7 @@ import view.AppointmentView;
 public class AppointmentController {
 	
 	public static void setPrescription(Appointment apt, Scanner scanner) {
+		apt.setPrescriptionStatus(Status.PENDING);
 		String name = AppointmentView.inputPrescription(scanner);
 		int dosage = AppointmentView.inputDosage(scanner);
         Medication prescribedMed = new Medication(name,dosage);
