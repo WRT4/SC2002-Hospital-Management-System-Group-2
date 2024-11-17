@@ -52,6 +52,13 @@ public class PatientView extends UserView{
 		System.out.println("Note: Appointment request that hasn't been accepted by doctor could be found in Menu Option 7");
 	}
 	
+	public void viewDoctors() {
+		for (Doctor doctor : Database.DOCTORS) {
+			System.out.println(doctor);
+		}
+		System.out.println("Enter Doctor id or -1 to go back: ");
+	}
+	
 	// static as its accessed by pharmacist also
 	public static void viewAppointmentOutcomes(Patient patient) {
 		
@@ -86,12 +93,12 @@ public class PatientView extends UserView{
 
 		String docInputID;
 		System.out.println("List of doctors: ");
-		for (Doctor doctor : Database.doctors) {
+		for (Doctor doctor : Database.DOCTORS) {
 			System.out.println(doctor.getID() + "- " + doctor.getName());
 		}
 		System.out.println("Enter the ID of doctor to check available slots:");
 		docInputID = scanner.next();
-		for (Doctor doctor : Database.doctors) {
+		for (Doctor doctor : Database.DOCTORS) {
 			if (docInputID.compareTo(doctor.getID())==0){
 				ScheduleView.viewAvailableSlots(date, doctor.getSchedule());
 				break;

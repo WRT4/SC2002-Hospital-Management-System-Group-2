@@ -66,8 +66,8 @@ public class AdministratorView extends UserView {
     }
     
     public void viewMedBankInventory() {
-        if (Database.medicationBank != null) {
-            Database.medicationBank.viewInventory();
+        if (Database.MEDICATION_BANK != null) {
+            Database.MEDICATION_BANK.viewInventory();
         } else {
             System.out.println("Medication bank is not initialized.");
         }
@@ -76,7 +76,7 @@ public class AdministratorView extends UserView {
     public void addNewMed() {
     	System.out.println("Enter name of new medicine: ");
     	String name = scanner.next();
-    	if(Database.medicationBank.inventory.containsKey(name)) {
+    	if(Database.MEDICATION_BANK.inventory.containsKey(name)) {
     		System.out.println("Medication already exists.");
     		return;
     	}
@@ -88,13 +88,13 @@ public class AdministratorView extends UserView {
     	System.out.println("What is the low stock threshold level?");
     	int n = scanner.nextInt();
     	Medication newMeds = new Medication(name, x, LocalDate.now().plusYears(y), n);
-    	Database.medicationBank.addMedication(newMeds);
+    	Database.MEDICATION_BANK.addMedication(newMeds);
     	}
     }
     
     public void displayAppointments() {
         boolean hasAppointments = false;        
-        for (Patient patient : Database.patients) {
+        for (Patient patient : Database.PATIENTS) {
             if (!patient.getAppointments().isEmpty()) {
                 System.out.println("Appointments Details:");
                 hasAppointments = true;
@@ -122,15 +122,15 @@ public class AdministratorView extends UserView {
         } else {
             System.out.println("Hospital Staff:");
 
-            for (Doctor doctor : Database.doctors) {
+            for (Doctor doctor : Database.DOCTORS) {
                 System.out.println("ID: " + doctor.getID() + " Name: " + doctor.getName() + " Role: Doctor");
             }
 
-            for (Pharmacist pharmacist : Database.pharmacists) {
+            for (Pharmacist pharmacist : Database.PHARMACISTS) {
                 System.out.println("ID: " + pharmacist.getID() + " Name: " + pharmacist.getName() + " Role: Pharmacist");
             }
 
-            for (Administrator administrator : Database.administrators) {
+            for (Administrator administrator : Database.ADMINISTRATORS) {
                 System.out.println("ID: " + administrator.getID() + " Name: " + administrator.getName() + " Role: Administrator");
             }
         }
@@ -161,7 +161,7 @@ public class AdministratorView extends UserView {
     }
 	public void viewSystemLogs() {
 		System.out.println("Viewing system logs...\n");
-		for (String log : Database.systemLogs) {
+		for (String log : Database.SYSTEM_LOGS) {
 			System.out.println(log);
 		}
 	}
@@ -169,28 +169,28 @@ public class AdministratorView extends UserView {
 		ArrayList<User> lockedAccounts = new ArrayList<User>();
 		System.out.println("\nViewing locked accounts...");
 		System.out.println("\nLocked Patient Accounts");
-		for (Patient patient : Database.patients) {
+		for (Patient patient : Database.PATIENTS) {
 			if (patient.isLocked()) {
 				System.out.println(patient.getID());
 				lockedAccounts.add(patient);
 			}
 		}
 		System.out.println("\nLocked Doctor Accounts");
-		for (Doctor doctor : Database.doctors) {
+		for (Doctor doctor : Database.DOCTORS) {
 			if (doctor.isLocked()) {
 				System.out.println(doctor.getID());
 				lockedAccounts.add(doctor);
 			}
 		}
 		System.out.println("\nLocked Pharmacist Accounts");
-		for (Pharmacist pharmacist : Database.pharmacists) {
+		for (Pharmacist pharmacist : Database.PHARMACISTS) {
 			if (pharmacist.isLocked()) {
 				System.out.println(pharmacist.getID());
 				lockedAccounts.add(pharmacist);
 			}
 		}
 		System.out.println("\nLocked administrator Accounts");
-		for (Administrator administrator : Database.administrators) {
+		for (Administrator administrator : Database.ADMINISTRATORS) {
 			if (administrator.isLocked()) {
 				System.out.println(administrator.getID());
 				lockedAccounts.add(administrator);

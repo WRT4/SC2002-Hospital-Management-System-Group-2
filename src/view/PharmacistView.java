@@ -13,7 +13,7 @@ public class PharmacistView extends UserView{
 	
 	public Patient getPatient() {
         // Display available administrators
-        for (Patient pat : Database.patients) {
+        for (Patient pat : Database.PATIENTS) {
             System.out.println(pat);
         }
 
@@ -23,7 +23,7 @@ public class PharmacistView extends UserView{
         if (id.equals("-1")) return null; // Allow user to go back
 
         // Find the matching administrator
-        for (Patient pat : Database.patients) {
+        for (Patient pat : Database.PATIENTS) {
             if (pat.getID().equals(id)) {
                 return pat; // Return the found admin
             }
@@ -40,7 +40,7 @@ public class PharmacistView extends UserView{
 	
 	public Administrator getAdmin() {
         // Display available administrators
-        for (Administrator admin : Database.administrators) {
+        for (Administrator admin : Database.ADMINISTRATORS) {
             System.out.println(admin);
         }
 
@@ -50,7 +50,7 @@ public class PharmacistView extends UserView{
         if (id.equals("-1")) return null; // Allow user to go back
 
         // Find the matching administrator
-        for (Administrator admin : Database.administrators) {
+        for (Administrator admin : Database.ADMINISTRATORS) {
             if (admin.getID().equals(id)) {
                 return admin; // Return the found admin
             }
@@ -62,7 +62,7 @@ public class PharmacistView extends UserView{
     }
 	
 	public void viewMedicationInventory() {
-        Database.medicationBank.viewInventory();
+        Database.MEDICATION_BANK.viewInventory();
     }
 	
 	public void showMenu() {
