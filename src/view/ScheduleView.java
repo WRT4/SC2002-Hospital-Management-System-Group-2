@@ -12,9 +12,8 @@ import enums.Status;
 import model.TimeSlot;
 
 public class ScheduleView {
-	static Scanner scanner = new Scanner(System.in);
 
-	public static LocalDate inputDate(boolean isPatient) {
+	public static LocalDate inputDate(boolean isPatient, Scanner scanner) {
 	    String dayStr, monthStr, yearStr;
 	    int day = 0, month = 0, year = 0;
 	    LocalDate finalDate = null;
@@ -73,7 +72,7 @@ public class ScheduleView {
 	    return finalDate;
 	}
 	
-	public static LocalTime inputTime() {
+	public static LocalTime inputTime(Scanner scanner) {
 	    String hourStr, minStr;
 	    int hour = 0, min = 0;
 		LocalTime finalTime = null;

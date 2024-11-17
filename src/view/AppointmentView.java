@@ -3,7 +3,6 @@ package view;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import controller.AppointmentController;
 import model.Appointment;
 
 public class AppointmentView {
@@ -37,7 +36,7 @@ public class AppointmentView {
                 
                 if (id == -1) return null;
                 
-                apt = AppointmentController.findAppointment(appointments, noConfirmed, id);  // Call to the controller’s logic, findAppointment throws RuntimeException
+                apt = Appointment.findAppointment(appointments, noConfirmed, id);  // Call to the controller’s logic, findAppointment throws RuntimeException
                 
                 break;  // If no exceptions are thrown, we can exit the loop
             } 
