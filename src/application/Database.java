@@ -11,31 +11,29 @@ import java.time.format.DateTimeFormatter;
 
 public class Database {
 
-    public static final ArrayList<Doctor> doctors = new ArrayList<Doctor>();
-    public static final ArrayList<Patient> patients = new ArrayList<Patient>();
-    public static final ArrayList<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
-    public static final ArrayList<Administrator> administrators = new ArrayList<Administrator>();
-    public static final MedicationBank medicationBank = new MedicationBank();
-    public static final ArrayList<String> systemLogs = new ArrayList<>();
-//    public static final ArrayList<User> allUsers = new ArrayList<User>();
+    public static final ArrayList<Doctor> DOCTORS = new ArrayList<Doctor>();
+    public static final ArrayList<Patient> PATIENTS = new ArrayList<Patient>();
+    public static final ArrayList<Pharmacist> PHARMACISTS = new ArrayList<Pharmacist>();
+    public static final ArrayList<Administrator> ADMINISTRATORS = new ArrayList<Administrator>();
+    public static final MedicationBank MEDICATION_BANK = new MedicationBank();
+    public static final ArrayList<String> SYSTEM_LOGS = new ArrayList<>();
 
-    // Constructor to initialize the database from CSV files
-    public Database() {
-        try {
+    // empty constructor
+    public Database() {}
+    
+    // Method to initialize the database from CSV files
+    public static void initialiseDatabase() {
+    	try {
             loadStaffData("src/application/Staff_List.csv");
             loadPatientData("src/application/Patient_List.csv");
             System.out.println("Data has been successfully loaded from CSV files.");
         } catch (IOException e) {
             System.err.println("Error loading data from CSV files: " + e.getMessage());
         }
-//        allUsers.addAll(doctors);
-//        allUsers.addAll(patients);
-//        allUsers.addAll(pharmacists);
-//        allUsers.addAll(administrators);
     }
     
     public static int getTotalStaffCount() {
-        return doctors.size() + pharmacists.size() + administrators.size();
+        return DOCTORS.size() + PHARMACISTS.size() + ADMINISTRATORS.size();
     }
 
     // Method to load staff data from CSV file
@@ -63,13 +61,13 @@ public class Database {
 
                 switch (role) {
                     case "doctor":
-                        doctors.add(new Doctor(id, name, gender, age));
+                        DOCTORS.add(new Doctor(id, name, gender, age));
                         break;
                     case "pharmacist":
-                        pharmacists.add(new Pharmacist(id, name, gender, age));
+                        PHARMACISTS.add(new Pharmacist(id, name, gender, age));
                         break;
                     case "administrator":
-                        administrators.add(new Administrator(id, name, gender, age));
+                        ADMINISTRATORS.add(new Administrator(id, name, gender, age));
                         break;
                     default:
                         System.out.println("Unknown role: " + role);
@@ -110,7 +108,7 @@ public class Database {
                 int age = Period.between(birthDate, LocalDate.now()).getYears();
 
                 // Create a Patient object with the calculated age
-                patients.add(new Patient(id, name, dob, gender, bloodType, contactInfo, age));
+                PATIENTS.add(new Patient(id, name, dob, gender, bloodType, contactInfo, age));
             }
         }
     }
@@ -118,26 +116,26 @@ public class Database {
     
  // Method to find a user by ID
     public static User findUserById(String userId) {
-        // Check in doctors list
-        for (Doctor doctor : doctors) {
+        // Check in DOCTORS list
+        for (Doctor doctor : DOCTORS) {
             if (doctor.getID().equals(userId)) {
                 return doctor;
             }
         }
-        // Check in pharmacists list
-        for (Pharmacist pharmacist : pharmacists) {
+        // Check in PHARMACISTS list
+        for (Pharmacist pharmacist : PHARMACISTS) {
             if (pharmacist.getID().equals(userId)) {
                 return pharmacist;
             }
         }
-        // Check in administrators list
-        for (Administrator administrator : administrators) {
+        // Check in ADMINISTRATORS list
+        for (Administrator administrator : ADMINISTRATORS) {
             if (administrator.getID().equals(userId)) {
                 return administrator;
             }
         }
-        // Check in patients list
-        for (Patient patient : patients) {
+        // Check in PATIENTS list
+        for (Patient patient : PATIENTS) {
             if (patient.getID().equals(userId)) {
                 return patient;
             }
@@ -154,23 +152,23 @@ public class Database {
 
     // Method to display all users
     public static void displayAllUsers() {
-        System.out.println("Doctors:");
-        for (Doctor doctor : doctors) {
+        System.out.println("DOCTORS:");
+        for (Doctor doctor : DOCTORS) {
             System.out.println(doctor);
         }
 
-        System.out.println("Pharmacists:");
-        for (Pharmacist pharmacist : pharmacists) {
+        System.out.println("PHARMACISTS:");
+        for (Pharmacist pharmacist : PHARMACISTS) {
             System.out.println(pharmacist);
         }
 
-        System.out.println("Administrators:");
-        for (Administrator administrator : administrators) {
+        System.out.println("ADMINISTRATORS:");
+        for (Administrator administrator : ADMINISTRATORS) {
             System.out.println(administrator);
         }
 
-        System.out.println("Patients:");
-        for (Patient patient : patients) {
+        System.out.println("PATIENTS:");
+        for (Patient patient : PATIENTS) {
             System.out.println(patient);
         }
     }

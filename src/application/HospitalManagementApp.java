@@ -9,7 +9,7 @@ public class HospitalManagementApp {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Database db = new Database();
+        Database.initialiseDatabase();
         User user = null;
 
         // Main loop for the application
