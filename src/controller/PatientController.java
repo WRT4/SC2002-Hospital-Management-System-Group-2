@@ -72,7 +72,7 @@ public class PatientController extends SessionController{
 				case 11:
 					System.out.println("Exiting Patient menu...");
 					String log = "Patient " + patient.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
-                    Database.systemLogs.add(log);
+                    Database.SYSTEM_LOGS.add(log);
 			}
 		}
 		while (choice != 11);
@@ -165,14 +165,11 @@ public class PatientController extends SessionController{
 	
 	public void scheduleAppointment() {
 		System.out.println("\nScheduling Appointment...\n!");
-		for (Doctor doctor : Database.doctors) {
-			System.out.println(doctor);
-		}
-		System.out.println("Enter Doctor id or -1 to go back: ");
-		String id = scanner.next();
+		patientView.viewDoctors();
+		String id = patientView.enterID();
 		if (id.equals("-1")) return;
 		Doctor doctor = null;
-		for (Doctor doctor1 : Database.doctors) {
+		for (Doctor doctor1 : Database.DOCTORS) {
 			if (doctor1.getID().equals(id)) doctor = doctor1;
 		}
 		if (doctor == null) {
@@ -291,7 +288,7 @@ public class PatientController extends SessionController{
 		if (choice == -1) return;
 		if (choice == 1) {
 			System.out.println("Which requestID would would like to cancel? Enter ID or -1 to exit.");
-			AppointmentRequest req = RequestController.findRequest(requests, true, scanner);
+			AppointmentRequest req = AppointmentRequest.findRequest(requests, true, scanner);
 			if (req == null) return;
 			req.setStatus(Status.CANCELLED);
 			System.out.println("Request Cancelled!");

@@ -23,7 +23,7 @@ public class UserController extends SessionController{
 		startTime = LocalTime.now();
 		startDate = LocalDate.now();
 		String log = "User " + user.getID() + " logged in at " + startTime.format(formatter) + " on " + startDate; 
-        Database.systemLogs.add(log);
+        Database.SYSTEM_LOGS.add(log);
 	}
 	
 	 // Method to simulate user login
@@ -136,7 +136,7 @@ public class UserController extends SessionController{
         user.setLocked(true);
         System.out.println("Account has been locked.");
         String log = "Account " + user.getID() + " has been locked.";
-        Database.systemLogs.add(log);
+        Database.SYSTEM_LOGS.add(log);
     }
 
     /**
@@ -146,7 +146,7 @@ public class UserController extends SessionController{
         user.setLocked(false);
         System.out.println("Account has been unlocked.");
         String log = "Account " + user.getID() + " has been unlocked.";
-        Database.systemLogs.add(log);
+        Database.SYSTEM_LOGS.add(log);
     }
     
     /**
@@ -195,7 +195,7 @@ public class UserController extends SessionController{
                     long minutes = duration.toMinutes() % 60; // Remaining minutes
                     long seconds = duration.getSeconds() % 60; // Remaining seconds
                     String log = "User " + user.getID() + " logged out at " + endTime.format(formatter) + " on " + endDate + ". Session lasted for " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds." ;
-                    Database.systemLogs.add(log);
+                    Database.SYSTEM_LOGS.add(log);
                     break;
                 default:
                 	System.out.println("Invalid option! Please try again.");

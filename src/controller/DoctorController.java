@@ -67,7 +67,7 @@ public class DoctorController extends SessionController {
                 case 9:
                     System.out.println("Exiting Doctor menu...");
                     String log = "Doctor " + doctor.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
-                    Database.systemLogs.add(log);
+                    Database.SYSTEM_LOGS.add(log);
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -238,7 +238,7 @@ public class DoctorController extends SessionController {
 		doctorView.viewRequests(doctor);
 		ArrayList<AppointmentRequest> requests = doctor.getRequests();
 		System.out.println("Which requestID would you like to accept/reject?");
-		AppointmentRequest request = RequestController.findRequest(requests, false, scanner);
+		AppointmentRequest request = AppointmentRequest.findRequest(requests, false, scanner);
 		if (request == null) return;
 		System.out.println("Please input 1 for Accept or 2 for Reject. Enter -1 to exit.");
 		int choice = doctorView.getChoice();

@@ -51,7 +51,7 @@ public class AdministratorController extends SessionController{
                 case 8:
                     System.out.println("Exiting Administrator menu...");
                     String log = "Admin " + admin.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
-                    Database.systemLogs.add(log);
+                    Database.SYSTEM_LOGS.add(log);
                     break;
                 default:
                     System.out.println("Invalid choice.");
@@ -129,7 +129,7 @@ public class AdministratorController extends SessionController{
             	return;
             }
             request.acceptRequest();
-            Database.medicationBank.increaseStock(request.getMedication(), request.getRequestedAmount()); 
+            Database.MEDICATION_BANK.increaseStock(request.getMedication(), request.getRequestedAmount()); 
             sendMessage(request);
         } else {
             System.out.println("Invalid request index.");
@@ -189,7 +189,7 @@ public class AdministratorController extends SessionController{
 	                String medicationName = scanner.nextLine();
 	                System.out.print("Enter amount to be added: ");
 	                int stock1 = scanner.nextInt();
-	                Database.medicationBank.increaseStock(medicationName, stock1); 
+	                Database.MEDICATION_BANK.increaseStock(medicationName, stock1); 
 	        		break;
 	        	case 2:
 	        	  	System.out.println("");
@@ -197,7 +197,7 @@ public class AdministratorController extends SessionController{
 	                String medName = scanner.nextLine();
 	                System.out.print("Enter amount to be removed: ");
 	                int stock2 = scanner.nextInt();
-	                Database.medicationBank.decreaseStock(medName, stock2); 
+	                Database.MEDICATION_BANK.decreaseStock(medName, stock2); 
 	        		break;
 	        	case 3:
 	        		administratorView.addNewMed();
@@ -266,28 +266,28 @@ public class AdministratorController extends SessionController{
 
         switch (role) {
             case "doctor":
-                exists = Database.doctors.stream().anyMatch(doctor -> doctor.getID().equals(id));
+                exists = Database.DOCTORS.stream().anyMatch(doctor -> doctor.getID().equals(id));
                 if (!exists) {
                     Doctor newDoctor = new Doctor(id, name);
-                    Database.doctors.add(newDoctor);
+                    Database.DOCTORS.add(newDoctor);
                     System.out.println("Doctor " + name + " added to the hospital staff.");
                 }
                 break;
 
             case "pharmacist":
-                exists = Database.pharmacists.stream().anyMatch(pharmacist -> pharmacist.getID().equals(id));
+                exists = Database.PHARMACISTS.stream().anyMatch(pharmacist -> pharmacist.getID().equals(id));
                 if (!exists) {
                     Pharmacist newPharmacist = new Pharmacist(id, name);
-                    Database.pharmacists.add(newPharmacist);
+                    Database.PHARMACISTS.add(newPharmacist);
                     System.out.println("Pharmacist " + name + " added to the hospital staff.");
                 }
                 break;
 
             case "administrator":
-                exists = Database.administrators.stream().anyMatch(admin -> admin.getID().equals(id));
+                exists = Database.ADMINISTRATORS.stream().anyMatch(admin -> admin.getID().equals(id));
                 if (!exists) {
                     Administrator newAdmin = new Administrator(id, name);
-                    Database.administrators.add(newAdmin);
+                    Database.ADMINISTRATORS.add(newAdmin);
                     System.out.println("Administrator " + name + " added to the hospital staff.");
                 }
                 break;
@@ -311,15 +311,15 @@ public class AdministratorController extends SessionController{
 
         switch (role) {
             case "doctor":
-                removed = Database.doctors.removeIf(doctor -> doctor.getID().equals(id));
+                removed = Database.DOCTORS.removeIf(doctor -> doctor.getID().equals(id));
                 break;
 
             case "pharmacist":
-                removed = Database.pharmacists.removeIf(pharmacist -> pharmacist.getID().equals(id));
+                removed = Database.PHARMACISTS.removeIf(pharmacist -> pharmacist.getID().equals(id));
                 break;
 
             case "administrator":
-                removed = Database.administrators.removeIf(admin -> admin.getID().equals(id));
+                removed = Database.ADMINISTRATORS.removeIf(admin -> admin.getID().equals(id));
                 break;
 
             default:

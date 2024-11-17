@@ -12,6 +12,6 @@ public abstract class SessionController {
     protected LocalDate startDate;
     protected LocalTime startTime;
     public abstract void showMenu();
- // Formatter to display time in HH:mm:ss format
+ // Formatter to display time in HH:MM:SS format
     protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 }

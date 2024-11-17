@@ -58,7 +58,7 @@ public class PharmacistController extends SessionController {
     		case 6:
     			System.out.println("Exiting Pharmacist menu...");
     			String log = "Pharmacist " + pharmacist.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
-                Database.systemLogs.add(log);
+                Database.SYSTEM_LOGS.add(log);
     			break;
     		default:
     			System.out.println("Invalid choice. Please try again.");
@@ -69,7 +69,7 @@ public class PharmacistController extends SessionController {
 	public void submitReplenishmentRequest() {
     	System.out.print("Enter Medication Name for replenishment request: ");
 	    String medicationName = scanner.next();
-	     if (!Database.medicationBank.inventory.containsKey(medicationName)) {
+	     if (!Database.MEDICATION_BANK.inventory.containsKey(medicationName)) {
 	            System.out.println("Error: Medication not found in inventory.");
 	            return;
 	        }
@@ -83,7 +83,7 @@ public class PharmacistController extends SessionController {
             return; // Stop if no valid admin is selected
         }
 
-        Medication medication = Database.medicationBank.inventory.get(medicationName);
+        Medication medication = Database.MEDICATION_BANK.inventory.get(medicationName);
         if (medication.isStockLow()) {
                 if (pharmacist.getRequests() == null) {
                     pharmacist.setRequests(new ArrayList<>()); // Initialize if null
@@ -146,13 +146,13 @@ public class PharmacistController extends SessionController {
             String medName = prescribedMed.getName();
             int requiredQuantity = prescribedMed.getDosage();
             
-            if (!Database.medicationBank.inventory.containsKey(medName)) {
+            if (!Database.MEDICATION_BANK.inventory.containsKey(medName)) {
                 System.out.println("Medication " + medName + " is not available in the inventory.");
                 allMedicationsDispensed = false;
                 continue;
             }
             
-            Medication inventoryMed = Database.medicationBank.inventory.get(medName);
+            Medication inventoryMed = Database.MEDICATION_BANK.inventory.get(medName);
             
             if (inventoryMed.getStockLevel() < requiredQuantity) {
                 System.out.println("Insufficient stock for " + medName + ". Unable to dispense.");
