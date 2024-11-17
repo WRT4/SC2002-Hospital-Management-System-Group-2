@@ -176,9 +176,9 @@ public class DoctorController extends SessionController {
     		choice = doctorView.getChoice();
     	}
     	if (choice == 1) {
-            LocalDate date = ScheduleView.inputDate(false);
+            LocalDate date = ScheduleView.inputDate(false, scanner);
             if (date == null) return;
-            LocalTime time = ScheduleView.inputTime();
+            LocalTime time = ScheduleView.inputTime(scanner);
             if (time == null) return;
             TimeSlot timeslot = doctor.getSchedule().findTimeSlot(date, time);
             if (timeslot == null) {
@@ -194,9 +194,9 @@ public class DoctorController extends SessionController {
             return;
     	}
     	else if (choice == 2) {
-            LocalDate date = ScheduleView.inputDate(false);
+            LocalDate date = ScheduleView.inputDate(false, scanner);
             if (date == null) return;
-            LocalTime time = ScheduleView.inputTime();
+            LocalTime time = ScheduleView.inputTime(scanner);
             if (time == null) return;
             Schedule schedule = doctor.getSchedule();
             Appointment temp = schedule.findAppointment(schedule.findTimeSlot(date, time));

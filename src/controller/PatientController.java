@@ -178,15 +178,15 @@ public class PatientController extends SessionController{
 		}
 
 		//input date time--start
-		LocalDate date = ScheduleView.inputDate(true);
+		LocalDate date = ScheduleView.inputDate(true, scanner);
 		if (date == null) return;
 
-		LocalTime time = ScheduleView.inputTime();
+		LocalTime time = ScheduleView.inputTime(scanner);
 		if (time == null) return;
 
 		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
 			System.out.println("Time has lapsed! Please re-enter!");
-			time = ScheduleView.inputTime();
+			time = ScheduleView.inputTime(scanner);
 			if (time == null) return;
 		}
 		//input date time--end
@@ -218,15 +218,15 @@ public class PatientController extends SessionController{
 		System.out.println("Changing appointment " + temp.getAppointmentID() + " ...");
 		System.out.println("Enter new date: ");
 
-		LocalDate date = ScheduleView.inputDate(true);
+		LocalDate date = ScheduleView.inputDate(true, scanner);
 		if (date == null) return;
 
-		LocalTime time = ScheduleView.inputTime();
+		LocalTime time = ScheduleView.inputTime(scanner);
 		if (time == null) return;
 
 		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
 			System.out.println("Time has lapsed! Please re-enter!");
-			time = ScheduleView.inputTime();
+			time = ScheduleView.inputTime(scanner);
 			if (time == null) return;
 		}
 
