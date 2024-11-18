@@ -8,10 +8,14 @@ import java.util.Scanner;
 import enums.Status;
 
 /**
- * Represents a request for an appointment in the medical system.
+ * Represents a request for an appointment in the Hospital Management System (HMS).
  * It includes information about the requesting patient, the assigned doctor, date,
  * and timeslot. Each request can be accepted, declined, or cancelled.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
  */
+
 public class AppointmentRequest implements Request {
 
 	private static final long serialVersionUID = 9181140749468462052L;

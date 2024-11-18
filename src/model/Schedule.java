@@ -6,120 +6,175 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.time.temporal.ChronoUnit;
 
-//schedule has appointments and workDays()
-public class Schedule implements Serializable{
-	
+/**
+ * Represents a doctor's schedule, including working time slots and appointments.
+ * Provides functionality for managing appointments and maintaining availability for up to 30 days in advance.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
+ */
+public class Schedule implements Serializable {
+
 	private static final long serialVersionUID = -9056252775996453213L;
 	private String doctorID;
-    private ArrayList<Appointment> appointments;
-    private ArrayList<TimeSlot> workingSlots;
+	private ArrayList<Appointment> appointments;
+	private ArrayList<TimeSlot> workingSlots;
 
-
-    public Schedule(String doctorID){
+	/**
+	 * Constructs a Schedule for a specific doctor by initializing working slots for 30 days and creating an empty appointment list.
+	 *
+	 * @param doctorID The unique ID of the doctor for this schedule
+	 */
+	public Schedule(String doctorID) {
 		this.doctorID = doctorID;
-        //create working slots for 2 weeks timeframe
-		workingSlots = new ArrayList<TimeSlot>();
+		workingSlots = new ArrayList<>();
 		createWorkingSlots30Days();
-        appointments = new ArrayList<Appointment>();
-    }
+		appointments = new ArrayList<>();
+	}
 
-	public void addWorkingSlots(LocalDate startDate, int dayNum){
+	/**
+	 * Adds working time slots starting from a given date for a specified number of days.
+	 *
+	 * @param startDate The start date for adding working slots
+	 * @param dayNum    The number of days for which to add working slots
+	 */
+	public void addWorkingSlots(LocalDate startDate, int dayNum) {
 		LocalDate day;
-		for (int i=0; i <=dayNum; i++){
+		for (int i = 0; i <= dayNum; i++) {
 			day = startDate.plusDays(i);
-			LocalTime temp = LocalTime.of(8,0);
-			while (temp.isBefore(LocalTime.of(17,0))){
+			LocalTime temp = LocalTime.of(8, 0);
+			while (temp.isBefore(LocalTime.of(17, 0))) {
 				workingSlots.add(new TimeSlot(day, temp, temp.plusMinutes(30)));
 				temp = temp.plusMinutes(30);
 			}
 		}
 	}
-    
-    public void createWorkingSlots30Days(){
+
+	/**
+	 * Creates working slots for a period of 30 days starting from the current date.
+	 */
+	public void createWorkingSlots30Days() {
 		LocalDate today = LocalDate.now();
 		LocalDate lastDay = today.plusDays(30);
 		System.out.println("Creating Working Schedule from " + today.toString() + " to " + lastDay.toString());
 		addWorkingSlots(today, 30);
-    }
+	}
 
+	/**
+	 * Retrieves the list of working time slots for the schedule.
+	 *
+	 * @return An ArrayList of working TimeSlot objects
+	 */
 	public ArrayList<TimeSlot> getWorkingSlots() {
 		return workingSlots;
 	}
 
-	//checkFilledSchedule(): check if there are 30 days working slots in advance
-	public boolean checkFilledSchedule(){
-		//check the last entry of WorkingSlots, if difference between that date and today is more than 30 days, we would fill up the working slots
+	/**
+	 * Checks if the schedule is filled for a 30-day period in advance.
+	 *
+	 * @return true if the schedule is filled for 30 days, false otherwise
+	 */
+	public boolean checkFilledSchedule() {
 		TimeSlot lastDay = workingSlots.get(workingSlots.size() - 1);
-		if (ChronoUnit.DAYS.between(LocalDate.now(), lastDay.getDate()) < 30){
-			return false;
-		}
-		else return true;
+		return ChronoUnit.DAYS.between(LocalDate.now(), lastDay.getDate()) >= 30;
 	}
 
-	//fillAdvancedSchedule(): fill in for up to 30 days only when checkFilledSchedule() is false + inform doctor filled up to what date\
-	public void fillAdvancedSchedule(){
-		if (!checkFilledSchedule()){
+	/**
+	 * Fills the schedule with working slots for up to 30 days if the schedule is not already filled.
+	 */
+	public void fillAdvancedSchedule() {
+		if (!checkFilledSchedule()) {
 			TimeSlot lastDay = workingSlots.get(workingSlots.size() - 1);
-			int numDays = (int)ChronoUnit.DAYS.between(lastDay.getDate().plusDays(1), LocalDate.now().plusDays(30));
+			int numDays = (int) ChronoUnit.DAYS.between(lastDay.getDate().plusDays(1), LocalDate.now().plusDays(30));
 			addWorkingSlots(lastDay.getDate().plusDays(1), numDays);
 		}
 	}
 
-	public ArrayList<Appointment> getAppointments(){
-    	return appointments;
-    }
+	/**
+	 * Retrieves the list of appointments in the schedule.
+	 *
+	 * @return An ArrayList of Appointment objects
+	 */
+	public ArrayList<Appointment> getAppointments() {
+		return appointments;
+	}
 
-    public void addAppointment(Appointment appointment) {
-        //need to check clash??
-        appointments.add(appointment);
-        System.out.println("Appointment added: " + appointment);
-    }
+	/**
+	 * Adds an appointment to the schedule.
+	 *
+	 * @param appointment The appointment to add
+	 */
+	public void addAppointment(Appointment appointment) {
+		appointments.add(appointment);
+		System.out.println("Appointment added: " + appointment);
+	}
 
-    public void removeAppointment(int appointmentId) {
-        appointments.removeIf(appt -> appt.getAppointmentID() == appointmentId);
-        System.out.println("Appointment " + appointmentId + " removed");
-    }
-    
-    public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
-    	for (TimeSlot timeslot : workingSlots) {
-    		if (time.equals(timeslot.getStartTime()) && date.equals(timeslot.getDate())) return timeslot;
-    	}
-    	return null;
-    }
-	//free up time slots
-    
-    public void setAvailability(TimeSlot timeslot) {
+	/**
+	 * Removes an appointment from the schedule based on its appointment ID.
+	 *
+	 * @param appointmentId The ID of the appointment to remove
+	 */
+	public void removeAppointment(int appointmentId) {
+		appointments.removeIf(appt -> appt.getAppointmentID() == appointmentId);
+		System.out.println("Appointment " + appointmentId + " removed");
+	}
+
+	/**
+	 * Finds a specific time slot in the working schedule based on a given date and time.
+	 *
+	 * @param date The date of the desired time slot
+	 * @param time The start time of the desired time slot
+	 * @return The matching TimeSlot object if found, otherwise null
+	 */
+	public TimeSlot findTimeSlot(LocalDate date, LocalTime time) {
+		for (TimeSlot timeslot : workingSlots) {
+			if (time.equals(timeslot.getStartTime()) && date.equals(timeslot.getDate())) {
+				return timeslot;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Frees up a specified time slot in the schedule, making it available.
+	 *
+	 * @param timeslot The time slot to free
+	 */
+	public void setAvailability(TimeSlot timeslot) {
 		timeslot.free();
-    }
+	}
 
-	public boolean checkOverlapping (TimeSlot requestSlot){
+	/**
+	 * Checks if a given time slot is occupied.
+	 *
+	 * @param requestSlot The time slot to check
+	 * @return true if the time slot is occupied, false otherwise
+	 */
+	public boolean checkOverlapping(TimeSlot requestSlot) {
 		return requestSlot.getOccupied();
 	}
 
-   /* public static void main(String[] args) {
-        Schedule doctorSchedule = new Schedule(1);
-        doctorSchedule.setAvailability("2024-10-20", "10:00");
-        doctorSchedule.addAppointment(new Appointment(1, "2024-10-20", "10:00", 101));
-        doctorSchedule.viewSchedule();
-        doctorSchedule.removeAppointment(1);
-        doctorSchedule.viewSchedule();
-    }*/
-	
+	/**
+	 * Finds an appointment in the schedule that matches a given time slot.
+	 *
+	 * @param timeslot The time slot to search for
+	 * @return The matching Appointment if found, otherwise null
+	 */
 	public Appointment findAppointment(TimeSlot timeslot) {
-		Appointment apt = null;
 		for (Appointment appointment : appointments) {
 			if (appointment.getTimeSlot().equals(timeslot)) {
-				apt = appointment;
-				break;
+				return appointment;
 			}
 		}
-		return apt;
+		return null;
 	}
 
+	/**
+	 * Retrieves the doctor ID associated with this schedule.
+	 *
+	 * @return The doctor ID
+	 */
 	public String getDoctorID() {
 		return doctorID;
 	}
-
 }
-
-

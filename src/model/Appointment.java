@@ -6,18 +6,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import enums.Status;
 
+/**
+ * Represents a request for an appointment in the Hospital Management System (HMS).
+ * It includes information about the appointment, the doctor, patient, timeslot, status
+ * prescription status, diagnosis, service type and note.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
+ */
+
 public class Appointment implements Serializable{
 
 	private static final long serialVersionUID = 2168626928105170600L;
 	private Patient patient;
-/**
- * Represents an appointment in HMS.
- * It contains information about the patient, doctor, date, timeslot,
- * and status of the appointment, as well as any associated prescriptions, diagnosis,
- * and additional notes.
- */
-public class Appointment {
-    private Patient patient;
     private Doctor doctor;
     private LocalDate date;
     private TimeSlot timeslot;
@@ -182,6 +183,12 @@ public class Appointment {
         return patient;
     }
 
+    /**
+     * Provides a string representation of the appointment, including appointment ID,
+     * date, start time, patient name and doctor name.
+     *
+     * @return A string containing details of the appointment
+     */
     public String toString() {
         return "Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " Patient: " + patient.getName() + " with Doctor: " + doctor.getName();
     }

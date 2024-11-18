@@ -7,43 +7,88 @@ import java.util.Scanner;
 import controller.AdministratorController;
 import controller.SessionController;
 
+/**
+ * Represents an Administrator in the Hospital Management System (HMS).
+ * This class extends the User class and provides additional functionality specific to administrators,
+ * such as managing staff and handling refill requests.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
+ */
 public class Administrator extends User {
-	
-	private static final long serialVersionUID = -3513955881484371321L;
-	private List<User> staff; // List to manage staff members
+
+    private static final long serialVersionUID = -3513955881484371321L;
+    private List<User> staff; // List to manage staff members
     private List<RefillRequest> refillRequests; // List to store refill requests for review
-    // private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
     private String gender;
     private int age;
-    
+
+    /**
+     * Constructs an Administrator with an ID, name, gender, and age.
+     * Sets the default password to "password" and the role to "Administrator".
+     *
+     * @param id The unique identifier for the administrator.
+     * @param name The name of the administrator.
+     * @param gender The gender of the administrator.
+     * @param age The age of the administrator.
+     */
     public Administrator(String id, String name, String gender, int age) {
         super(id, name, "password", "Administrator");
         this.gender = gender;
         this.age = age;
     }
 
+    /**
+     * Constructs an Administrator with an ID and name.
+     * Sets the default password to "password" and the role to "Administrator".
+     *
+     * @param id The unique identifier for the administrator.
+     * @param name The name of the administrator.
+     */
     public Administrator(String id, String name) {
         this(id, name, "password");
     }
-    
+
+    /**
+     * Constructs an Administrator with an ID, name, and password.
+     * Sets the role to "Administrator" and initializes the staff and refill requests lists.
+     *
+     * @param id The unique identifier for the administrator.
+     * @param name The name of the administrator.
+     * @param password The password for the administrator.
+     */
     public Administrator(String id, String name, String password) {
-    	super(id, name, password, "Administrator");
+        super(id, name, password, "Administrator");
         this.staff = new ArrayList<>();
         this.setRefillRequests(new ArrayList<>());
-        // this.userRequests = new ArrayList<>();
     }
- 
-    public List<User> getStaff(){ 
-    	return this.staff;
+
+    /**
+     * Gets the list of staff members managed by the administrator.
+     *
+     * @return A list of users representing the staff members.
+     */
+    public List<User> getStaff() {
+        return this.staff;
     }
-    
-    // Receive a refill request from pharmacists
+
+    /**
+     * Receives a refill request from a pharmacist and adds it to the refill requests list.
+     *
+     * @param request The refill request to be added.
+     */
     public void receiveRefillRequest(RefillRequest request) {
         if (getRefillRequests() == null) {
             setRefillRequests(new ArrayList<>()); // Initialize if null
         }
         getRefillRequests().add(request);
     }
+
+    /**
+     * Gets the list of refill requests currently in the system.
+     *
+     * @return A list of refill requests.
+     */
     public List<RefillRequest> getRefillRequests() {
         if (refillRequests == null) {
             refillRequests = new ArrayList<>(); // Initialize if null
@@ -51,126 +96,52 @@ public class Administrator extends User {
         return refillRequests;
     }
 
-	public void setRefillRequests(List<RefillRequest> refillRequests) {
-		this.refillRequests = refillRequests;
-	}
+    /**
+     * Sets the list of refill requests for the administrator.
+     *
+     * @param refillRequests A list of refill requests to be set.
+     */
+    public void setRefillRequests(List<RefillRequest> refillRequests) {
+        this.refillRequests = refillRequests;
+    }
 
-	public String toString() {
+    /**
+     * Provides a string representation of the administrator, including their ID, name, gender, and age.
+     *
+     * @return A string representing the administrator.
+     */
+    @Override
+    public String toString() {
         return "Administrator ID: " + getID() + ", Name: " + getName() + ", Gender: " + gender + ", Age: " + age;
     }
-	
-	public String getGender() {
+
+    /**
+     * Gets the gender of the administrator.
+     *
+     * @return The gender of the administrator.
+     */
+    public String getGender() {
         return gender;
     }
 
+    /**
+     * Gets the age of the administrator.
+     *
+     * @return The age of the administrator.
+     */
     public int getAge() {
         return age;
     }
 
-	@Override
-	public SessionController createController(Scanner scanner) {
-		System.out.println("Accessing Administrator Dashboard...");
-		return new AdministratorController(this, scanner);
-	}
-
-
-//    //********************************* This part onwards is mainly extras, not for test cases ******************************************8**
-//
-//    // Keeping original methods for handling user requests, account locking, password resetting, and logging
-//    public void receiveUserRequest(Request request) {
-//        userRequests.add(request);
-//        System.out.println("User request received: " + request);
-//    }
-//
-//
-//    // Approve a general user request
-//    public void approveUserRequest(int requestIndex) {
-//        if (requestIndex >= 0 && requestIndex < userRequests.size()) {
-//            Request request = userRequests.get(requestIndex);
-//            request.acceptRequest();
-//            userRequests.remove(requestIndex); // Remove from list after approval
-//            System.out.println("User request approved.");
-//        } else {
-//            System.out.println("Invalid request index.");
-//        }
-//    }
-//
-//    // Display all pending user requests
-//    public void viewPendingUserRequests() {
-//        if (userRequests.isEmpty()) {
-//            System.out.println("No pending user requests.");
-//        } else {
-//            System.out.println("Pending User Requests:");
-//            for (int i = 0; i < userRequests.size(); i++) {
-//                System.out.println((i + 1) + ". " + userRequests.get(i));
-//            }
-//        }
-//    }
-//
-// // Decline a general user request
-//    public void declineUserRequest(int requestIndex) {
-//        if (requestIndex >= 0 && requestIndex < userRequests.size()) {
-//            Request request = userRequests.get(requestIndex);
-//            request.declineRequest();
-//            userRequests.remove(requestIndex); // Remove from list after decline
-//            System.out.println("User request declined.");
-//        } else {
-//            System.out.println("Invalid request index.");
-//        }
-//    }
-//
-//    // Lock or unlock a user account
-//    public void toggleAccountLock(User user, boolean lock) {
-//        if (lock) {
-//            user.lockAccount(); // Lock the account
-//            System.out.println(user.getName() + "'s account has been locked.");
-//        } else {
-//            user.unlockAccount(); // Unlock the account
-//            System.out.println(user.getName() + "'s account has been unlocked.");
-//        }
-//    }
-//
-//    // Method to receive a password reset request
-//    public void receiveRequest(PasswordResetRequest request) {
-//        userRequests.add(request);
-//        System.out.println("Password reset request received from user: " + request.getUser().getName());
-//    }
-//
-//    // Method to receive an unlock account request
-//    public void receiveRequest(UnlockAccountRequest request) {
-//        userRequests.add(request);
-//        System.out.println("Unlock account request received from user: " + request.getUser().getName());
-//    }
-//
-//
-//    // Reset a staff member's password to the default
-//    public void resetPassword(User user) {
-//        user.changePassword("password"); // Reset to default password
-//        System.out.println(user.getName() + "'s password has been reset to the default.");
-//    }
-//
-//    // View the activity log of a specific staff member
-//    public void viewStaffActivityLog(User staffMember) {
-//        System.out.println("Activity Log for " + staffMember.getName() + ":");
-//        staffMember.displayActivityLog();
-//    }
-//
-//    public String toString() {
-//    	return "Administrator ID: " + getId() + " Name: " + getName();
-//    }
-//
-//	//No need for decline Refill request(?) Keeping it here jic.
-//     // Decline a specific refill request
-//    /*public void declineRefillRequest(int requestIndex) {
-//        if (requestIndex >= 0 && requestIndex < refillRequests.size()) {
-//            RefillRequest request = refillRequests.get(requestIndex);
-//            request.declineRequest();
-//            refillRequests.remove(requestIndex); // Remove from list after decline
-//            System.out.println("Refill request declined for " + request.getMedication());
-//        } else {
-//            System.out.println("Invalid request index.");
-//        }
-//    }*/
-
-    
+    /**
+     * Creates a session controller for the administrator, allowing them to access the administrator dashboard.
+     *
+     * @param scanner A Scanner object for reading user input during the session.
+     * @return An AdministratorController object for managing the administrator's session.
+     */
+    @Override
+    public SessionController createController(Scanner scanner) {
+        System.out.println("Accessing Administrator Dashboard...");
+        return new AdministratorController(this, scanner);
+    }
 }
