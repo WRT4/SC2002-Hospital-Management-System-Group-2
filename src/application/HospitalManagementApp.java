@@ -6,50 +6,46 @@ import model.User;
 
 public class HospitalManagementApp {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Database.initialiseDatabase();
-        User user = null;
+	public static void main(String[] args) {
+	    Scanner scanner = new Scanner(System.in);
+	    Database.initialiseDatabase();
+	    User user = null;
 
-        // Main loop for the application
-        while (true) {
-            // Prompt the user for their User ID
-        	System.out.println("\nLogging in...");
-            user = getUser(scanner);
-            if (user == null) {
-            	System.out.println("Exiting the application!");
-            	return;
-            }
-            if (user.isLocked()) {
-            	System.out.println("Account is Locked! Please contact an administrator to unlock!");
-            	continue;
-            }
-            
-            // Prompt the user for their password
-            System.out.print("Enter Password: ");
-            String inputPassword = scanner.nextLine();
-            
-            UserController userController = new UserController(user,scanner);
-            
-            // Delegate login handling to the UserController class
-            boolean loggedIn = userController.login(user.getID(), inputPassword);
-            
-            // If login is successful, access the user's menu
-            if (loggedIn) {
-                userController.showMenu();
-            }
+	    // Main loop for the application
+	    try {
+	        while (true) {
+	            System.out.println("\nLogging in...");
+	            user = getUser(scanner);
+	            if (user == null) {
+	                System.out.println("Exiting the application!");
+	                break;
+	            }
+	            if (user.isLocked()) {
+	                System.out.println("Account is Locked! Please contact an administrator to unlock!");
+	                continue;
+	            }
 
-            // After the user logs out, return to the login prompt
-            System.out.println("You have logged out. Returning to the login page...");
-        }
-//        while (true) {
-//        	UserController userController = new UserController(user,scanner);
-//        	userController.showMenu();
-//        	
-//        	// After the user logs out, return to the login prompt
-//        	System.out.println("You have logged out. Returning to the login page...");
-//        }
-    }
+	            System.out.print("Enter Password: ");
+	            String inputPassword = scanner.nextLine();
+
+	            UserController userController = new UserController(user, scanner);
+	            boolean loggedIn = userController.login(user.getID(), inputPassword);
+
+	            if (loggedIn) {
+	                userController.showMenu();
+	            }
+
+	            System.out.println("You have logged out. Returning to the login page...");
+	        }
+	    } finally {
+	        scanner.close();
+	        // Save the database before exiting
+	        System.out.println("Saving the database...");
+	        Database.saveSerializedDatabase();
+	        System.out.println("Database saved successfully. Goodbye!");
+	    }
+	}
+
     
     private static User getUser(Scanner scanner) {
 		System.out.print("Enter User ID (-1 to exit): ");

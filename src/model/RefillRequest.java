@@ -5,8 +5,10 @@ import java.time.LocalTime;
 
 import enums.Status;
 
-public class RefillRequest implements Request {
-    private Pharmacist pharmacist;
+public class RefillRequest implements Request{
+	
+    private static final long serialVersionUID = 4779573415288173697L;
+	private Pharmacist pharmacist;
     private Administrator admin;
     private String medication;
     private int requestedAmount;

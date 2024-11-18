@@ -1,17 +1,22 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Medication {
-    private String name;
+public class Medication implements Serializable{
+	
+    private static final long serialVersionUID = 3164761930276452742L;
+	private String name;
     private int stockLevel;
     private int dosage;
     private int lowStockThreshold;
+	private LocalDate expirationDate;
 
     public Medication(String name, int stockLevel,  LocalDate expirationDate, int lowStockThreshold) {
         this.name = name;
         this.stockLevel = stockLevel;
         //this.dosage = dosage;
+        this.setExpirationDate(expirationDate);
         this.lowStockThreshold = lowStockThreshold;
     }
     
@@ -94,6 +99,14 @@ public class Medication {
 
         return result.toString();
     }
+
+	public LocalDate getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(LocalDate expirationDate) {
+		this.expirationDate = expirationDate;
+	}
 
 
 }

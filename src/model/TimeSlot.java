@@ -1,11 +1,14 @@
 package model;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class TimeSlot {
-    private LocalDate date;
+public class TimeSlot implements Serializable{
+	
+    private static final long serialVersionUID = -8117177383039659L;
+	private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     private boolean isOccupied;

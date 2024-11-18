@@ -1,10 +1,15 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import enums.Status;
 
+public class Appointment implements Serializable{
+
+	private static final long serialVersionUID = 2168626928105170600L;
+	private Patient patient;
 /**
  * Represents an appointment in HMS.
  * It contains information about the patient, doctor, date, timeslot,
@@ -154,9 +159,9 @@ public class Appointment {
         if (this.prescriptions == null) {
             System.out.println("No prescriptions yet.");
             return null;
-        } else {
-            return this.prescriptions;
         }
+        else
+            return this.prescriptions;
     }
 
     /**
@@ -175,6 +180,10 @@ public class Appointment {
      */
     public Patient getPatient() {
         return patient;
+    }
+
+    public String toString() {
+        return "Appointment " + appointmentID + ": " + date + " at " + timeslot.getStartTime() + " Patient: " + patient.getName() + " with Doctor: " + doctor.getName();
     }
 
     /**

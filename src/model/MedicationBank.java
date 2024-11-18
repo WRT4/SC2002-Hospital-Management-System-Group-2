@@ -3,11 +3,14 @@ package model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class MedicationBank {
-    public HashMap<String, Medication> inventory;
+public class MedicationBank implements Serializable{
+	
+    private static final long serialVersionUID = 4996340102333033032L;
+	public HashMap<String, Medication> inventory;
 
     public MedicationBank() {
         this.inventory = new HashMap<>();
@@ -18,7 +21,31 @@ public class MedicationBank {
             System.err.println("Error loading medications from CSV: " + e.getMessage());
         }
     }
+    
+ // Method to copy inventory from another MedicationBank
+    public void copyFrom(MedicationBank otherBank) {
+        if (otherBank == null) {
+            System.out.println("The provided MedicationBank is null. Copy operation aborted.");
+            return;
+        }
 
+        // Clear the current inventory to avoid duplicates
+        this.inventory.clear();
+
+        // Copy the medications from the other bank's inventory
+        for (String medicationName : otherBank.inventory.keySet()) {
+            Medication medication = otherBank.inventory.get(medicationName);
+            // Add the medication to the current inventory
+            this.inventory.put(medicationName, new Medication(
+                medication.getName(),
+                medication.getStockLevel(),
+                medication.getExpirationDate(),
+                medication.getLowStockThreshold()
+            ));
+        }
+
+        System.out.println("Medication inventory copied successfully from another MedicationBank.");
+    }
     // Method to load medications from a CSV file
     private void loadMedicationsFromCSV(String filePath) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

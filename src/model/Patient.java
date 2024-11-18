@@ -8,7 +8,8 @@ import controller.SessionController;
 
 public class Patient extends User {
 	
-    private MedicalRecord record;
+	private static final long serialVersionUID = 3070349195380175059L;
+	private MedicalRecord record;
     private ArrayList<Appointment> appointments;
     private ArrayList<AppointmentRequest> requests;
 
