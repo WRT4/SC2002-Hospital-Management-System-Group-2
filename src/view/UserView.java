@@ -2,7 +2,6 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import model.User;
 
 public class UserView {
 	protected Scanner scanner;
@@ -20,14 +19,6 @@ public class UserView {
             scanner.next();
         }
         return scanner.nextInt();
-    }
-    
-    /**
-     * Displays the activity log for the user (placeholder implementation).
-     */
-    public void displayActivityLog(User user) {
-        System.out.println("Displaying activity log for user ID: " + user.getID());
-        // Placeholder: In a real system, this would display the user's actual activity log.
     }
     
     public String enterID() {
@@ -66,21 +57,19 @@ public class UserView {
 	public void showMessageBox(ArrayList<String> messages, int index) {
 		System.out.println("\nMessage Box: ");
 		int counter = 0;
-		for (int i = messages.size() - 1; i >= index; i--){
-			System.out.println(RED + "UNREAD - " + messages.get(i) + RESET);
-			System.out.println();
-			counter++;
-		}
-		if (counter ==0)
+		counter = messages.size() - index;
+		if (counter ==0) {
 			System.out.println("No unread messages!");
+			return;
+		}
+		System.out.println(RED + "YOU HAVE " + counter + " UNREAD MESSAGES!" + RESET);
 	}
 
 	public void showMenu() {
     	System.out.println("\nMain Menu: ");
         System.out.println("1. Access Role-Specific Dashboard");
         System.out.println("2. Change Password");
-        System.out.println("3. Display Activity Log");
-        System.out.println("4. Logout");
+        System.out.println("3. Logout");
         System.out.println("Choose an action:");
     }
 }

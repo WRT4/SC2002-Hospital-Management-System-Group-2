@@ -54,7 +54,7 @@ public class PatientView extends UserView{
 		for (Doctor doctor : Database.DOCTORS) {
 			System.out.println(doctor);
 		}
-		System.out.println("Enter Doctor id or -1 to go back: ");
+		System.out.println("Enter Doctor ID or -1 to go back: ");
 	}
 	
 	// static as its accessed by pharmacist also
