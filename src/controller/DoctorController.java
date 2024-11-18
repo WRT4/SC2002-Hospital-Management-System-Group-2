@@ -349,8 +349,8 @@ public class DoctorController extends SessionController {
             choice = doctorView.getChoice();
         }
         if (choice == 1) {
-            // check overlap of requests or busy
-            if (doctor.getSchedule().checkOverlapping(request.getTimeSlot())) {
+            // check overlap of requests with a busy timeslot or patient already has a scheduled appointment at that time
+            if (doctor.getSchedule().checkOverlapping(request.getTimeSlot()) || request.getPatient().checkOverlapping(request.getDate(), request.getTimeSlot().getStartTime())) {
                 System.out.println("Timeslot is not available! Would you like to reject request instead? 1. Yes -1. Exit");
                 int choice2 = doctorView.getChoice();
                 while (choice2 != 1 && choice2 != -1) {

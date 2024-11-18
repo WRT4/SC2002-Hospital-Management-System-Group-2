@@ -183,12 +183,21 @@ public class PatientController extends SessionController{
 
 		LocalTime time = ScheduleView.inputTime(scanner);
 		if (time == null) return;
-
+		
+		// check if time is in the past
 		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
 			System.out.println("Time has lapsed! Please re-enter!");
 			time = ScheduleView.inputTime(scanner);
 			if (time == null) return;
 		}
+		
+		// check for if there is already an appointment at reequested time
+		while (patient.checkOverlapping(date, time)) {
+			System.out.println("You already have a scheduled appointment at this time! Please re-enter!");
+			time = ScheduleView.inputTime(scanner);
+			if (time == null) return;
+		}
+		
 		//input date time--end
 		TimeSlot requestTime = doctor.findTimeSlot(date, time);
 		if (requestTime == null) return;
@@ -224,8 +233,16 @@ public class PatientController extends SessionController{
 		LocalTime time = ScheduleView.inputTime(scanner);
 		if (time == null) return;
 
+		// check if time is in the past
 		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
 			System.out.println("Time has lapsed! Please re-enter!");
+			time = ScheduleView.inputTime(scanner);
+			if (time == null) return;
+		}
+				
+		// check for if there is already an appointment at reequested time
+		while (patient.checkOverlapping(date, time)) {
+			System.out.println("You already have a scheduled appointment at this time! Please re-enter!");
 			time = ScheduleView.inputTime(scanner);
 			if (time == null) return;
 		}
