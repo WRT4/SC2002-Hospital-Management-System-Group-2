@@ -7,13 +7,32 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class MedicationBank implements Serializable{
-	
-    private static final long serialVersionUID = 4996340102333033032L;
-	public HashMap<String, Medication> inventory;
+/**
+ * Represents a medication inventory system.
+ * Provides functionalities to manage medications, including adding, updating stock levels,
+ * viewing inventory, and loading data from a CSV file. Handles low-stock alerts and
+ * allows for copying inventory from another {@code MedicationBank}
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
+ */
+public class MedicationBank implements Serializable {
 
+    private static final long serialVersionUID = 4996340102333033032L;
+    public HashMap<String, Medication> inventory;
+
+    /**
+     * Constructs an empty {@code MedicationBank}.
+     * Initializes an empty medication inventory.
+     */
     public MedicationBank() {
         this.inventory = new HashMap<>();
+    }
+
+    /**
+     * Initializes the medication bank by loading medications from a CSV file.
+     */
+    public void initialiseMedicineBank() {
         try {
             loadMedicationsFromCSV("src/application/Medicine_List.csv");
             System.out.println("Medications successfully loaded from CSV.");
@@ -21,21 +40,24 @@ public class MedicationBank implements Serializable{
             System.err.println("Error loading medications from CSV: " + e.getMessage());
         }
     }
-    
- // Method to copy inventory from another MedicationBank
+
+    /**
+     * Copies the inventory from another {@code MedicationBank}.
+     * Clears the current inventory before copying.
+     * Used for loading from Serialized file
+     *
+     * @param otherBank The {@code MedicationBank} to copy inventory from.
+     */
     public void copyFrom(MedicationBank otherBank) {
         if (otherBank == null) {
             System.out.println("The provided MedicationBank is null. Copy operation aborted.");
             return;
         }
 
-        // Clear the current inventory to avoid duplicates
         this.inventory.clear();
 
-        // Copy the medications from the other bank's inventory
         for (String medicationName : otherBank.inventory.keySet()) {
             Medication medication = otherBank.inventory.get(medicationName);
-            // Add the medication to the current inventory
             this.inventory.put(medicationName, new Medication(
                 medication.getName(),
                 medication.getStockLevel(),
@@ -44,9 +66,15 @@ public class MedicationBank implements Serializable{
             ));
         }
 
-        System.out.println("Medication inventory copied successfully from another MedicationBank.");
+        System.out.println("Medication inventory loaded successfully from saved MedicationBank.");
     }
-    // Method to load medications from a CSV file
+
+    /**
+     * Loads medications from a CSV file into the inventory.
+     *
+     * @param filePath The path to the CSV file.
+     * @throws IOException If an error occurs while reading the file.
+     */
     private void loadMedicationsFromCSV(String filePath) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -54,7 +82,7 @@ public class MedicationBank implements Serializable{
 
             while ((line = br.readLine()) != null) {
                 if (isFirstLine) {
-                    isFirstLine = false; // Skip header row
+                    isFirstLine = false;
                     continue;
                 }
 
@@ -69,7 +97,6 @@ public class MedicationBank implements Serializable{
                 int lowStockThreshold = Integer.parseInt(data[2].trim());
                 LocalDate expirationDate = null;
 
-                // Set expiration dates based on predefined medications
                 switch (name.toLowerCase()) {
                     case "paracetamol":
                         expirationDate = LocalDate.of(2025, 12, 31);
@@ -80,19 +107,22 @@ public class MedicationBank implements Serializable{
                     case "amoxicillin":
                         expirationDate = LocalDate.of(2026, 5, 15);
                         break;
-                    default:                       
+                    default:
                         System.out.println("Unknown medication: " + name + ". No expiration date set.");
                         break;
                 }
 
-                // Create the Medication object
                 Medication medication = new Medication(name, stockLevel, expirationDate, lowStockThreshold);
                 addMedication(medication);
             }
         }
     }
 
-    // Add a medication to the inventory
+    /**
+     * Adds a medication to the inventory.
+     *
+     * @param medication The {@code Medication} object to add.
+     */
     public void addMedication(Medication medication) {
         if (medication == null || medication.getName() == null || medication.getName().isEmpty()) {
             System.out.println("Invalid medication information.");
@@ -102,7 +132,12 @@ public class MedicationBank implements Serializable{
         System.out.println(medication.getName() + " added with stock: " + medication.getStockLevel());
     }
 
-    // Update stock for a medication
+    /**
+     * Increases the stock of a specific medication.
+     *
+     * @param medicationName The name of the medication.
+     * @param amount         The amount to increase.
+     */
     public void increaseStock(String medicationName, int amount) {
         Medication medication = inventory.get(medicationName);
         if (medication == null) {
@@ -114,7 +149,12 @@ public class MedicationBank implements Serializable{
         checkAndAlertForLowStock(medication);
     }
 
-    // Decrease stock for a medication
+    /**
+     * Decreases the stock of a specific medication.
+     *
+     * @param medicationName The name of the medication.
+     * @param amount         The amount to decrease.
+     */
     public void decreaseStock(String medicationName, int amount) {
         Medication medication = inventory.get(medicationName);
         if (medication == null) {
@@ -126,7 +166,12 @@ public class MedicationBank implements Serializable{
         checkAndAlertForLowStock(medication);
     }
 
-    // Check stock level for a specific medication
+    /**
+     * Checks the stock level of a specific medication.
+     *
+     * @param medicationName The name of the medication.
+     * @return The stock level of the medication, or 0 if the medication is not found.
+     */
     public int checkStock(String medicationName) {
         Medication medication = inventory.get(medicationName);
         if (medication == null) {
@@ -136,7 +181,9 @@ public class MedicationBank implements Serializable{
         return medication.getStockLevel();
     }
 
-    // View the entire medication inventory
+    /**
+     * Displays the entire medication inventory.
+     */
     public void viewInventory() {
         if (inventory.isEmpty()) {
             System.out.println("The inventory is currently empty.");
@@ -148,7 +195,11 @@ public class MedicationBank implements Serializable{
         }
     }
 
-    // Check if any medication stock is below the threshold and send an alert
+    /**
+     * Checks if the stock level of a medication is below its threshold and triggers an alert if true.
+     *
+     * @param medication The {@code Medication} object to check.
+     */
     private void checkAndAlertForLowStock(Medication medication) {
         if (medication.isStockLow()) {
             System.out.println("ALERT: Low stock for " + medication.getName() + ". Current stock: "
@@ -156,4 +207,3 @@ public class MedicationBank implements Serializable{
         }
     }
 }
-
