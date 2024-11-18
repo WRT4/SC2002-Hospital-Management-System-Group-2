@@ -15,29 +15,42 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-public class Database implements Serializable{
+/**
+ * Represents the central database for the Hospital Management System.
+ * Manages data storage, retrieval, and initialization for various entities, including doctors, patients,
+ * pharmacists, and administrators. Handles both serialized file storage and CSV-based initialization.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
+ */
+public class Database implements Serializable {
 
     private static final long serialVersionUID = -4569093636507412208L;
-	public static final ArrayList<Doctor> DOCTORS = new ArrayList<Doctor>();
-    public static final ArrayList<Patient> PATIENTS = new ArrayList<Patient>();
-    public static final ArrayList<Pharmacist> PHARMACISTS = new ArrayList<Pharmacist>();
-    public static final ArrayList<Administrator> ADMINISTRATORS = new ArrayList<Administrator>();
+    public static final ArrayList<Doctor> DOCTORS = new ArrayList<>();
+    public static final ArrayList<Patient> PATIENTS = new ArrayList<>();
+    public static final ArrayList<Pharmacist> PHARMACISTS = new ArrayList<>();
+    public static final ArrayList<Administrator> ADMINISTRATORS = new ArrayList<>();
     public static final MedicationBank MEDICATION_BANK = new MedicationBank();
     public static final ArrayList<String> SYSTEM_LOGS = new ArrayList<>();
     private static final String DATABASE_FILE = "database.ser";
 
-    // empty constructor
+    /**
+     * Default constructor for the Database class.
+     */
     public Database() {}
 
-    // Method to initialize the database
+    /**
+     * Initializes the database by loading data from a serialized file or CSV files.
+     * If a serialized file exists, it loads the data; otherwise, it initializes data from CSV files.
+     */
     public static void initialiseDatabase() {
         if (loadSerializedDatabase()) {
             System.out.println("Data loaded from serialized file.");
         } else {
             try {
-                // Load data from CSV files
                 loadStaffData("src/application/Staff_List.csv");
                 loadPatientData("src/application/Patient_List.csv");
+                MEDICATION_BANK.initialiseMedicineBank();
                 saveSerializedDatabase();
                 System.out.println("Data has been successfully loaded from CSV files and saved for future runs.");
             } catch (IOException e) {
@@ -46,7 +59,9 @@ public class Database implements Serializable{
         }
     }
 
-    // Save the current state of the database to a file
+    /**
+     * Saves the current state of the database to a serialized file.
+     */
     public static void saveSerializedDatabase() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATABASE_FILE))) {
             oos.writeObject(DOCTORS);
@@ -61,12 +76,16 @@ public class Database implements Serializable{
         }
     }
 
-    // Load the database from a serialized file
+    /**
+     * Loads the database from a serialized file, if it exists.
+     *
+     * @return True if the data was successfully loaded, false otherwise.
+     */
     @SuppressWarnings("unchecked")
     private static boolean loadSerializedDatabase() {
         File file = new File(DATABASE_FILE);
         if (!file.exists()) {
-            return false; // No serialized data found
+            return false;
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
@@ -81,25 +100,35 @@ public class Database implements Serializable{
             MEDICATION_BANK.copyFrom((MedicationBank) ois.readObject());
             SYSTEM_LOGS.clear();
             SYSTEM_LOGS.addAll((ArrayList<String>) ois.readObject());
-            return true; // Successfully loaded serialized data
+            return true;
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading serialized database: " + e.getMessage());
-            return false; // Fall back to CSV initialization
+            return false;
         }
     }
-    
+
+    /**
+     * Retrieves the total count of staff members, including doctors, pharmacists, and administrators.
+     *
+     * @return The total number of staff members.
+     */
     public static int getTotalStaffCount() {
         return DOCTORS.size() + PHARMACISTS.size() + ADMINISTRATORS.size();
     }
 
-    // Method to load staff data from CSV file
+    /**
+     * Loads staff data from a CSV file and initializes corresponding entities.
+     *
+     * @param filePath The path to the staff data CSV file.
+     * @throws IOException If an error occurs while reading the file.
+     */
     private static void loadStaffData(String filePath) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean isFirstLine = true;
             while ((line = br.readLine()) != null) {
                 if (isFirstLine) {
-                    isFirstLine = false; // Skip header row
+                    isFirstLine = false;
                     continue;
                 }
 
@@ -133,7 +162,12 @@ public class Database implements Serializable{
         }
     }
 
-    // Method to load patient data from CSV file
+    /**
+     * Loads patient data from a CSV file and initializes corresponding entities.
+     *
+     * @param filePath The path to the patient data CSV file.
+     * @throws IOException If an error occurs while reading the file.
+     */
     private static void loadPatientData(String filePath) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -142,7 +176,7 @@ public class Database implements Serializable{
 
             while ((line = br.readLine()) != null) {
                 if (isFirstLine) {
-                    isFirstLine = false; // Skip header row
+                    isFirstLine = false;
                     continue;
                 }
 
@@ -159,54 +193,59 @@ public class Database implements Serializable{
                 String bloodType = data[4].trim();
                 String contactInfo = data[5].trim();
 
-                // Calculate age based on Date of Birth
                 LocalDate birthDate = LocalDate.parse(dob, formatter);
                 int age = Period.between(birthDate, LocalDate.now()).getYears();
 
-                // Create a Patient object with the calculated age
                 PATIENTS.add(new Patient(id, name, dob, gender, bloodType, contactInfo, age));
             }
         }
     }
-    
-    
- // Method to find a user by ID
+
+    /**
+     * Finds and returns a user by their unique ID.
+     *
+     * @param userId The unique ID of the user.
+     * @return The {@link User} object if found, or null otherwise.
+     */
     public static User findUserById(String userId) {
-        // Check in DOCTORS list
         for (Doctor doctor : DOCTORS) {
             if (doctor.getID().equals(userId)) {
                 return doctor;
             }
         }
-        // Check in PHARMACISTS list
         for (Pharmacist pharmacist : PHARMACISTS) {
             if (pharmacist.getID().equals(userId)) {
                 return pharmacist;
             }
         }
-        // Check in ADMINISTRATORS list
         for (Administrator administrator : ADMINISTRATORS) {
             if (administrator.getID().equals(userId)) {
                 return administrator;
             }
         }
-        // Check in PATIENTS list
         for (Patient patient : PATIENTS) {
             if (patient.getID().equals(userId)) {
                 return patient;
             }
         }
-        // Return null if user is not found
         return null;
     }
 
-
-    // Method to retrieve a user based on user ID (fixed version)
+    /**
+     * Retrieves a user by their unique ID.
+     * Delegates the search to {@link #findUserById(String)}.
+     *
+     * @param id The unique ID of the user.
+     * @return The {@link User} object if found, or null otherwise.
+     */
     public static User getUser(String id) {
         return findUserById(id);
     }
 
-    // Method to display all users
+    /**
+     * Displays all users stored in the database.
+     * Includes doctors, pharmacists, administrators, and patients.
+     */
     public static void displayAllUsers() {
         System.out.println("DOCTORS:");
         for (Doctor doctor : DOCTORS) {
