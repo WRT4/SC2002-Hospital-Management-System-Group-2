@@ -33,6 +33,9 @@ public class Database implements Serializable {
     public static final MedicationBank MEDICATION_BANK = new MedicationBank();
     public static final ArrayList<String> SYSTEM_LOGS = new ArrayList<>();
     private static final String DATABASE_FILE = "database.ser";
+    public static int refillRequestCount;
+    public static int appointmentRequestCount;
+    public static int appointmentCount;
 
     /**
      * Default constructor for the Database class.
@@ -70,6 +73,9 @@ public class Database implements Serializable {
             oos.writeObject(ADMINISTRATORS);
             oos.writeObject(MEDICATION_BANK);
             oos.writeObject(SYSTEM_LOGS);
+            oos.writeObject(refillRequestCount);
+            oos.writeObject(appointmentRequestCount);
+            oos.writeObject(appointmentCount);
             System.out.println("Database saved successfully.");
         } catch (IOException e) {
             System.err.println("Error saving database: " + e.getMessage());
@@ -100,6 +106,9 @@ public class Database implements Serializable {
             MEDICATION_BANK.copyFrom((MedicationBank) ois.readObject());
             SYSTEM_LOGS.clear();
             SYSTEM_LOGS.addAll((ArrayList<String>) ois.readObject());
+            refillRequestCount = (int) ois.readObject();
+            appointmentRequestCount = (int) ois.readObject();
+            appointmentCount = (int) ois.readObject();
             return true;
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading serialized database: " + e.getMessage());
