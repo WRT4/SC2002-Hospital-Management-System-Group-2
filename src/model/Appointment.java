@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+
+import application.Database;
 import enums.Status;
 
 /**
@@ -25,7 +27,6 @@ public class Appointment implements Serializable{
     private Status status;
     private Status prescriptionStatus = Status.PENDING;
     private int appointmentID;
-    private static int count;
     private ArrayList<Medication> prescriptions = new ArrayList<>();
     private String diagnosis;
     private String serviceType;
@@ -47,8 +48,7 @@ public class Appointment implements Serializable{
         this.timeslot = time;
         this.timeslot.setOccupied();
         this.status = Status.PENDING;
-        count++;
-        this.appointmentID = count;
+        this.appointmentID = ++Database.appointmentCount;
     }
 
     /**

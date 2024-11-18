@@ -1,10 +1,13 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import controller.PatientController;
 import controller.SessionController;
+import enums.Status;
 
 /**
  * Represents a patient in the medical system.
@@ -178,4 +181,22 @@ public class Patient extends User {
 		System.out.println("Accessing Patient Dashboard...");
 		return new PatientController(this, scanner);
 	}
+	
+	/**
+	 * Checks if there is an overlapping appointment for the given date and time.
+	 * Iterates through the list of appointments and compares the date and start time of each appointment.
+	 *
+	 * @param date The date to check for overlapping appointments
+	 * @param time The time to check for overlapping appointments
+	 * @return true if there is an overlapping appointment, false otherwise
+	 */
+	public boolean checkOverlapping(LocalDate date, LocalTime time) {
+	    for (Appointment appointment : appointments) {
+	        if (appointment.getDate().equals(date) && appointment.getTimeSlot().getStartTime().equals(time) && appointment.getStatus() == Status.CONFIRMED) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 }

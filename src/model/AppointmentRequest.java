@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import application.Database;
 import enums.Status;
 
 /**
@@ -24,7 +25,6 @@ public class AppointmentRequest implements Request {
 	private LocalDate date;
 	private TimeSlot timeslot;
 	private Status status;
-	private static int count = 0;
 	private int requestID;
 
 	/**
@@ -42,7 +42,7 @@ public class AppointmentRequest implements Request {
 		this.date = date;
 		this.timeslot = timeslot;
 		status = Status.PENDING;
-		requestID = ++count;
+		requestID = ++Database.appointmentRequestCount;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class AppointmentRequest implements Request {
 	 * @return A string containing details of the appointment request
 	 */
 	public String toString() {
-		return "Request ID: " + requestID + " Patient Name: " + patient.getName() + ", Doctor Name: " + doctor.getName() + " " + timeslot.toString() + " Status: " + status;
+		return "Request ID: " + requestID + ", Patient Name: " + patient.getName() + ", Doctor Name: " + doctor.getName() + ", " + timeslot.toString() + ", Status: " + status;
 	}
 
 	/**

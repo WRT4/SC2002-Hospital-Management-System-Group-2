@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import application.Database;
 import enums.Status;
 
 /**
@@ -23,7 +24,6 @@ public class RefillRequest implements Request {
     private Status status;
     private LocalDate requestDate;
     private LocalTime requestTime;
-    private static int count = 0;
     private int reqID;
 
     /**
@@ -43,7 +43,7 @@ public class RefillRequest implements Request {
         this.status = Status.PENDING;
         this.requestDate = LocalDate.now();
         this.requestTime = LocalTime.now();
-        this.reqID = ++count;
+        this.reqID = ++Database.refillRequestCount;
     }
 
     /**
