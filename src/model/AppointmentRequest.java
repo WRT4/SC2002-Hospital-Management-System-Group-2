@@ -8,6 +8,8 @@ import java.util.Scanner;
 import enums.Status;
 
 public class AppointmentRequest implements Request {
+
+	private static final long serialVersionUID = 9181140749468462052L;
 	private Doctor doctor;
 	private Patient patient;
 	private LocalDate date;

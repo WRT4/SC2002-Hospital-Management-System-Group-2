@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,8 +11,10 @@ import controller.SessionController;
  * Represents a user in the Hospital Management System (HMS).
  * This class provides login functionality, password management, and role-based access.
  */
-public abstract class User {
-    protected String id;
+public abstract class User implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	protected String id;
     private String password;
     protected String role;
     private boolean isFirstLogin;

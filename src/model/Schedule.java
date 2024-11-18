@@ -1,12 +1,15 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.time.temporal.ChronoUnit;
 
 //schedule has appointments and workDays()
-public class Schedule {
+public class Schedule implements Serializable{
+	
+	private static final long serialVersionUID = -9056252775996453213L;
 	private String doctorID;
     private ArrayList<Appointment> appointments;
     private ArrayList<TimeSlot> workingSlots;

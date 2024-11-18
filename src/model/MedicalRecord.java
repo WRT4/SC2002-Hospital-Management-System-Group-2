@@ -1,9 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MedicalRecord {
-    private String patientID;
+public class MedicalRecord implements Serializable{
+	
+	private static final long serialVersionUID = 4416168631521337836L;
+	private String patientID;
     private String name;
     private String dateOfBirth;
     private String gender;

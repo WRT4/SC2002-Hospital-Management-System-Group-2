@@ -8,7 +8,9 @@ import controller.AdministratorController;
 import controller.SessionController;
 
 public class Administrator extends User {
-    private List<User> staff; // List to manage staff members
+	
+	private static final long serialVersionUID = -3513955881484371321L;
+	private List<User> staff; // List to manage staff members
     private List<RefillRequest> refillRequests; // List to store refill requests for review
     // private List<Request> userRequests; // List to store general user requests (password reset, unlock account)
     private String gender;

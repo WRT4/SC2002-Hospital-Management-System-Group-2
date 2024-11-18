@@ -10,7 +10,9 @@ import controller.DoctorController;
 import controller.SessionController;
 
 public class Doctor extends User {
-    private Schedule schedule;
+	
+	private static final long serialVersionUID = -1805621604075705717L;
+	private Schedule schedule;
     private ArrayList<AppointmentRequest> requests;
 	private HashMap<Patient, Integer> appointmentCounter;
 	private String gender;

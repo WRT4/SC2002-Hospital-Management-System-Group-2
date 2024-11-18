@@ -1,11 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import enums.Status;
 
-public class Appointment {
+public class Appointment implements Serializable{
+
+	private static final long serialVersionUID = 2168626928105170600L;
 	private Patient patient;
     private Doctor doctor;
     private LocalDate date;

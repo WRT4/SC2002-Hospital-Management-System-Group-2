@@ -7,7 +7,9 @@ import controller.PharmacistController;
 import controller.SessionController;
 
 public class Pharmacist extends User {
-    //private MedicationBank medicationBank;
+	
+	private static final long serialVersionUID = 1L;
+	//private MedicationBank medicationBank;
     private ArrayList<RefillRequest> requests;
     private String gender;
     private int age;
