@@ -10,6 +10,9 @@ import controller.SessionController;
  * Represents a patient in the medical system.
  * Each patient has a medical record, a list of appointments, and appointment requests.
  * Provides methods to update personal information and manage appointments and requests.
+ * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version 1.0
+ * @since 2024-11-18
  */
 public class Patient extends User {
 
