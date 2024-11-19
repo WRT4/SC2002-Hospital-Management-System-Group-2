@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import application.Database;
@@ -279,7 +280,7 @@ public class DoctorController extends SessionController {
             choice = doctorView.getChoice();
         }
         if (choice == 1) {
-            LocalDate date = ScheduleView.inputDate(false, scanner);
+            LocalDate date = ScheduleView.inputDate(scanner);
             if (date == null) return;
             LocalTime time = ScheduleView.inputTime(scanner);
             if (time == null) return;
@@ -296,7 +297,7 @@ public class DoctorController extends SessionController {
             System.out.println("Date: " + date + " Time: " + time + " successfully set as unavailable!");
             return;
         } else if (choice == 2) {
-            LocalDate date = ScheduleView.inputDate(false, scanner);
+            LocalDate date = ScheduleView.inputDate(scanner);
             if (date == null) return;
             LocalTime time = ScheduleView.inputTime(scanner);
             if (time == null) return;
@@ -340,7 +341,7 @@ public class DoctorController extends SessionController {
         ArrayList<AppointmentRequest> requests = doctor.getRequests();
         doctorView.viewRequests(requests);
         System.out.println("Which requestID would you like to accept/reject?");
-        AppointmentRequest request = AppointmentRequest.findRequest(requests, false, scanner);
+        AppointmentRequest request = findRequest(requests);
         if (request == null) return;
         System.out.println("Please input 1 for Accept or 2 for Reject. Enter -1 to exit.");
         int choice = doctorView.getChoice();
@@ -471,4 +472,48 @@ public class DoctorController extends SessionController {
             }
         }
     }
+    
+	private AppointmentRequest findRequest(ArrayList<AppointmentRequest> requests) {
+		AppointmentRequest request = null;
+		while (true) {
+			try {
+				request = null;
+				int requestID;
+				System.out.println("Enter requestID or -1 to exit: ");
+				requestID = doctorView.getChoice();
+				if (requestID == -1) return null;
+				int i = 0;
+				for (i = 0; i < requests.size(); i++) {
+					if (requests.get(i).getRequestID() == requestID) {
+						request = requests.get(i);
+						break;
+					}
+				}
+				if (request == null) throw new RuntimeException("RequestID does not exist!");
+				if (request.getStatus() != Status.PENDING) {
+					if (request.getStatus() == Status.CANCELLED) {
+						throw new RuntimeException("Request already cancelled!");
+					} else if (request.getStatus() == Status.ACCEPTED) {
+						throw new RuntimeException("Request already accepted!");
+					} else if (request.getStatus() == Status.DECLINED) {
+						throw new RuntimeException("Request already declined!");
+					}
+				}
+				break;
+			} catch (InputMismatchException e) {
+				System.out.println("Wrong input type! Try Again!");
+				scanner.nextLine();
+				continue;
+			} catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				scanner.nextLine();
+				continue;
+			} catch (Exception e) {
+				System.out.println("Error! Try Again!");
+				scanner.nextLine();
+				continue;
+			}
+		}
+		return request;
+	}
 }

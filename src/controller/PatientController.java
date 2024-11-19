@@ -3,15 +3,15 @@ package controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import model.Appointment;
 import model.AppointmentRequest;
 import application.Database;
 import model.Doctor;
 import model.Patient;
-import enums.Status;
 import model.TimeSlot;
+import enums.Status;
 import view.AppointmentView;
 import view.PatientView;
 import view.ScheduleView;
@@ -49,7 +49,9 @@ public class PatientController extends SessionController{
 					updatePersonalInfo();
 					break;
 				case 4:
-					patientView.viewAvailableSlots();
+					System.out.println("\nViewing available slots: \n");
+					System.out.println("Enter date: ");
+					patientView.viewAvailableSlots(inputDate());
 					break;
 				case 5:
 					scheduleAppointment();
@@ -92,6 +94,21 @@ public class PatientController extends SessionController{
 		else if (choice3 == 2) {
 			updateContactInfo();
 		}
+	}
+	
+	private LocalDate inputDate() {
+		LocalDate finalDate = ScheduleView.inputDate(scanner);
+		if (finalDate == null) return null;
+		
+		//system check :patient cannot book backwards in time
+		while (finalDate.isBefore(LocalDate.now()) ){
+			System.out.println("Date has lapsed! Unable to perform operation!");
+			System.out.println("Please re-enter.");
+			finalDate = ScheduleView.inputDate(scanner);
+			if (finalDate == null) return null;
+		}
+
+		return finalDate;
 	}
 	
 	public void updateContactInfo() {
@@ -177,26 +194,10 @@ public class PatientController extends SessionController{
 			return;
 		}
 
-		//input date time--start
-		LocalDate date = ScheduleView.inputDate(true, scanner);
-		if (date == null) return;
-
-		LocalTime time = ScheduleView.inputTime(scanner);
-		if (time == null) return;
-		
-		// check if time is in the past
-		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
-			System.out.println("Time has lapsed! Please re-enter!");
-			time = ScheduleView.inputTime(scanner);
-			if (time == null) return;
-		}
-		
-		// check for if there is already an appointment at reequested time
-		while (patient.checkOverlapping(date, time)) {
-			System.out.println("You already have a scheduled appointment at this time! Please re-enter!");
-			time = ScheduleView.inputTime(scanner);
-			if (time == null) return;
-		}
+		ArrayList<Object> tempArr = getDateAndTime();
+		if (tempArr == null) return;
+		LocalDate date = (LocalDate) tempArr.get(0);
+		LocalTime time = (LocalTime) tempArr.get(1);
 		
 		//input date time--end
 		TimeSlot requestTime = doctor.findTimeSlot(date, time);
@@ -227,25 +228,10 @@ public class PatientController extends SessionController{
 		System.out.println("Changing appointment " + temp.getAppointmentID() + " ...");
 		System.out.println("Enter new date: ");
 
-		LocalDate date = ScheduleView.inputDate(true, scanner);
-		if (date == null) return;
-
-		LocalTime time = ScheduleView.inputTime(scanner);
-		if (time == null) return;
-
-		// check if time is in the past
-		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
-			System.out.println("Time has lapsed! Please re-enter!");
-			time = ScheduleView.inputTime(scanner);
-			if (time == null) return;
-		}
-				
-		// check for if there is already an appointment at reequested time
-		while (patient.checkOverlapping(date, time)) {
-			System.out.println("You already have a scheduled appointment at this time! Please re-enter!");
-			time = ScheduleView.inputTime(scanner);
-			if (time == null) return;
-		}
+		ArrayList<Object> tempArr = getDateAndTime();
+		if (tempArr == null) return;
+		LocalDate date = (LocalDate) tempArr.get(0);
+		LocalTime time = (LocalTime) tempArr.get(1);
 
 		TimeSlot requestTime = temp.getDoctor().findTimeSlot(date, time);
 		if (requestTime == null) return;
@@ -265,6 +251,33 @@ public class PatientController extends SessionController{
 		sendCancellationMessage(temp);
 		sendRequestMessage(request,true);
 		System.out.println("Successfully Rescheduled! New request sent!");
+	}
+	
+	private ArrayList<Object> getDateAndTime(){
+		ArrayList<Object> arr = new ArrayList<>();
+		//input date time--start
+		LocalDate date = inputDate();
+		if (date == null) return null;
+
+		LocalTime time = ScheduleView.inputTime(scanner);
+		if (time == null) return null;
+		
+		// check if time is in the past
+		while (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
+			System.out.println("Time has lapsed! Please re-enter!");
+			time = ScheduleView.inputTime(scanner);
+			if (time == null) return null;
+		}
+		
+		// check for if there is already an appointment at requested time
+		while (patient.checkOverlapping(date, time)) {
+			System.out.println("You already have a scheduled appointment at this time! Please re-enter!");
+			time = ScheduleView.inputTime(scanner);
+			if (time == null) return null;
+		}
+		arr.add(date);
+		arr.add(time);
+		return arr;
 	}
 	
 	public void cancelAppointment () {
@@ -305,10 +318,55 @@ public class PatientController extends SessionController{
 		if (choice == -1) return;
 		if (choice == 1) {
 			System.out.println("Which requestID would would like to cancel? Enter ID or -1 to exit.");
-			AppointmentRequest req = AppointmentRequest.findRequest(requests, true, scanner);
+			AppointmentRequest req = findRequest(requests);
 			if (req == null) return;
 			req.setStatus(Status.CANCELLED);
 			System.out.println("Request Cancelled!");
 		}
 	}
+	
+	private AppointmentRequest findRequest(ArrayList<AppointmentRequest> requests) {
+		AppointmentRequest request = null;
+		while (true) {
+			try {
+				request = null;
+				int requestID;
+				System.out.println("Enter requestID or -1 to exit: ");
+				requestID = patientView.getChoice();
+				if (requestID == -1) return null;
+				int i = 0;
+				for (i = 0; i < requests.size(); i++) {
+					if (requests.get(i).getRequestID() == requestID) {
+						request = requests.get(i);
+						break;
+					}
+				}
+				if (request == null) throw new RuntimeException("RequestID does not exist!");
+				if (request.getStatus() != Status.PENDING) {
+					if (request.getStatus() == Status.CANCELLED) {
+						throw new RuntimeException("Request already cancelled!");
+					} else if (request.getStatus() == Status.ACCEPTED) {
+						throw new RuntimeException("Request already accepted! Cancel appointment instead!");
+					} else if (request.getStatus() == Status.DECLINED) {
+						throw new RuntimeException("Request already declined!");
+					}
+				}
+				break;
+			} catch (InputMismatchException e) {
+				System.out.println("Wrong input type! Try Again!");
+				scanner.nextLine();
+				continue;
+			} catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				scanner.nextLine();
+				continue;
+			} catch (Exception e) {
+				System.out.println("Error! Try Again!");
+				scanner.nextLine();
+				continue;
+			}
+		}
+		return request;
+	}
+	
 }
