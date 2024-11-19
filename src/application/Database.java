@@ -32,7 +32,7 @@ public class Database implements Serializable {
     public static final ArrayList<Administrator> ADMINISTRATORS = new ArrayList<>();
     public static final MedicationBank MEDICATION_BANK = new MedicationBank();
     public static final ArrayList<String> SYSTEM_LOGS = new ArrayList<>();
-    private static final String DATABASE_FILE = "database.ser";
+    private static final String DATABASE_FILE = "database.dat";
     public static int refillRequestCount;
     public static int appointmentRequestCount;
     public static int appointmentCount;
@@ -113,6 +113,9 @@ public class Database implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading serialized database: " + e.getMessage());
             return false;
+        } catch (Exception e) {
+        	System.err.println("Error occured: " + e.getMessage());
+        	return false;
         }
     }
 
