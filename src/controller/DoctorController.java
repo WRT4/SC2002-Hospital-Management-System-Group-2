@@ -85,7 +85,7 @@ public class DoctorController extends SessionController {
                     break;
                 case 9:
                     System.out.println("Exiting Doctor menu...");
-                    String log = "Doctor " + doctor.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
+                    String log = "Doctor " + doctor.getID() + " accessed system from " + startTime.format(FORMATTER) + " on " + startDate + " to " + LocalTime.now().format(FORMATTER) + " on " + LocalDate.now(); 
                     Database.SYSTEM_LOGS.add(log);
                     break;
                 default:

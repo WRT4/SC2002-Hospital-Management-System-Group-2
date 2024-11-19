@@ -22,7 +22,7 @@ public class UserController extends SessionController{
 		this.scanner = scanner;
 		startTime = LocalTime.now();
 		startDate = LocalDate.now();
-		String log = "User " + user.getID() + " logged in at " + startTime.format(formatter) + " on " + startDate; 
+		String log = "User " + user.getID() + " logged in at " + startTime.format(FORMATTER) + " on " + startDate; 
         Database.SYSTEM_LOGS.add(log);
 	}
 	
@@ -160,7 +160,7 @@ public class UserController extends SessionController{
                     long hours = duration.toHours();
                     long minutes = duration.toMinutes() % 60; // Remaining minutes
                     long seconds = duration.getSeconds() % 60; // Remaining seconds
-                    String log = "User " + user.getID() + " logged out at " + endTime.format(formatter) + " on " + endDate + ". Session lasted for " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds." ;
+                    String log = "User " + user.getID() + " logged out at " + endTime.format(FORMATTER) + " on " + endDate + ". Session lasted for " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds." ;
                     Database.SYSTEM_LOGS.add(log);
                     break;
                 default:

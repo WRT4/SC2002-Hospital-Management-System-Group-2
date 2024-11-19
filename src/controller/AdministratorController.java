@@ -51,7 +51,7 @@ public class AdministratorController extends SessionController{
                 	break;
                 case 8:
                     System.out.println("Exiting Administrator menu...");
-                    String log = "Admin " + admin.getID() + " accessed system from " + startTime.format(formatter) + " on " + startDate + " to " + LocalTime.now().format(formatter) + " on " + LocalDate.now(); 
+                    String log = "Admin " + admin.getID() + " accessed system from " + startTime.format(FORMATTER) + " on " + startDate + " to " + LocalTime.now().format(FORMATTER) + " on " + LocalDate.now(); 
                     Database.SYSTEM_LOGS.add(log);
                     break;
                 default:
