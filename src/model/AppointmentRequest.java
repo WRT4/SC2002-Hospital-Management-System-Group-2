@@ -154,7 +154,7 @@ public class AppointmentRequest implements Request {
 	 * Throws exceptions if the request is invalid or in certain states.
 	 *
 	 * @param requests  A list of appointment requests to search through
-	 * @param isPatient If true, restricts actions based on the role of the patient
+	 * @param isPatient If true, changes message based on the role of the patient
 	 * @param scanner   A Scanner instance for reading user input
 	 * @return The matching AppointmentRequest or null if exited by the user
 	 */
