@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class UserView {
 	protected Scanner scanner;
-	protected final String RED = "\u001B[31m";
-    protected final String RESET = "\u001B[0m";
+	public static final String RED = "\u001B[31m";
+    public static final String RESET = "\u001B[0m";
     
     public UserView(Scanner scanner) {
 		this.scanner = scanner;
