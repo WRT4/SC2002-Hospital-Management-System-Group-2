@@ -22,11 +22,11 @@ public class DoctorView extends UserView{
 	public void viewSchedule(Doctor doctor) {
     	System.out.println("Viewing Personal Schedule for Doctor " + doctor.getID() + ", Name: " + doctor.getName() + ": ");
 		System.out.println("Enter date: ");
-		LocalDate date = ScheduleView.inputDate(false, scanner);
+		LocalDate date = ScheduleView.inputDate(scanner);
 		if (date == null) return;
 		while (date.isBefore(doctor.getSchedule().getWorkingSlots().get(0).getDate())) {
 			System.out.println("No record found! ");
-			date = ScheduleView.inputDate(false, scanner);
+			date = ScheduleView.inputDate(scanner);
 			if (date == null) return;
 		}
 		ScheduleView.viewAllSlots(date, doctor.getSchedule());

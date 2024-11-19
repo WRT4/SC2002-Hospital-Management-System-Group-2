@@ -76,10 +76,7 @@ public class PatientView extends UserView{
 		}
 	}
 	
-	public void viewAvailableSlots() {
-		System.out.println("\nViewing available slots: \n");
-		System.out.println("Enter date: ");
-		LocalDate date = ScheduleView.inputDate(true, scanner);
+	public void viewAvailableSlots(LocalDate date) {
 		if(date == null) return;
 
 		String docInputID;

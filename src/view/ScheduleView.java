@@ -5,15 +5,14 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import model.Appointment;
 import model.Schedule;
-import enums.Status;
 import model.TimeSlot;
+import enums.Status;
 
 public class ScheduleView {
 
-	public static LocalDate inputDate(boolean isPatient, Scanner scanner) {
+	public static LocalDate inputDate(Scanner scanner) {
 	    String dayStr, monthStr, yearStr;
 	    int day = 0, month = 0, year = 0;
 	    LocalDate finalDate = null;
@@ -43,19 +42,16 @@ public class ScheduleView {
 	            if (year < LocalDate.now().getYear() || year > LocalDate.now().getYear() + 1) {
 	                throw new RuntimeException("Invalid input for Year! Please enter a valid year.");
 	            }
-
-				//system check 1:patient cannot book backwards in time
-				finalDate = LocalDate.of(year, month, day);
-				if (finalDate.isBefore(LocalDate.now()) && isPatient){
-					System.out.println("Date has lapsed! Unable to perform operation!");
-					System.out.println("Please re-enter.");
-				}
-				//system check 2: patient cannot schedule for more than 30 days in-advance
-				else if (ChronoUnit.DAYS.between(LocalDate.now(), finalDate) > 30){
-					System.out.println("At most 30 days in advance.");
-					System.out.println("Please re-enter.");
-				}
-				else break; // Exit the loop if all inputs are valid
+	            
+	            // Construct the final date
+	            finalDate = LocalDate.of(year, month, day);
+	            
+	            //system check: patient cannot schedule for more than 30 days in-advance
+	    		if (ChronoUnit.DAYS.between(LocalDate.now(), finalDate) > 30){
+	    			throw new RuntimeException("At most 30 days in advance. Please re-enter. ");
+	    		}
+	            
+				break; // Exit the loop if all inputs are valid
 
 	        } catch (InputMismatchException e) {
 	            System.out.println("Wrong input type! Please enter a valid number.");
@@ -67,7 +63,6 @@ public class ScheduleView {
 	            System.out.println("Error! Try Again!");
 	            scanner.nextLine(); // Clear the input
 	        }
-
 	    }
 	    return finalDate;
 	}
