@@ -3,28 +3,43 @@ package view;
 import java.util.Scanner;
 import application.Database;
 
-public class PharmacistView extends UserView{
-	public PharmacistView(Scanner scanner){
-		super(scanner);
-	}
+/**
+ * Represents the user interface for pharmacists in the medical system.
+ * Handles input and output operations specific to pharmacist functions.
+ * Provides methods to view medication inventory and display pharmacist menu options.
+ * @author Lee Kuan Rong, Tan Wen Rong
+ * @version 1.0
+ * @since 2024-11-18
+ */
+public class PharmacistView extends UserView {
 
-	public String enterID(){
-		String id = scanner.next();
-		return id;
-	}
-	
-	public void viewMedicationInventory() {
+    /**
+     * Constructs a PharmacistView object with a given scanner for input.
+     *
+     * @param scanner The Scanner instance for user input
+     */
+    public PharmacistView(Scanner scanner) {
+        super(scanner);
+    }
+
+    /**
+     * Displays the medication inventory.
+     */
+    public void viewMedicationInventory() {
         Database.MEDICATION_BANK.viewInventory();
     }
-	
-	public void showMenu() {
-		System.out.println("\nPharmacist Menu:");
-		System.out.println("1. View Inbox");
-		System.out.println("2. View Appointment Outcome Record");
-		System.out.println("3. Update Prescription Status");
-		System.out.println("4. View Medication Inventory");
-		System.out.println("5. Submit Replenishment Request");
-		System.out.println("6. Exit to Main Menu");
-		System.out.println("Choose an action: ");
-	}
+
+    /**
+     * Displays the pharmacist menu options.
+     */
+    public void showMenu() {
+        System.out.println("\nPharmacist Menu:");
+        System.out.println("1. View Inbox");
+        System.out.println("2. View Appointment Outcome Record");
+        System.out.println("3. Update Prescription Status");
+        System.out.println("4. View Medication Inventory");
+        System.out.println("5. Submit Replenishment Request");
+        System.out.println("6. Exit to Main Menu");
+        System.out.println("Choose an action: ");
+    }
 }
