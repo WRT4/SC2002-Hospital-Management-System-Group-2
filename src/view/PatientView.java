@@ -58,11 +58,11 @@ public class PatientView extends UserView {
      *
      * @param appointments The list of scheduled appointments
      */
-    public void viewScheduledAppointments(ArrayList<Appointment> appointments) {
-        System.out.println("\nViewing scheduled Appointment...\n");
+    public int viewScheduledAppointments(ArrayList<Appointment> appointments) {
+        System.out.println("\nViewing scheduled Appointments...\n");
         if (appointments.size() == 0) {
             System.out.println("No scheduled appointments!");
-            return;
+            return -1;
         }
         int num = 0;
         for (Appointment apt : appointments) {
@@ -73,9 +73,10 @@ public class PatientView extends UserView {
         }
         if (num == 0) {
             System.out.println("No scheduled appointments! ");
-            return;
+            return -1;
         }
         System.out.println("Note: Appointment request that hasn't been accepted by doctor can be found in Menu Option 8");
+        return 0;
     }
 
     /**
