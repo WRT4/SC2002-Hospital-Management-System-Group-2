@@ -8,7 +8,7 @@ import model.User;
  * The main entry point for the Hospital Management Application.
  * This class initializes the database, handles user login, and manages
  * the main application loop for interacting with different user controllers.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

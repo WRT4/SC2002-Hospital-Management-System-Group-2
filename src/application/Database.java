@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
  * Represents the central database for the Hospital Management System.
  * Manages data storage, retrieval, and initialization for various entities, including doctors, patients,
  * pharmacists, and administrators. Handles both serialized file storage and CSV-based initialization.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */
