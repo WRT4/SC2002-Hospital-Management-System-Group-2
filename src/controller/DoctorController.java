@@ -270,7 +270,7 @@ public class DoctorController extends SessionController {
     }
     
     /**
-     * Sets or frees a timeslot as unavailable for the doctor.
+     * Sets or frees a timeslot as unavailable for the doctor. Allows doctor to cancel appointment if he attempts to free a slot with one.
      */
     public void setAvailability() {
         System.out.println("Would you like to \n1. Set unavailable timeslot \n2. Free unavailable timeslot \n-1. Exit");
@@ -296,7 +296,8 @@ public class DoctorController extends SessionController {
             timeslot.setOccupied();
             System.out.println("Date: " + date + " Time: " + time + " successfully set as unavailable!");
             return;
-        } else if (choice == 2) {
+        } 
+        else if (choice == 2) {
             LocalDate date = ScheduleView.inputDate(scanner);
             if (date == null) return;
             LocalTime time = ScheduleView.inputTime(scanner);
@@ -312,24 +313,29 @@ public class DoctorController extends SessionController {
                 timeslot.free();
                 System.out.println("Date: " + date + " Time: " + time + " successfully freed!");
                 return;
-            } else {
-                System.out.println("Cancel " + temp + "?" + "\n1. Yes \n2. No");
-                int choice2 = doctorView.getChoice();
-                while (choice2 != 1 && choice2 != 2) {
-                    System.out.println("No such option! Try again!");
-                    choice2 = doctorView.getChoice();
-                }
+            } 
+            // allow doctors to cancel appointments directly
+            else {
+	            System.out.println("Cancel " + temp + "?" + "\n1. Yes \n2. No");
+	            int choice2 = doctorView.getChoice();
+	            while (choice2 != 1 && choice2 != 2) {
+	                System.out.println("No such option! Try again!");
+	                choice2 = doctorView.getChoice();
+	            }
                 if (choice2 == 1) {
-                    temp.getDoctor().getSchedule().setAvailability(temp.getTimeSlot());
+                    temp.getTimeSlot().free();
+                    doctor.subtractAppointmentCounter(temp.getPatient());
                     temp.setStatus(Status.CANCELLED);
                     sendCancellationMessage(temp);
                     System.out.println("Successfully cancelled!");
                     return;
-                } else
+                } 
+                else
                     return;
             }
             // ask for confirmation to cancel appointment
-        } else if (choice == -1) {
+        } 
+        else if (choice == -1) {
             return;
         }
     }
@@ -402,12 +408,21 @@ public class DoctorController extends SessionController {
         System.out.println("Which AppointmentID would you like to cancel? Enter ID or -1 to exit.");
         Appointment apt = AppointmentView.promptForAppointment(doctor.getSchedule().getAppointments(), true, scanner);
         if (apt == null) return 0;
-        apt.setStatus(Status.CANCELLED);
-        apt.getTimeSlot().free();
-        doctor.subtractAppointmentCounter(apt.getPatient());
-        sendCancellationMessage(apt);
-        System.out.println("Successfully cancelled!");
-        return 1;
+        System.out.println("Confirm cancellation for " + apt + "? Enter 1 to confirm and -1 to exit.");
+        int choice = doctorView.getChoice();
+        while (choice != 1 && choice != -1) {
+        	System.out.println("Option doesn't exist! ");
+        	choice = doctorView.getChoice();
+        }
+        if (choice == -1) return 0;
+        else {
+	        apt.setStatus(Status.CANCELLED);
+	        apt.getTimeSlot().free();
+	        doctor.subtractAppointmentCounter(apt.getPatient());
+	        sendCancellationMessage(apt);
+	        System.out.println("Successfully cancelled!");
+	        return 1;
+        }
     }
 
     /**

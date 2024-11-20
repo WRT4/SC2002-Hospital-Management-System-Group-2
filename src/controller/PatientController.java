@@ -268,10 +268,10 @@ public class PatientController extends SessionController {
      * Prompts the patient to select a new date and time for the appointment.
      */
     public void rescheduleAppointments() {
-        System.out.println("\nRescheduling Appointment...\n");
+        System.out.println("\nRescheduling Appointment...");
         ArrayList<Appointment> appointments = patient.getAppointments();
         patientView.viewScheduledAppointments(appointments);
-        System.out.println("Which appointment ID would you like to cancel? Enter Appointment ID or -1 to exit.");
+        System.out.println("Which appointment ID would you like to reschedule? Enter Appointment ID or -1 to exit.");
         Appointment temp = AppointmentView.promptForAppointment(appointments, true, scanner);
         if (temp == null) return;
         
@@ -298,7 +298,9 @@ public class PatientController extends SessionController {
         AppointmentRequest request = new AppointmentRequest(date, requestTime, temp.getDoctor(), temp.getPatient());
         temp.getDoctor().addRequest(request);
         patient.getRequests().add(request);
+        // update doctor schedule and free slot
         temp.getDoctor().getSchedule().setAvailability(temp.getTimeSlot());
+        // send messages to doctor
         sendCancellationMessage(temp);
         sendRequestMessage(request, true);
         System.out.println("Successfully Rescheduled! New request sent!");
@@ -342,29 +344,27 @@ public class PatientController extends SessionController {
      * Prompts the patient to select an appointment to cancel and updates the status.
      */
     public void cancelAppointment() {
-        System.out.println("\nCancelling Appointment...\n");
-        int num = 0;
+        System.out.println("\nCancelling Appointment...");
         ArrayList<Appointment> appointments = patient.getAppointments();
-        for (Appointment appointment : appointments) {
-            if (appointment.getStatus() == Status.CONFIRMED) {
-                System.out.println(appointment);
-                num++;
-            }
-        }
-        System.out.println("Note: Appointment requests that haven't been accepted by the doctor could be found in Menu Option 8.");
-        if (num == 0) {
-            System.out.println("No scheduled appointments!");
-            System.out.println("Note: Appointment requests that haven't been accepted by the doctor could be found in Menu Option 8.");
-            return;
-        }
+        int exit = patientView.viewScheduledAppointments(appointments);
+        if (exit == -1) return;
         System.out.println("Which appointment would you like to cancel? Enter Appointment ID or -1 to exit.");
         Appointment temp = AppointmentView.promptForAppointment(appointments, true, scanner);
         if (temp == null) return;
-        temp.getDoctor().getSchedule().setAvailability(temp.getTimeSlot());
-        temp.setStatus(Status.CANCELLED);
-        temp.getDoctor().subtractAppointmentCounter(patient);
-        sendCancellationMessage(temp);
-        System.out.println("Successfully cancelled!");
+        System.out.println("Confirm cancellation for " + temp + "? Enter 1 to confirm and -1 to exit.");
+        int choice = patientView.getChoice();
+        while (choice != 1 && choice != -1) {
+        	System.out.println("Option doesn't exist! ");
+        	choice = patientView.getChoice();
+        }
+        if (choice == -1) return;
+        else {
+	        temp.getDoctor().getSchedule().setAvailability(temp.getTimeSlot());
+	        temp.setStatus(Status.CANCELLED);
+	        temp.getDoctor().subtractAppointmentCounter(patient);
+	        sendCancellationMessage(temp);
+	        System.out.println("Successfully cancelled!");
+        }
     }
 
     /**
