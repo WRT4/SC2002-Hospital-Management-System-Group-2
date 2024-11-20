@@ -10,23 +10,42 @@ import application.Database;
 import model.User;
 import view.UserView;
 
-public class UserController extends SessionController{
-	
-	private UserView userView;
-	private User user;
-	private Scanner scanner;
-	
-	public UserController(User user, Scanner scanner) {
-		this.user = user;
-		this.userView = new UserView (scanner);
-		this.scanner = scanner;
-		startTime = LocalTime.now();
-		startDate = LocalDate.now();
-		String log = "User " + user.getID() + " logged in at " + startTime.format(FORMATTER) + " on " + startDate; 
+/**
+ * Represents the controller for a user in the medical system.
+ * Manages user-related tasks such as login, password change, and accessing role-specific menus.
+ * @author: Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version: 1.0
+ * @since: 2024-11-18
+ */
+public class UserController extends SessionController {
+    
+    private UserView userView;
+    private User user;
+    private Scanner scanner;
+    
+    /**
+     * Constructs a UserController with a given user and scanner for input.
+     *
+     * @param user The user associated with this controller
+     * @param scanner The scanner for user input
+     */
+    public UserController(User user, Scanner scanner) {
+        this.user = user;
+        this.userView = new UserView(scanner);
+        this.scanner = scanner;
+        startTime = LocalTime.now();
+        startDate = LocalDate.now();
+        String log = "User " + user.getID() + " logged in at " + startTime.format(FORMATTER) + " on " + startDate;
         Database.SYSTEM_LOGS.add(log);
-	}
-	
-	 // Method to simulate user login
+    }
+    
+    /**
+     * Simulates user login by validating user ID and password.
+     *
+     * @param inputID The user ID entered by the user
+     * @param inputPassword The password entered by the user
+     * @return true if login is successful, false otherwise
+     */
     public boolean login(String inputID, String inputPassword) {
         int attempts = 0;
         final int maxAttempts = 3;
@@ -34,7 +53,7 @@ public class UserController extends SessionController{
         while (attempts < maxAttempts) {
             // Validate user ID and password
             if (user.getID().equals(inputID) && user.getPassword().equals(inputPassword)) {
-            	if (user.isLocked()) return false;
+                if (user.isLocked()) return false;
                 System.out.println("Login successful!");
                 if (user.isFirstLogin()) {
                     System.out.println("You are logging in for the first time or your password has been reset. Please change your password.");
@@ -61,7 +80,9 @@ public class UserController extends SessionController{
         return false;
     }
     
-    // Method to change the user's password
+    /**
+     * Changes the user's password by prompting for a new password.
+     */
     public void changePassword() {
         System.out.print("Enter your new password: ");
         String newPassword = scanner.nextLine();
@@ -69,10 +90,10 @@ public class UserController extends SessionController{
         String confirmPassword = scanner.nextLine();
 
         if (newPassword.equals(confirmPassword)) {
-        	if (newPassword.equals("password")) {
-        		System.out.println("Please set a different password!");
-        		changePassword();
-        	}
+            if (newPassword.equals("password")) {
+                System.out.println("Please set a different password!");
+                changePassword();
+            }
             user.setPassword(newPassword);
             
             user.setFirstLogin(false);
@@ -87,7 +108,9 @@ public class UserController extends SessionController{
         }
     }
     
- // Method to access the role specific menus
+    /**
+     * Accesses the role-specific menus for the user.
+     */
     public void accessSystem() {
         String role = user.getRole();
         if (role == null) {
@@ -97,7 +120,6 @@ public class UserController extends SessionController{
         SessionController sessionController = user.createController(scanner);
         sessionController.showMenu();
     }
-    
     
     /**
      * Locks the user account.
@@ -128,7 +150,6 @@ public class UserController extends SessionController{
         System.out.println("Password has been changed successfully.");
     }
 
-    
     /**
      * Displays the menu and handles user input for various actions.
      */
@@ -141,9 +162,9 @@ public class UserController extends SessionController{
             choice = userView.getChoice();
             scanner.nextLine();
             switch (choice) {
-            	case 1:
-	                accessSystem();
-	                break;
+                case 1:
+                    accessSystem();
+                    break;
                 case 2:
                     System.out.println("Changing password...");
                     changePassword();
@@ -164,9 +185,8 @@ public class UserController extends SessionController{
                     Database.SYSTEM_LOGS.add(log);
                     break;
                 default:
-                	System.out.println("Invalid option! Please try again.");
+                    System.out.println("Invalid option! Please try again.");
             }
         } while (choice != 3);
     }
-	
 }

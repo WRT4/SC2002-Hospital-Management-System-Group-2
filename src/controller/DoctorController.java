@@ -18,9 +18,9 @@ import enums.Status;
  * Represents the controller for a doctor in the medical system.
  * Manages doctor-related tasks such as viewing and updating medical records,
  * managing schedules, handling appointment requests, and interacting with the doctor view.
- * Author: Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
- * Version: 1.0
- * Since: 2024-11-18
+ * @author Hoo Jing Huan, Lim Wee Keat, Tan Wen Rong
+ * @version 1.0
+ * @since 2024-11-18
  */
 public class DoctorController extends SessionController {
     
@@ -473,6 +473,12 @@ public class DoctorController extends SessionController {
         }
     }
     
+    /**
+     * Finds an appointment request by its ID from a list of requests.
+     *
+     * @param requests The list of appointment requests
+     * @return The found appointment request, or null if not found or invalid
+     */
 	private AppointmentRequest findRequest(ArrayList<AppointmentRequest> requests) {
 		AppointmentRequest request = null;
 		while (true) {
