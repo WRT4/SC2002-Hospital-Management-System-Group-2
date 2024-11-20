@@ -8,7 +8,7 @@ import java.time.LocalTime;
  * Represents a time slot within a schedule in the Hospital Management System (HMS).
  * A time slot is defined by a date, start time, end time, and an occupied status.
  * Provides methods for managing and checking the state of the time slot.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */

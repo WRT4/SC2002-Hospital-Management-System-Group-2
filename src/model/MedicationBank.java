@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Provides functionalities to manage medications, including adding, updating stock levels,
  * viewing inventory, and loading data from a CSV file. Handles low-stock alerts and
  * allows for copying inventory from another {@code MedicationBank}
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

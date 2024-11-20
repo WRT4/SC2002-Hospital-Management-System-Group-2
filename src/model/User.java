@@ -7,10 +7,10 @@ import java.util.Scanner;
 import controller.SessionController;
 
 /**
- * Represents a user in the Hospital Management System (HMS).
+ * Abstract base class for a user in the Hospital Management System (HMS).
  * Provides core user attributes and functionalities such as password management,
  * messaging, and role-based access. Serves as a base class for specific user types.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

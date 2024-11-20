@@ -8,7 +8,7 @@ import enums.Status;
  * Represents a request for an appointment in the Hospital Management System (HMS).
  * It includes information about the requesting patient, the assigned doctor, date,
  * and timeslot. Each request can be accepted, declined, or cancelled.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */

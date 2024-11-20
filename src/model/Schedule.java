@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * Represents a doctor's schedule, including working time slots and appointments.
  * Provides functionality for managing appointments and maintaining availability for up to 30 days in advance.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */

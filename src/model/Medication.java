@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * Represents a medication in the system.
  * Stores details such as name, stock level, dosage, expiration date, and low stock threshold.
  * Provides methods to manage stock levels and check for low stock or expiration status.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */

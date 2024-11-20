@@ -12,7 +12,7 @@ import enums.Status;
  * Represents a request for an appointment in the Hospital Management System (HMS).
  * It includes information about the appointment, the doctor, patient, timeslot, status
  * prescription status, diagnosis, service type and note.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Lim Wee Keat, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */
@@ -238,37 +238,5 @@ public class Appointment implements Serializable{
         return "Appointment ID: " + this.appointmentID + ", Date: " + this.date +
                 ", Time: " + this.timeslot.getStartTime() + ", Doctor: " + this.doctor.getName() +
                 ", Patient: " + this.patient.getName() + ", Status: " + this.status;
-    }
-
-    /**
-     * Finds an appointment by ID from a list of appointments, and optionally filters out completed appointments.
-     * Throws an exception if the appointment is cancelled or completed based on conditions.
-     *
-     * @param appointments A list of appointments to search
-     * @param noConfirmed  If true, completed appointments are not returned
-     * @param id           The ID of the appointment to find
-     * @return The appointment found or throws a RuntimeException if not found or invalid
-     * @throws RuntimeException If the appointment is not found, cancelled, or completed based on conditions
-     */
-    public static Appointment findAppointment(ArrayList<Appointment> appointments, boolean noConfirmed, int id) throws RuntimeException {
-        Appointment apt = null;
-        for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID() == id) {
-                apt = appointment;
-                break;
-            }
-        }
-
-        if (apt == null) {
-            throw new RuntimeException("Appointment ID does not exist!");
-        }
-        if (apt.getStatus() == Status.CANCELLED) {
-            throw new RuntimeException("Appointment has been cancelled!");
-        }
-        if (noConfirmed && apt.getStatus() == Status.COMPLETED) {
-            throw new RuntimeException("Appointment has been completed!");
-        }
-
-        return apt;
     }
 }

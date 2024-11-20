@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Represents a medical record for a patient.
  * It contains details such as the patient's personal information, medical diagnoses,
  * prescriptions, and contact details.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

@@ -13,7 +13,7 @@ import controller.SessionController;
  * Represents a doctor in the Hospital Management System (HMS).
  * Manages doctor-specific attributes, such as schedule, appointment requests, and patient counters.
  * Provides functionality to handle appointments and their related actions.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

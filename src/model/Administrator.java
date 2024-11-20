@@ -11,7 +11,7 @@ import controller.SessionController;
  * Represents an Administrator in the Hospital Management System (HMS).
  * This class extends the User class and provides additional functionality specific to administrators,
  * such as managing staff and handling refill requests.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

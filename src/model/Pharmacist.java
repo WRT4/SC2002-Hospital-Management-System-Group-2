@@ -10,9 +10,9 @@ import controller.SessionController;
  * Represents a pharmacist in the medical system.
  * Each pharmacist has personal information and a list of refill requests to manage.
  * Provides methods to access personal details and manage refill requests.
- * Author: Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
- * Version: 1.0
- * Since: 2024-11-18
+ * @author: Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @version: 1.0
+ * @since: 2024-11-18
  */
 public class Pharmacist extends User {
     
