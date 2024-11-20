@@ -10,7 +10,7 @@ import enums.Status;
  * Represents a refill request for a specific medication.
  * Tracks details such as the medication name, requested amount, request date and time,
  * and the associated pharmacist and administrator. Provides methods to approve or decline the request.
- * @author Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lee Kuan Rong Shane, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

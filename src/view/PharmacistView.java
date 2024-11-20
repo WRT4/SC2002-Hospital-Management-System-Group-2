@@ -7,7 +7,7 @@ import application.Database;
  * Represents the user interface for pharmacists in the medical system.
  * Handles input and output operations specific to pharmacist functions.
  * Provides methods to view medication inventory and display pharmacist menu options.
- * @author Lee Kuan Rong, Tan Wen Rong
+ * @author Lee Kuan Rong Shane, Tan Wen Rong
  * @version 1.0
  * @since 2024-11-18
  */

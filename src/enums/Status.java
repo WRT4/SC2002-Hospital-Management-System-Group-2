@@ -4,7 +4,7 @@ package enums;
  * Represents the various statuses that can be assigned to actions, requests, or processes 
  * in the Hospital Management System (HMS).
  * Used to track and manage the lifecycle of requests, appointments, or other operations.
- * @author Hoo Jing Huan, Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Hoo Jing Huan, Lee Kuan Rong Shane, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */

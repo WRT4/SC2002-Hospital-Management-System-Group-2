@@ -21,7 +21,7 @@ import view.AppointmentView;
  * Controls the operations related to pharmacists in the medical system.
  * Manages medication inventory, prescription statuses, and appointment outcomes.
  * Provides methods to submit replenishment requests and update prescription statuses.
- * @author Lee Kuan Rong, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
+ * @author Lee Kuan Rong Shane, Lim Wee Keat, Tan Wen Rong, Yeoh Kai Wen
  * @version 1.0
  * @since 2024-11-18
  */
