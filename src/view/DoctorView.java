@@ -2,7 +2,6 @@ package view;
 
 import model.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import enums.Status;
@@ -35,24 +34,6 @@ public class DoctorView extends UserView {
         if (patient != null) {
             patient.getRecord().printMedicalRecord();
         }
-    }
-
-    /**
-     * Displays the personal schedule of a doctor for a given date.
-     *
-     * @param doctor The doctor whose schedule is to be viewed
-     */
-    public void viewSchedule(Doctor doctor) {
-        System.out.println("Viewing Personal Schedule for Doctor " + doctor.getID() + ", Name: " + doctor.getName() + ": ");
-        System.out.println("Enter date: ");
-        LocalDate date = ScheduleView.inputDate(scanner);
-        if (date == null) return;
-        while (date.isBefore(doctor.getSchedule().getWorkingSlots().get(0).getDate())) {
-            System.out.println("No record found! ");
-            date = ScheduleView.inputDate(scanner);
-            if (date == null) return;
-        }
-        ScheduleView.viewAllSlots(date, doctor.getSchedule());
     }
 
     /**
