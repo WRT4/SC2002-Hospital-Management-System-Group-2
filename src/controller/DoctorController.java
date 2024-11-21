@@ -47,7 +47,7 @@ public class DoctorController extends SessionController {
      * Includes options for viewing messages, medical records, schedule, and managing appointments.
      */
     public void showMenu() {
-        refreshWorkingSchedule(doctor);
+        refreshWorkingSchedule();
         remindPendingRequests();
         int choice;
         do {
@@ -125,9 +125,8 @@ public class DoctorController extends SessionController {
     /**
      * Refreshes the doctor's working schedule.
      *
-     * @param doctor The doctor whose schedule is to be refreshed
      */
-    public void refreshWorkingSchedule(Doctor doctor){
+    public void refreshWorkingSchedule(){
         doctor.getSchedule().fillAdvancedSchedule();
     }
     
