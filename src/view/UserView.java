@@ -47,7 +47,7 @@ public class UserView {
      */
     public String enterID() {
         System.out.print("Enter User ID: ");
-        return scanner.nextLine();
+        return scanner.next();
     }
 
     /**
