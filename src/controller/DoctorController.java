@@ -68,7 +68,7 @@ public class DoctorController extends SessionController {
                     updateMedicalRecord();
                     break;
                 case 4:
-                    doctorView.viewSchedule(doctor);
+                    viewSchedule();
                     break;
                 case 5:
                     setAvailability();
@@ -102,6 +102,24 @@ public class DoctorController extends SessionController {
      */
     public void setUnreadIndex(int i) {
         this.unreadIndex = i;
+    }
+    
+    /**
+     * Displays the personal schedule of a doctor for a given date.
+     *
+     * @param doctor The doctor whose schedule is to be viewed
+     */
+    public void viewSchedule() {
+        System.out.println("Viewing Personal Schedule for Doctor " + doctor.getID() + ", Name: " + doctor.getName() + ": ");
+        System.out.println("Enter date: ");
+        LocalDate date = ScheduleView.inputDate(scanner);
+        if (date == null) return;
+        while (date.isBefore(doctor.getSchedule().getWorkingSlots().get(0).getDate())) {
+            System.out.println("No record found! ");
+            date = ScheduleView.inputDate(scanner);
+            if (date == null) return;
+        }
+        ScheduleView.viewAllSlots(date, doctor.getSchedule());
     }
 
     /**
