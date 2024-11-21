@@ -23,6 +23,15 @@ public class PharmacistView extends UserView {
     }
 
     /**
+     * Returns the value of ID input by user
+     *
+     */
+    public String enterID(){
+        String id = scanner.next();
+        return id;
+    }
+
+    /**
      * Displays the medication inventory.
      */
     public void viewMedicationInventory() {
